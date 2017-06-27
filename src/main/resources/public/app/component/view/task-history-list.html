@@ -34,23 +34,23 @@
         <el-row v-loading="queryLoading">
             <el-col :span="24">
                 <el-table :data="queryResult.result">
-                    <el-table-column label="时间">
+                    <el-table-column label="时间" width="170">
                         <template scope="scope">{{$moment(scope.row.startTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
                     </el-table-column>
                     <el-table-column label="任务">
                         <template scope="scope">{{scope.row.taskGroup}}.{{scope.row.taskName}}</template>
                     </el-table-column>
-                    <el-table-column label="状态">
+                    <el-table-column label="状态" width="120">
                         <template scope="scope">
                             <el-tag v-if="scope.row.state === 'SUCCESS'" type="success" close-transition>SUCCESS</el-tag>
                             <el-tag v-if="scope.row.state === 'FAIL'" type="danger" close-transition>FAIL</el-tag>
                             <el-tag v-if="scope.row.state === 'VETOED'" type="warning" close-transition>VETOED</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="触发方式">
+                    <el-table-column label="触发方式" width="100">
                         <template scope="scope">{{scope.row.triggerType === 1?"调度":scope.row.triggerType === 2?"手动":"未知"}}</template>
                     </el-table-column>
-                    <el-table-column label="耗时">
+                    <el-table-column label="耗时" width="100">
                         <template scope="scope">
                             <span :class="{'text-danger text-bold':scope.row.expendTime > 500}">{{scope.row.expendTime}} ms</span>
                         </template>

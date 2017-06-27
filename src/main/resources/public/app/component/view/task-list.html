@@ -38,14 +38,14 @@
                 <el-table stripe :data="taskList">
                     <el-table-column prop="jobDetail.fullName" label="任务"></el-table-column>
                     <el-table-column prop="jobComponent.name" label="组件"></el-table-column>
-                    <el-table-column prop="triggerState" label="状态">
+                    <el-table-column prop="triggerState" label="状态" width="80">
                         <template scope="scope">
                             <el-tag v-if="scope.row.triggerState === 'NORMAL'" type="primary" close-transition>调度中</el-tag>
                             <el-tag v-if="scope.row.triggerState === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="trigger.cronExpression" label="执行计划"></el-table-column>
-                    <el-table-column label="下次执行">
+                    <el-table-column prop="trigger.cronExpression" label="执行计划" width="120"></el-table-column>
+                    <el-table-column label="下次执行" width="170">
                         <template scope="scope">{{$moment(scope.row.trigger.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
                     </el-table-column>
                     <el-table-column prop="trigger.nextFireTime" label="操作">
@@ -63,7 +63,7 @@
 
 
         <!--Dialogs-->
-        <el-dialog title="新建任务" size="tiny" :visible.sync="newTaskDialogVisible">
+        <el-dialog title="新建任务" :visible.sync="newTaskDialogVisible">
             <el-form :model="newTaskFormModel" ref="newTaskForm" label-width="80px">
                 <el-form-item label="Job组件" prop="jobComponent" :rules="validators.jobComponent">
                     <el-select v-model="newTaskFormModel.jobComponent" placeholder="请选择Job组件" style="width: 100%">
@@ -93,7 +93,7 @@
                 <el-button type="primary" @click="postNewTask" :loading="postNewTaskInProcess">保 存</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="编辑任务" size="tiny" :visible.sync="editTaskDialogVisible">
+        <el-dialog title="编辑任务" :visible.sync="editTaskDialogVisible">
             <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="80px" v-loading="editTaskDialogLoading">
                 <el-form-item label="Job组件" prop="jobComponent" :rules="validators.jobComponent">
                     <el-input v-model="editTaskFormModel.jobComponent" :disabled="true"></el-input>
