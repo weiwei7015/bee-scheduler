@@ -38,7 +38,7 @@
                 <el-table stripe :data="taskList">
                     <el-table-column prop="jobDetail.fullName" label="任务"></el-table-column>
                     <el-table-column prop="jobComponent.name" label="组件"></el-table-column>
-                    <el-table-column prop="triggerState" label="状态" width="80">
+                    <el-table-column prop="triggerState" label="状态" width="90">
                         <template scope="scope">
                             <el-tag v-if="scope.row.triggerState === 'NORMAL'" type="primary" close-transition>调度中</el-tag>
                             <el-tag v-if="scope.row.triggerState === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>
@@ -58,6 +58,23 @@
                         </template>
                     </el-table-column>
                 </el-table>
+
+
+                <div class="spr"></div>
+                <template v-for="item in taskList">
+                    <div class="box">
+                        <div class="box-body">
+                            <h4 class="no-margin">
+                                <el-tag v-if="item.triggerState === 'NORMAL'" type="primary" close-transition>调度中</el-tag>
+                                <el-tag v-if="item.triggerState === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>
+                                {{item.jobDetail.fullName}}
+                            </h4>
+                            <div class="spr"></div>
+                            <span>{{item.trigger.cronExpression}}</span> | <span>{{$moment(item.trigger.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</span>
+                        </div>
+                    </div>
+                    <div class="spr"></div>
+                </template>
             </el-col>
         </el-row>
 
