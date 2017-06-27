@@ -1,0 +1,35 @@
+<el-form :model="inputModel" ref="form" label-width="80px">
+    <el-row>
+        <el-col :span="12">
+            <h4 style="margin-top: 0">Step1：设置促销基本信息</h4>
+            <promoform-part-base :input-model="inputModel" :options="partBaseOptions" ref="promoFormBase"></promoform-part-base>
+            <div class="hr"></div>
+        </el-col>
+    </el-row>
+
+    <template v-if="showRulePart">
+        <el-row>
+            <el-col :span="12">
+                <h4 style="margin-top: 0">Step2：设置优惠规则</h4>
+                <promoform-part-rule :input-model="inputModel" :options="partRuleOptions" ref="promoFormRule"></promoform-part-rule>
+                <div class="hr"></div>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="22">
+                <h4 style="margin-top: 0">Step3：设置促销商品</h4>
+                <promoform-part-product :input-model="inputModel" :options="partProductOptions" ref="promoFormProduct"></promoform-part-product>
+                <div class="hr"></div>
+            </el-col>
+        </el-row>
+    </template>
+    <template v-else>
+        <el-row>
+            <el-col :span="22">
+                <h4 style="margin-top: 0">Step2：设置促销商品</h4>
+                <promoform-part-product :input-model="inputModel" :options="partProductOptions" ref="promoFormProduct"></promoform-part-product>
+                <div class="hr"></div>
+            </el-col>
+        </el-row>
+    </template>
+</el-form>

@@ -1,0 +1,26 @@
+define(['text!view/task-history-detail.html'], function (tpl) {
+    return {
+        template: tpl,
+        components: {},
+        data: function () {
+            var vm = this;
+            var fireId = vm.$route.params.fireId;
+            var data = {
+                taskHistoryDetailLoading: true,
+                taskHistoryDetail: {}
+            };
+
+            vm.$http.get("/task/history/detail?fireId=" + fireId).then(function (re) {
+                data.taskHistoryDetail = re.body.data;
+                data.taskHistoryDetailLoading = false;
+            });
+
+            return data;
+        },
+        methods: {
+            formatLogContent: function (logContent) {
+                return new String(logContent).replace(/\r/g, "\n");
+            }
+        }
+    };
+});

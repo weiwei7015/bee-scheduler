@@ -1,0 +1,446 @@
+<div>
+    <template v-if="options.subProductSetter">
+        <el-tabs type="card" value="main">
+            <el-tab-pane label="设置主商品" name="main">
+                <template v-if="options.mainProductSetterTypes.length > 1">
+                    <combined-searcher handle-btn-label="设为主商品" @handle="handleMainProductSelected(arguments[0].type,arguments[0].selectedItems)" @searcherTypeChange="resetTarget" :searchers="options.mainProductSetterTypes"></combined-searcher>
+                </template>
+                <template v-else>
+                    <template v-if="options.mainProductSetterTypes[0] == 'PRODUCT'">
+                        <product-searcher handle-btn-label="设为主商品" @handle="handleMainProductSelected('PRODUCT',arguments[0])"></product-searcher>
+                    </template>
+                    <template v-if="options.mainProductSetterTypes[0] == 'BRAND'">
+                        <brand-searcher handle-btn-label="设为主商品" @handle="handleMainProductSelected('BRAND',arguments[0])"></brand-searcher>
+                    </template>
+                    <template v-if="options.mainProductSetterTypes[0] == 'CATEGORY'">
+                        <category-searcher handle-btn-label="设为主商品" @handle="handleMainProductSelected('CATEGORY',arguments[0])"></category-searcher>
+                    </template>
+                </template>
+            </el-tab-pane>
+            <el-tab-pane :label="options.subProductSetterType=='GIFT'?'设置赠品':'设置换购品'" name="sub">
+                <product-searcher :handle-btn-label="options.subProductSetterType=='GIFT'?'设为赠品':'设为换购品'" @handle="handleSubProductSelected"></product-searcher>
+            </el-tab-pane>
+        </el-tabs>
+    </template>
+    <template v-else>
+        <template v-if="options.mainProductSetterTypes.length > 1">
+            <combined-searcher @handle="handleMainProductSelected(arguments[0].type,arguments[0].selectedItems)" @searcherTypeChange="resetTarget" :searchers="options.mainProductSetterTypes"></combined-searcher>
+        </template>
+        <template v-else>
+            <template v-if="options.mainProductSetterTypes[0] == 'PRODUCT'">
+                <product-searcher @handle="handleMainProductSelected('PRODUCT',arguments[0])"></product-searcher>
+            </template>
+            <template v-if="options.mainProductSetterTypes[0] == 'BRAND'">
+                <brand-searcher @handle="handleMainProductSelected('BRAND',arguments[0])"></brand-searcher>
+            </template>
+            <template v-if="options.mainProductSetterTypes[0] == 'CATEGORY'">
+                <category-searcher @handle="handleMainProductSelected('CATEGORY',arguments[0])"></category-searcher>
+            </template>
+        </template>
+    </template>
+
+
+    <div class="spr"></div>
+    <div style="color: #1f2d3d;font-size: 14px"><i class="el-icon-circle-check"></i> 已选商品</div>
+    <div class="spr"></div>
+    <template v-if="!inputModel.targets || inputModel.targets.length == 0">
+        <div class="text-extra-light-silver" style="line-height: 50px;border: 1px dashed #C0CCDA;padding: 15px 30px;font-size: 16px;">暂未选择活动商品</div>
+    </template>
+    <template v-else>
+        <template v-if="inputModel.targetType=='PRODUCT'">
+            <template v-if="hasExtendDomainItems">
+                <template v-for="(targetItem, index) in inputModel.targets">
+                    <div class="el-table no-border el-table--fit el-table--enable-row-hover el-table--enable-row-transition">
+                        <div class="el-table__body-wrapper">
+                            <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" style="width: 100%">
+                                <tr>
+                                    <th class="is-leaf" width="100">
+                                        <div class="cell">商品ID</div>
+                                    </th>
+                                    <th class="is-leaf">
+                                        <div class="cell">商品名称</div>
+                                    </th>
+                                    <th class="is-leaf">
+                                        <div class="cell">酒仙价</div>
+                                    </th>
+                                    <th class="is-leaf">
+                                        <div class="cell">成本价</div>
+                                    </th>
+                                    <th class="is-leaf">
+                                        <div class="cell">操作</div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="cell">{{targetItem.id}}</div>
+                                    </td>
+                                    <td>
+                                        <div class="cell">{{targetItem.name}}</div>
+                                    </td>
+                                    <td>
+                                        <div class="cell">¥ {{targetItem.price.toFixed(2)}}</div>
+                                    </td>
+                                    <td>
+                                        <div class="cell">{{targetItem.costPrice!==null&&targetItem.costPrice!==undefined?("¥ "+targetItem.costPrice.toFixed(2)):"- -"}}</div>
+                                    </td>
+                                    <td>
+                                        <div class="cell">
+                                            <button type="button" class="el-button el-button--text el-button--small" @click="removeMainProduct(inputModel.targets[index])"><span>移除</span></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="el-table__expanded-cell">
+                                        <template v-if="options.memberRankPriceItem">
+                                            <el-row>
+                                                <el-col :span="8">
+                                                    <el-form-item label="酒虫" :prop="'targets['+index+'].extend.memberRankPrice[0]'" :rules="validators.priceValidator">
+                                                        <el-input placeholder="酒虫" size="small" v-model="targetItem.extend.memberRankPrice[0]">
+                                                            <template slot="prepend">¥</template>
+                                                        </el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                                <el-col :span="8">
+                                                    <el-form-item label="酒鬼" :prop="'targets['+index+'].extend.memberRankPrice[1]'" :rules="validators.priceValidator">
+                                                        <el-input placeholder="酒鬼" size="small" v-model="targetItem.extend.memberRankPrice[1]">
+                                                            <template slot="prepend">¥</template>
+                                                        </el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                                <el-col :span="8">
+                                                    <el-form-item label="酒圣" :prop="'targets['+index+'].extend.memberRankPrice[2]'" :rules="validators.priceValidator">
+                                                        <el-input placeholder="酒圣" size="small" v-model="targetItem.extend.memberRankPrice[2]">
+                                                            <template slot="prepend">¥</template>
+                                                        </el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
+                                                <el-col :span="8">
+                                                    <el-form-item label="酒神" :prop="'targets['+index+'].extend.memberRankPrice[3]'" :rules="validators.priceValidator">
+                                                        <el-input placeholder="酒神" size="small" v-model="targetItem.extend.memberRankPrice[3]">
+                                                            <template slot="prepend">¥</template>
+                                                        </el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                                <el-col :span="8">
+                                                    <el-form-item label="酒仙" :prop="'targets['+index+'].extend.memberRankPrice[4]'" :rules="validators.priceValidator">
+                                                        <el-input placeholder="酒仙" size="small" v-model="targetItem.extend.memberRankPrice[4]">
+                                                            <template slot="prepend">¥</template>
+                                                        </el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                        </template>
+                                        <el-row>
+                                            <el-col :span="12">
+                                                <template v-if="options.benefitItem">
+                                                    <template v-if="options.multiLevel">
+                                                        <el-form-item v-for="(benefitItem, j) in targetItem.extend.benefits" :label="j==0?'优惠力度':''" required>
+                                                            <el-row>
+                                                                <el-col :span="10">
+                                                                    <el-form-item :prop="'targets['+index+'].extend.benefits['+j+'].threshold'" :rules="validators.thresholdValidator">
+                                                                        <el-input size="small" v-model="benefitItem.threshold" :maxlength="benefitThresholdMaxInputLength">
+                                                                            <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                                                                            <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                                                                        </el-input>
+                                                                    </el-form-item>
+                                                                </el-col>
+                                                                <el-col :span="2" class="text-center"><i class="el-icon-d-arrow-right text-extra-light-silver"></i></el-col>
+                                                                <el-col :span="10">
+                                                                    <el-form-item :prop="'targets['+index+'].extend.benefits['+j+'].promise'" :rules="validators.promiseValidator">
+                                                                        <el-input size="small" v-model="benefitItem.promise" :maxlength="benefitPromiseMaxInputLength">
+                                                                            <template slot="prepend">{{benefitItemLayoutResult[1].prefix}}</template>
+                                                                            <template slot="append">{{benefitItemLayoutResult[1].suffix}}</template>
+                                                                        </el-input>
+                                                                    </el-form-item>
+                                                                </el-col>
+                                                                <el-col :span="2" class="text-center" v-show="j!=0">
+                                                                    <el-button icon="circle-cross" type="text" class="text-extra-light-silver" @click="removeBenefitsItem(targetItem,benefitItem)"></el-button>
+                                                                </el-col>
+                                                            </el-row>
+                                                        </el-form-item>
+                                                        <el-form-item v-show="targetItem.extend.benefits.length < 3">
+                                                            <el-button icon="plus" size="small" class="text-extra-light-silver" @click="addBenefitsItem(targetItem)">增加阶梯</el-button>
+                                                        </el-form-item>
+                                                    </template>
+                                                    <template v-else>
+                                                        <el-form-item label="优惠力度" v-if="benefitItemLayoutResult.length == 1" :prop="'targets['+index+'].extend.benefits[0].' + benefitItemLayoutResult[0].type" :rules="benefitItemLayoutResult[0].type=='threshold'?validators.thresholdValidator:validators.promiseValidator">
+                                                            <el-input size="small" v-if="benefitItemLayoutResult[0].type=='threshold'" v-model="targetItem.extend.benefits[0].threshold" style="width: 200px" :maxlength="benefitThresholdMaxInputLength">
+                                                                <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                                                                <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                                                            </el-input>
+                                                            <el-input size="small" v-if="benefitItemLayoutResult[0].type=='promise'" v-model="targetItem.extend.benefits[0].promise" style="width: 200px" :maxlength="benefitPromiseMaxInputLength">
+                                                                <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                                                                <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                                                            </el-input>
+                                                        </el-form-item>
+                                                        <el-form-item label="优惠力度" style="width: 600px" v-if="benefitItemLayoutResult.length == 2" required>
+                                                            <el-col :span="11">
+                                                                <el-form-item :prop="'targets['+index+'].extend.benefits[0].threshold'" :rules="validators.thresholdValidator">
+                                                                    <el-input size="small" v-model="targetItem.extend.benefits[0].threshold" :maxlength="benefitThresholdMaxInputLength">
+                                                                        <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                                                                        <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                                                                    </el-input>
+                                                                </el-form-item>
+                                                            </el-col>
+                                                            <el-col :span="2" class="text-center"><i class="el-icon-d-arrow-right text-extra-light-silver"></i></el-col>
+                                                            <el-col :span="11">
+                                                                <el-form-item :prop="'targets['+index+'].extend.benefits[0].promise'" :rules="validators.promiseValidator">
+                                                                    <el-input size="small" v-model="targetItem.extend.benefits[0].promise" :maxlength="benefitPromiseMaxInputLength">
+                                                                        <template slot="prepend">{{benefitItemLayoutResult[1].prefix}}</template>
+                                                                        <template slot="append">{{benefitItemLayoutResult[1].suffix}}</template>
+                                                                    </el-input>
+                                                                </el-form-item>
+                                                            </el-col>
+                                                        </el-form-item>
+                                                    </template>
+                                                </template>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <template v-if="options.productSloganItem">
+                                                    <el-form-item label="商品广告语">
+                                                        <el-input size="small" placeholder="商品广告语" v-model="targetItem.extend.productSlogan" maxlength="200" style="width: 200px"></el-input>
+                                                    </el-form-item>
+                                                </template>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row>
+                                            <el-col :span="12">
+                                                <template v-if="options.promoStockItem">
+                                                    <el-form-item label="活动库存" prop="name">
+                                                        <el-row style="width: 500px">
+                                                            <el-col :span="9">
+                                                                <el-radio-group class="small" v-model="targetItem.extend.enablePromoStock">
+                                                                    <el-radio :label="false">实际库存</el-radio>
+                                                                    <el-radio :label="true">活动可售</el-radio>
+                                                                </el-radio-group>
+                                                            </el-col>
+                                                            <el-col :span="15" v-if="targetItem.extend.enablePromoStock">
+                                                                <el-form-item :prop="'targets['+index+'].extend.promoStock'" :rules="validators.numberValidator">
+                                                                    <el-input size="small" placeholder="可售库存" v-model="targetItem.extend.promoStock" maxlength="5" style="width:150px">
+                                                                        <template slot="append">件</template>
+                                                                    </el-input>
+                                                                </el-form-item>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </el-form-item>
+                                                </template>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <template v-if="options.purchaseLimitItem">
+                                                    <el-form-item label="是否限购" prop="name">
+                                                        <el-row style="width: 250px">
+                                                            <el-col :span="8">
+                                                                <el-switch on-text="是" off-text="否" v-model="targetItem.extend.enablePurchaseLimit"></el-switch>
+                                                            </el-col>
+                                                            <el-col :span="16" v-if="targetItem.extend.enablePurchaseLimit">
+                                                                <el-form-item :prop="'targets['+index+'].extend.purchaseLimit'" :rules="validators.numberValidator">
+                                                                    <el-popover placement="right" width="200" trigger="focus" content="单个用户在该促销下可购买的数量">
+                                                                        <el-input size="small" placeholder="限购数量" v-model="targetItem.extend.purchaseLimit" maxlength="5" style="width:150px" slot="reference">
+                                                                            <template slot="append">件</template>
+                                                                        </el-input>
+                                                                    </el-popover>
+                                                                </el-form-item>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </el-form-item>
+                                                </template>
+                                            </el-col>
+                                        </el-row>
+                                        <template v-if="options.couponForbbidenItem">
+                                            <el-form-item label="禁用优惠券" prop="name">
+                                                <el-switch on-text="是" off-text="否" v-model="targetItem.extend.couponDisable"></el-switch>
+                                            </el-form-item>
+                                        </template>
+                                        <template v-if="options.promoPictureItem">
+                                            <el-form-item label="商品活动图">
+                                                <div style="width: 80px;height: 80px;float: left">
+                                                    <el-upload action="/upload/pic" :data="targetItem.id" :multiple="false" :show-file-list="false" :http-request="uploadTargetPromoPic">
+                                                        <img v-if="targetItem.extend.promoPicture" :src="'//' + getDomainImg() + targetItem.extend.promoPicture" style="box-sizing:border-box;width: 80px;height: 80px;border: 1px solid #c5c5c5;padding: 3px;border-radius: 3px;"/>
+                                                        <div v-else class="el-upload el-upload--picture-card" style="width: 80px;height: 80px;line-height: 86px;"><i class="el-icon-plus" style="font-size: 22px"></i></div>
+                                                    </el-upload>
+                                                </div>
+                                                <div style="float: left;margin-left: 10px" v-if="targetItem.extend.promoPicture">
+                                                    <el-button icon="circle-cross" type="text" class="text-extra-light-silver" @click="removeTargetPromoPic(targetItem.id)"></el-button>
+                                                </div>
+                                            </el-form-item>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="spr spr-x"></div>
+                </template>
+            </template>
+            <template v-else>
+                <el-table :data="inputModel.targets" empty-text="暂未选择活动商品">
+                    <el-table-column prop="id" label="商品ID" width="100"></el-table-column>
+                    <el-table-column prop="name" label="商品名称"></el-table-column>
+                    <el-table-column label="酒仙价">
+                        <template scope="scope">¥ {{scope.row.price.toFixed(2)}}</template>
+                    </el-table-column>
+                    <el-table-column label="成本价">
+                        <template scope="scope">{{scope.row.costPrice!==null&&scope.row.costPrice!==undefined?("¥ "+scope.row.costPrice.toFixed(2)):"- -"}}</template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template scope="scope">
+                            <el-button size="small" type="text" @click="removeMainProduct(scope.row)">移除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+        </template>
+        <template v-if="inputModel.targetType=='CATEGORY'">
+            <div class="text-extra-light-silver" style="line-height: 50px;border: 1px solid #eee;padding: 15px 30px;font-size: 16px;">
+                <el-row>
+                    <el-col :span="6" v-for="item in inputModel.targets" style="margin-bottom: 5px">
+                        <el-tag :closable="true" :close-transition="true" :hit="true" type="primary" @close="removeMainProduct(item)">{{item.name}}</el-tag>
+                    </el-col>
+                </el-row>
+            </div>
+        </template>
+        <template v-if="inputModel.targetType=='BRAND'">
+            <el-table :data="inputModel.targets" empty-text="暂未选择活动商品">
+                <el-table-column prop="id" label="品牌ID" width="100"></el-table-column>
+                <el-table-column prop="name" label="品牌名称"></el-table-column>
+                <el-table-column label="操作">
+                    <template scope="scope">
+                        <el-button type="text" @click="removeMainProduct(scope.row)">移除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
+        <template v-if="inputModel.targetType=='WHOLE_STORE'">
+            <div class="text-extra-light-silver" style="line-height: 50px;border: 1px solid #eee;padding: 15px 30px;font-size: 16px;"><i class="el-icon-check"></i> 全场商品</div>
+        </template>
+    </template>
+
+    <template v-if="options.subProductSetter && options.subProductSetterType=='GIFT'">
+        <div class="spr"></div>
+        <div style="color: #1f2d3d;font-size: 14px"><i class="el-icon-circle-check"></i> 已选赠品{{options.subProductSetterDesc?"（"+options.subProductSetterDesc+"）":""}}</div>
+        <div class="spr"></div>
+        <template v-if="!inputModel.benefits[0].promise || !inputModel.benefits[0].promise.length || inputModel.benefits[0].promise.length == 0">
+            <div class="text-extra-light-silver" style="line-height: 50px;border: 1px dashed #C0CCDA;padding: 15px 30px;font-size: 16px;">暂未选择赠品</div>
+        </template>
+        <template v-else>
+            <template v-for="(giftItem, index) in inputModel.benefits[0].promise">
+                <div class="el-table no-border el-table--fit el-table--enable-row-hover el-table--enable-row-transition">
+                    <div class="el-table__body-wrapper">
+                        <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" style="width: 100%">
+                            <tr>
+                                <th class="is-leaf" width="100">
+                                    <div class="cell">商品ID</div>
+                                </th>
+                                <th class="is-leaf">
+                                    <div class="cell">商品名称</div>
+                                </th>
+                                <th class="is-leaf">
+                                    <div class="cell">酒仙价</div>
+                                </th>
+                                <th class="is-leaf">
+                                    <div class="cell">成本价</div>
+                                </th>
+                                <th class="is-leaf">
+                                    <div class="cell">操作</div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cell">{{giftItem.proId}}</div>
+                                </td>
+                                <td>
+                                    <div class="cell">{{giftItem.proName}}</div>
+                                </td>
+                                <td>
+                                    <div class="cell">¥ {{giftItem.proPrice.toFixed(2)}}</div>
+                                </td>
+                                <td>
+                                    <div class="cell">{{giftItem.costPrice!==null&&giftItem.costPrice!==undefined?("¥ "+giftItem.costPrice.toFixed(2)):"- -"}}</div>
+                                </td>
+                                <td>
+                                    <div class="cell">
+                                        <button type="button" class="el-button el-button--text el-button--small" @click="removeSubProduct(inputModel.benefits[0].promise[index])"><span>移除</span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" class="el-table__expanded-cell">
+                                    <el-form-item label="赠送数量" :prop="'benefits[0].promise['+index+'].giftCount'" :rules="validators.numberValidator" style="width: 300px">
+                                        <el-input size="small" placeholder="赠送数量" size="small" v-model="giftItem.giftCount" maxlength="5"></el-input>
+                                    </el-form-item>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="spr spr-x"></div>
+            </template>
+        </template>
+    </template>
+
+    <template v-if="options.subProductSetter && options.subProductSetterType=='FT'">
+        <div class="spr"></div>
+        <div style="color: #1f2d3d;font-size: 14px"><i class="el-icon-circle-check"></i> 已选换购品{{options.subProductSetterDesc?"（"+options.subProductSetterDesc+"）":""}}</div>
+        <div class="spr"></div>
+        <template v-if="!inputModel.benefits[0].promise || !inputModel.benefits[0].promise.length || inputModel.benefits[0].promise.length == 0">
+            <div class="text-extra-light-silver" style="line-height: 50px;border: 1px dashed #C0CCDA;padding: 15px 30px;font-size: 16px;">暂未选择换购品</div>
+        </template>
+        <template v-else>
+            <template v-for="(exchangeProItem, index) in inputModel.benefits[0].promise">
+                <div class="el-table no-border el-table--fit el-table--enable-row-hover el-table--enable-row-transition">
+                    <div class="el-table__body-wrapper">
+                        <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" style="width: 100%">
+                            <tr>
+                                <th class="is-leaf" width="100">
+                                    <div class="cell">商品ID</div>
+                                </th>
+                                <th class="is-leaf">
+                                    <div class="cell">商品名称</div>
+                                </th>
+                                <th class="is-leaf">
+                                    <div class="cell">酒仙价</div>
+                                </th>
+                                <th class="is-leaf">
+                                    <div class="cell">成本价</div>
+                                </th>
+                                <th class="is-leaf">
+                                    <div class="cell">操作</div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cell">{{exchangeProItem.proId}}</div>
+                                </td>
+                                <td>
+                                    <div class="cell">{{exchangeProItem.proName}}</div>
+                                </td>
+                                <td>
+                                    <div class="cell">¥ {{exchangeProItem.proPrice.toFixed(2)}}</div>
+                                </td>
+                                <td>
+                                    <div class="cell">{{exchangeProItem.costPrice!==null&&exchangeProItem.costPrice!==undefined?("¥ "+exchangeProItem.costPrice.toFixed(2)):"- -"}}</div>
+                                </td>
+                                <td>
+                                    <div class="cell">
+                                        <button type="button" class="el-button el-button--text el-button--small" @click="removeSubProduct(inputModel.benefits[0].promise[index])"><span>移除</span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" class="el-table__expanded-cell">
+                                    <el-form-item label="加价金额" :prop="'benefits[0].promise['+index+'].exchangePrice'" :rules="validators.priceValidator" style="width: 300px">
+                                        <el-input size="small" placeholder="加价金额" size="small" v-model="exchangeProItem.exchangePrice" maxlength="11"></el-input>
+                                    </el-form-item>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="spr spr-x"></div>
+            </template>
+        </template>
+    </template>
+
+</div>

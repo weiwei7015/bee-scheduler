@@ -1,0 +1,98 @@
+<div>
+    <template v-if="options.benefitItem">
+        <template v-if="options.multiLevel">
+            <el-form-item v-for="(item, index) in inputModel.benefits" :label="index==0?'优惠力度':''" style="width: 500px" required>
+                <el-col :span="10">
+                    <el-form-item :prop="'benefits['+index+'].threshold'" :rules="validators.thresholdValidator">
+                        <el-input size="small" v-model="item.threshold" :maxlength="benefitThresholdMaxInputLength">
+                            <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                            <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="2" class="text-center"><i class="el-icon-d-arrow-right text-extra-light-silver"></i></el-col>
+                <el-col :span="10">
+                    <el-form-item :prop="'benefits['+index+'].promise'" :rules="validators.promiseValidator">
+                        <el-input size="small" v-model="item.promise" :maxlength="benefitPromiseMaxInputLength">
+                            <template slot="prepend">{{benefitItemLayoutResult[1].prefix}}</template>
+                            <template slot="append">{{benefitItemLayoutResult[1].suffix}}</template>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="2" class="text-center" v-show="index!=0">
+                    <el-button icon="circle-cross" type="text" class="text-extra-light-silver" @click="removeBenefitsItem(item)"></el-button>
+                </el-col>
+            </el-form-item>
+            <el-form-item v-show="inputModel.benefits.length < 3">
+                <el-button size="small" icon="plus" class="text-extra-light-silver" @click="addBenefitsItem()">增加阶梯</el-button>
+            </el-form-item>
+        </template>
+        <template v-else>
+            <el-form-item label="优惠力度" v-if="benefitItemLayoutResult.length == 1" :prop="benefitItemLayoutResult[0].type=='threshold'?'benefits[0].threshold':'benefits[0].promise'" :rules="benefitItemLayoutResult[0].type=='threshold'?validators.thresholdValidator:validators.promiseValidator">
+
+                <template v-if="benefitItemLayoutResult[0].type=='threshold'">
+                    <template v-if="options.benefitThresholdPopover">
+                        <el-popover placement="right" width="200" trigger="focus" :content="options.benefitThresholdPopover">
+                            <el-input size="small" v-model="inputModel.benefits[0].threshold" style="width: 200px" :maxlength="benefitThresholdMaxInputLength" slot="reference">
+                                <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                                <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                            </el-input>
+                        </el-popover>
+                    </template>
+                    <template v-else>
+                        <el-input size="small" v-model="inputModel.benefits[0].threshold" style="width: 200px" :maxlength="benefitThresholdMaxInputLength">
+                            <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                            <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                        </el-input>
+                    </template>
+                </template>
+                <template v-if="benefitItemLayoutResult[0].type=='promise'">
+                    <template v-if="options.benefitPromisePopover">
+                        <el-popover placement="right" width="200" trigger="focus" :content="options.benefitPromisePopover">
+                            <el-input size="small" v-model="inputModel.benefits[0].promise" style="width: 200px" :maxlength="benefitPromiseMaxInputLength" slot="reference">
+                                <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                                <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                            </el-input>
+                        </el-popover>
+                    </template>
+                    <template v-else>
+                        <el-input size="small" v-model="inputModel.benefits[0].promise" style="width: 200px" :maxlength="benefitPromiseMaxInputLength">
+                            <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                            <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                        </el-input>
+                    </template>
+                </template>
+            </el-form-item>
+            <el-form-item label="优惠力度" style="width: 500px" v-if="benefitItemLayoutResult.length == 2" required>
+                <el-col :span="11">
+                    <el-form-item prop="benefits[0].threshold" :rules="validators.thresholdValidator">
+                        <el-input size="small" v-model="inputModel.benefits[0].threshold" :maxlength="benefitThresholdMaxInputLength">
+                            <template slot="prepend">{{benefitItemLayoutResult[0].prefix}}</template>
+                            <template slot="append">{{benefitItemLayoutResult[0].suffix}}</template>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="2" class="text-center"><i class="el-icon-d-arrow-right text-extra-light-silver"></i></el-col>
+                <el-col :span="11">
+                    <el-form-item prop="benefits[0].promise" :rules="validators.promiseValidator">
+                        <el-input size="small" v-model="inputModel.benefits[0].promise" :maxlength="benefitPromiseMaxInputLength">
+                            <template slot="prepend">{{benefitItemLayoutResult[1].prefix}}</template>
+                            <template slot="append">{{benefitItemLayoutResult[1].suffix}}</template>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+            </el-form-item>
+        </template>
+    </template>
+
+    <template v-if="options.loopItem">
+        <el-form-item :label="options.loopItemLabel">
+            <el-switch on-text="是" off-text="否" v-model="inputModel.loop"></el-switch>
+        </el-form-item>
+    </template>
+    <template v-if="options.couponForbbidenItem">
+        <el-form-item label="禁用优惠券" prop="delivery">
+            <el-switch on-text="是" off-text="否" v-model="inputModel.couponDisable"></el-switch>
+        </el-form-item>
+    </template>
+</div>

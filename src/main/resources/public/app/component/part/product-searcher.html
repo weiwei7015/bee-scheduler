@@ -1,0 +1,49 @@
+<div>
+    <div class="box bg-darkwhite">
+        <div class="box-body">
+            <el-form class="no-item-margin" :inline="true" :model="queryModel" label-width="70px">
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="商品ID" prop="proId">
+                            <el-input size="small" v-model="queryModel.proId" placeholder="商品ID" style="width: 70px"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品编号" prop="proSn">
+                            <el-input size="small" v-model="queryModel.proSn" placeholder="商品编号" style="width: 100px"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品名称" prop="proName">
+                            <el-input size="small" v-model="queryModel.proName" placeholder="商品名称"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button size="small" type="primary" @click="query">查询</el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+    </div>
+    <div class="spr"></div>
+    <div v-loading="queryLoading">
+        <el-table :data="queryResult.recordList" @selection-change="setSelectedItems" style="width: 100%">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="id" label="商品ID" width="80"></el-table-column>
+            <el-table-column prop="sn" label="商品编号"></el-table-column>
+            <el-table-column prop="name" label="商品名称" width="300"></el-table-column>
+            <el-table-column label="酒仙价">
+                <template scope="scope">¥ {{scope.row.shopPrice.toFixed(2)}}</template>
+            </el-table-column>
+            <el-table-column label="成本价">
+                <template scope="scope">{{scope.row.costPrice!==null&&scope.row.costPrice!==undefined?("¥ "+scope.row.costPrice.toFixed(2)):"- -"}}</template>
+            </el-table-column>
+            <el-table-column label="商品状态">
+                <template scope="scope">{{scope.row.onSaleType=="ON_SALE"?"已上架":scope.row.onSaleType=="OFF_SALE"?"未上架":"未审核"}}</template>
+            </el-table-column>
+        </el-table>
+        <template v-if="queryResult.recordList && queryResult.recordList.length > 0">
+            <div class="spr"></div>
+            <div>
+                <el-pagination class="no-padding pull-right" @current-change="changePage" :current-page="queryResult.pageNum" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.recordCount"></el-pagination>
+                <el-button type="primary" size="small" @click="handleSelectedItems" :disabled="selectedItems.length<=0">{{handleBtnLabel}}</el-button>
+            </div>
+        </template>
+    </div>
+</div>
