@@ -37,7 +37,7 @@ public class BootStrap {
 
     public static void main(String[] args) throws Exception {
         SpringApplication app = new SpringApplication(BootStrap.class);
-        app.setBanner((environment, sourceClass, out) -> out.append("=============$$$$$$===========\n"));
+//        app.setBanner((environment, sourceClass, out) -> out.append("=============$$$$$$===========\n"));
 
         Map<String, Object> defaultProperties = new HashMap<>();
         defaultProperties.put("spring.datasource.initialize", false);
