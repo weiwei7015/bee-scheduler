@@ -60,7 +60,7 @@ public class TaskHistoryDao extends DaoBase {
         return jdbcTemplate.update(sql);
     }
 
-    public Pageable<TaskHistory> query(String fireId, String taskName, String taskGroup, String state, Long beginTime, Long endTime, int page) {
+    public Pageable<TaskHistory> query(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, int page) {
         List<Object> args = new ArrayList<>();
         StringBuffer sqlQueryResultCount = new StringBuffer("SELECT COUNT(1) FROM TASK_HISTORY");
         StringBuffer sqlQueryResult = new StringBuffer("SELECT LIMIT ? ? * FROM TASK_HISTORY");
@@ -81,6 +81,10 @@ public class TaskHistoryDao extends DaoBase {
         if (state != null) {
             sqlWhere.append(" AND STATE = ?");
             args.add(state);
+        }
+        if (triggerType != null) {
+            sqlWhere.append(" AND TRIGGER_TYPE = ?");
+            args.add(triggerType);
         }
         if (beginTime != null) {
             sqlWhere.append(" AND START_TIME >= ?");

@@ -15,7 +15,7 @@ public interface TaskService {
 
     public int insertTaskHistory(TaskHistory taskHistory);
 
-    public Pageable<TaskHistory> queryTaskHistories(String fireId, String taskName, String taskGroup, String state, Long beginTime, Long endTime, Integer page);
+    public Pageable<TaskHistory> queryTaskHistories(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page);
 
     public TaskHistory queryHistory(String fireId);
 

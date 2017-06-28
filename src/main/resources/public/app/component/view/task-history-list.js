@@ -10,6 +10,7 @@ define(['text!view/task-history-list.html'], function (tpl) {
                     name: '',
                     group: '',
                     status: '',
+                    triggerType: '',
                     page: 1,
                     pageSize: 10
                 },
@@ -34,6 +35,7 @@ define(['text!view/task-history-list.html'], function (tpl) {
                 var queryModel = {
                     taskName: queryFormModel.name,
                     taskGroup: queryFormModel.group,
+                    triggerType: queryFormModel.triggerType,
                     state: queryFormModel.status
                 };
                 vm.load(queryModel);

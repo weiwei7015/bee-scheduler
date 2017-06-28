@@ -13,17 +13,24 @@
                 <el-input v-model="queryFormModel.name" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="任务组">
-                <el-select v-model="queryFormModel.group" placeholder="">
+                <el-select v-model="queryFormModel.group" placeholder="" style="width: 150px">
                     <el-option label="全部" value=""></el-option>
                     <el-option v-for="item in taskGroups" :label="item" :value="item"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="状态">
-                <el-select v-model="queryFormModel.status" placeholder="">
+                <el-select v-model="queryFormModel.status" placeholder="" style="width: 100px">
                     <el-option label="全部" value=""></el-option>
                     <el-option label="SUCCESS" value="SUCCESS"></el-option>
                     <el-option label="FAIL" value="FAIL"></el-option>
                     <el-option label="VETOED" value="VETOED"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="触发方式">
+                <el-select v-model="queryFormModel.triggerType" placeholder="" style="width: 100px">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="调度" value="1"></el-option>
+                    <el-option label="手动" value="2"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>

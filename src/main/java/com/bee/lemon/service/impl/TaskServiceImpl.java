@@ -14,47 +14,47 @@ import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-	@Autowired
-	private TaskHistoryDao taskHistoryDao;
+    @Autowired
+    private TaskHistoryDao taskHistoryDao;
 
-	@Override
-	public int insertTaskHistories(List<TaskHistory> taskHistoryList) {
-		return taskHistoryDao.insert(taskHistoryList);
-	}
+    @Override
+    public int insertTaskHistories(List<TaskHistory> taskHistoryList) {
+        return taskHistoryDao.insert(taskHistoryList);
+    }
 
-	@Override
-	public int insertTaskHistory(TaskHistory taskHistory) {
-		List<TaskHistory> histories = new ArrayList<>();
-		histories.add(taskHistory);
-		return insertTaskHistories(histories);
-	}
+    @Override
+    public int insertTaskHistory(TaskHistory taskHistory) {
+        List<TaskHistory> histories = new ArrayList<>();
+        histories.add(taskHistory);
+        return insertTaskHistories(histories);
+    }
 
-	@Override
-	public Pageable<TaskHistory> queryTaskHistories(String fireId, String taskName, String taskGroup, String state, Long beginTime, Long endTime, Integer page) {
-		// 默认值处理
-		if (page == null) {
-			page = 1;
-		}
-		fireId = StringUtils.trimToNull(fireId);
-		taskName = StringUtils.trimToNull(taskName);
-		taskGroup = StringUtils.trimToNull(taskGroup);
-		state = StringUtils.trimToNull(state);
-		return taskHistoryDao.query(fireId, taskName, taskGroup, state, beginTime, endTime, page);
-	}
+    @Override
+    public Pageable<TaskHistory> queryTaskHistories(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) {
+        // 默认值处理
+        if (page == null) {
+            page = 1;
+        }
+        fireId = StringUtils.trimToNull(fireId);
+        taskName = StringUtils.trimToNull(taskName);
+        taskGroup = StringUtils.trimToNull(taskGroup);
+        state = StringUtils.trimToNull(state);
+        return taskHistoryDao.query(fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
+    }
 
-	@Override
-	public TaskHistory queryHistory(String fireId) {
-		return taskHistoryDao.query(fireId);
-	}
+    @Override
+    public TaskHistory queryHistory(String fireId) {
+        return taskHistoryDao.query(fireId);
+    }
 
-	@Override
-	public List<String> getTaskHistoryGroups() {
-		return taskHistoryDao.getTaskHistoryGroups();
-	}
+    @Override
+    public List<String> getTaskHistoryGroups() {
+        return taskHistoryDao.getTaskHistoryGroups();
+    }
 
-	@Override
-	public int clearHistoryBefore(Date date) {
-		return taskHistoryDao.clearBefore(date);
-	}
+    @Override
+    public int clearHistoryBefore(Date date) {
+        return taskHistoryDao.clearBefore(date);
+    }
 
 }

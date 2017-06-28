@@ -13,13 +13,13 @@
                 <el-input v-model="queryFormModel.name" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="任务组">
-                <el-select v-model="queryFormModel.group" placeholder="">
+                <el-select v-model="queryFormModel.group" placeholder="" style="width: 150px">
                     <el-option label="全部" value=""></el-option>
                     <el-option v-for="item in taskGroups" :label="item" :value="item"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="状态">
-                <el-select v-model="queryFormModel.status" placeholder="">
+                <el-select v-model="queryFormModel.status" placeholder="" style="width: 100px">
                     <el-option label="全部" value="ALL"></el-option>
                     <el-option label="调度中" value="NORMAL"></el-option>
                     <el-option label="已暂停" value="PAUSED"></el-option>
@@ -29,7 +29,7 @@
                 <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button @click="newTaskDialogVisible = true">新建任务</el-button>
+                <el-button @click="newTaskDialogVisible = true">创建任务</el-button>
             </el-form-item>
         </el-form>
 
