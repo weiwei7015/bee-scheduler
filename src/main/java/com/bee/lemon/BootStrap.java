@@ -2,7 +2,6 @@ package com.bee.lemon;
 
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.lemon.core.SystemInitializer;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
@@ -43,10 +40,8 @@ public class BootStrap {
         defaultProperties.put("spring.datasource.initialize", false);
 
 
-        // 是否需要初始化数据库
-        if (ArrayUtils.contains(args, "--initdb")) {
-            defaultProperties.put("spring.datasource.initialize", true);
-        }
+
+
 
         app.setDefaultProperties(defaultProperties);
 
