@@ -98,6 +98,7 @@ define(['text!view/task-list.html'], function (tpl) {
                 vm.currentQueryModel = queryModel;
 
                 vm.queryLoading = true;
+                vm.taskList = [];
                 vm.$http.get("/task/list", {params: queryModel}).then(function (re) {
                     vm.queryLoading = false;
                     vm.taskList = re.body.data;
