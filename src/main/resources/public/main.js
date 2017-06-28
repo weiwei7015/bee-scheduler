@@ -12,7 +12,7 @@ require.config({
         smoothScroll: '/public/lib/smooth-scroll.min',
         text: '/public/lib/text'
     },
-    urlArgs: 'v=2017060501'
+    urlArgs: 'v=2017062801'
 });
 
 require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll'], function (Vue, VueRouter, VueResource, Elem, moment, smoothScroll) {
