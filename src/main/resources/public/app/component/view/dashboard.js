@@ -1,4 +1,4 @@
-define(['text!view/home.html', 'ace/ace'], function (tpl, ace) {
+define(['text!view/dashboard.html', 'ace/ace'], function (tpl, ace) {
 
     //定义子组件
     var ace_editor = function (resolver) {

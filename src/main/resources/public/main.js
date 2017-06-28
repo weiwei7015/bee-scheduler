@@ -33,20 +33,8 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
         index: function (resolver) {
             require(['view/index'], resolver);
         },
-        manual: function (resolver) {
-            require(['view/manual'], resolver);
-        },
-        promo_list: function (resolver) {
-            require(['view/promo-list'], resolver);
-        },
-        promo_edit: function (resolver) {
-            require(['view/promo-edit'], resolver);
-        },
-        promo_detail: function (resolver) {
-            require(['view/promo-detail'], resolver);
-        },
-        home: function (resolver) {
-            require(['view/home'], resolver);
+        dashboard: function (resolver) {
+            require(['view/dashboard'], resolver);
         },
         taskList: function (resolver) {
             require(['view/task-list'], resolver);
@@ -69,7 +57,8 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
             {
                 path: '/', component: views.index,
                 children: [
-                    {path: '', component: views.home},
+                    {path: '', redirect: '/task/list'},
+                    {path: '/dashboard', component: views.dashboard},
                     {path: '/task/list', component: views.taskList},
                     {path: '/task/history/list', component: views.taskHistoryList},
                     {path: '/task/history/detail/:fireId', component: views.taskHistoryDetail},
