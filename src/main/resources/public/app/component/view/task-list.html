@@ -35,43 +35,38 @@
 
         <el-row v-loading="queryLoading">
             <el-col :span="24">
-                <el-table stripe :data="taskList">
-                    <el-table-column prop="jobDetail.fullName" label="任务"></el-table-column>
-                    <el-table-column prop="jobComponent.name" label="组件"></el-table-column>
-                    <el-table-column prop="triggerState" label="状态" width="90">
-                        <template scope="scope">
-                            <el-tag v-if="scope.row.triggerState === 'NORMAL'" type="primary" close-transition>调度中</el-tag>
-                            <el-tag v-if="scope.row.triggerState === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="trigger.cronExpression" label="执行计划" width="120"></el-table-column>
-                    <el-table-column label="下次执行" width="170">
-                        <template scope="scope">{{$moment(scope.row.trigger.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
-                    </el-table-column>
-                    <el-table-column prop="trigger.nextFireTime" label="操作">
-                        <template scope="scope">
-                            <el-button type="text" @click="openEditTaskDialog(scope.row.jobDetail.name,scope.row.jobDetail.group)">详细</el-button>
-                            <el-button type="text" v-if="scope.row.triggerState === 'NORMAL'" @click="pauseTask(scope.row.jobDetail.name,scope.row.jobDetail.group)">暂停</el-button>
-                            <el-button type="text" v-if="scope.row.triggerState === 'PAUSED'" @click="resumeTask(scope.row.jobDetail.name,scope.row.jobDetail.group)">恢复</el-button>
-                            <el-button type="text" @click="executeTask(scope.row.jobDetail.name,scope.row.jobDetail.group)">执行</el-button>
-                            <el-button type="text" @click="deleteTask(scope.row.jobDetail.name,scope.row.jobDetail.group)">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-
-
+                <template v-if="taskList.length == 0">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="text-center text-text-silver">暂无任务，立即
+                                <el-button type="text" @click="newTaskDialogVisible = true">创建任务</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
                 <div class="spr"></div>
                 <template v-for="item in taskList">
                     <div class="box">
                         <div class="box-body">
-                            <h4 class="no-margin">
-                                <el-tag v-if="item.triggerState === 'NORMAL'" type="primary" close-transition>调度中</el-tag>
+                            <el-row>
+                                <el-col :span="12">
+                                    <h3 class="no-margin" style="line-height: 34px">{{item.jobDetail.fullName}}<span class="text-gray">（{{item.jobComponent.name}}）</span></h3>
+                                </el-col>
+                                <el-col :span="12" class="text-right">
+                                    <el-button type="text" @click="openEditTaskDialog(item.jobDetail.name,item.jobDetail.group)">详细</el-button>
+                                    <el-button type="text" v-if="item.triggerState === 'NORMAL'" @click="pauseTask(item.jobDetail.name,item.jobDetail.group)">暂停</el-button>
+                                    <el-button type="text" v-if="item.triggerState === 'PAUSED'" @click="resumeTask(item.jobDetail.name,item.jobDetail.group)">恢复</el-button>
+                                    <el-button type="text" @click="executeTask(item.jobDetail.name,item.jobDetail.group)">执行</el-button>
+                                    <el-button type="text" @click="deleteTask(item.jobDetail.name,item.jobDetail.group)">删除</el-button>
+                                </el-col>
+                            </el-row>
+                            <div>
+                                执行计划：{{item.trigger.cronExpression}}
+                                <el-tag v-if="item.triggerState === 'NORMAL'" type="primary" close-transition>调度中，下次执行：{{$moment(item.trigger.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</el-tag>
                                 <el-tag v-if="item.triggerState === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>
-                                {{item.jobDetail.fullName}}
-                            </h4>
-                            <div class="spr"></div>
-                            <span>{{item.trigger.cronExpression}}</span> | <span>{{$moment(item.trigger.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</span>
+                            </div>
                         </div>
+                        <div class="box-footer"><span class="text-silver">{{item.trigger.description||"无描述"}}</span></div>
                     </div>
                     <div class="spr"></div>
                 </template>
