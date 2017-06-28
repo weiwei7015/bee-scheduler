@@ -2,6 +2,8 @@ package com.bee.lemon;
 
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.lemon.core.SystemInitializer;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,8 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.regex.Pattern;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class BootStrap {
@@ -34,21 +34,20 @@ public class BootStrap {
 
     public static void main(String[] args) throws Exception {
         SpringApplication app = new SpringApplication(BootStrap.class);
-//        app.setBanner((environment, sourceClass, out) -> out.append("=============$$$$$$===========\n"));
 
-        Map<String, Object> defaultProperties = new HashMap<>();
-        defaultProperties.put("spring.datasource.initialize", false);
-
-
-
-
-
-        app.setDefaultProperties(defaultProperties);
+        //检查启动参数
+        StringBuilder stringBuilder = new StringBuilder(" ");
+        for (String arg : args) {
+            stringBuilder.append(arg + " ");
+        }
+        if (!Pattern.matches(".* --datafile=\\S+ .*", stringBuilder)) {
+            throw new RuntimeException("--datafile must be specified in args");
+        }
 
         app.run(args);
     }
 
-    //    @Bean
+//    @Bean
 //    public static PropertySourcesPlaceholderConfigurer PropertySourcesPlaceholderConfigurer() {
 //        return new PropertySourcesPlaceholderConfigurer();
 //    }
