@@ -1,5 +1,7 @@
 package com.bee.lemon;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.lemon.core.SystemInitializer;
 import com.google.common.collect.Lists;
@@ -58,7 +60,11 @@ public class BootStrap {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-                converters.add(new FastJsonHttpMessageConverter());
+                FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
+                FastJsonConfig fastJsonConfig = new FastJsonConfig();
+                fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
+                fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+                converters.add(fastJsonHttpMessageConverter);
             }
         };
     }
