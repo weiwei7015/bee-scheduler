@@ -18,9 +18,7 @@ import org.quartz.JobExecutionException;
 import java.io.IOException;
 
 /**
- * @author weiwei
- *         <p>
- *         用于发起HTTP请求
+ * @author weiwei 用于发起HTTP请求
  */
 public class HttpClientJobComponent extends JobComponent {
 
@@ -92,7 +90,7 @@ public class HttpClientJobComponent extends JobComponent {
             if (params.containsKey("cookies")) {
                 for (Object cookie : params.getJSONArray("cookies").toArray()) {
                     JSONObject cookieJson = JSONObject.parseObject(cookie.toString());
-                    cookiesStr.append(cookieJson.getString("n") + "=" + cookieJson.getString("v")).append("; ");
+                    cookiesStr.append(cookieJson.getString("n")).append("=").append(cookieJson.getString("v")).append("; ");
                 }
                 Header cookieHeader = new BasicHeader("Cookie", cookiesStr.toString());
                 request.addHeader(cookieHeader);
@@ -111,8 +109,7 @@ public class HttpClientJobComponent extends JobComponent {
                 }
             }
         } catch (Exception e) {
-            JobExecutionException jobExecutionException = new JobExecutionException(e);
-            throw jobExecutionException;
+            throw new JobExecutionException(e);
         }
     }
 

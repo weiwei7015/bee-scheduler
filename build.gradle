@@ -30,6 +30,7 @@ dependencies {
 //    compile('hsqldb:hsqldb:1.8.0.10')
     compile('joda-time:joda-time:2.9.9')
     compile('org.apache.httpcomponents:httpclient:4.5.3')
+    compile('com.squareup.okhttp3:okhttp:3.8.1')
     compile('com.alibaba:fastjson:1.2.33')
     compile('com.alibaba:dubbo:2.5.3') {
         exclude group: 'org.springframework'
