@@ -3,6 +3,9 @@ package com.bee.lemon.dao;
 import com.bee.lemon.model.Pageable;
 import com.bee.lemon.model.TaskHistory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +23,7 @@ import java.util.List;
  * @author weiwei1
  */
 @Repository
+//@ConditionalOnProperty(name = "", havingValue = "")
 public class TaskHistoryDao extends DaoBase {
 
     @Autowired

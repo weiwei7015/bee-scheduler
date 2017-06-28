@@ -77,6 +77,7 @@ public class BootStrap {
         schedulerFactoryBean.setSchedulerName("DefaultQuartzScheduler");
         Properties quartzProperties = new Properties();
         quartzProperties.setProperty("org.quartz.jobStore.useProperties", "true");
+        quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
         schedulerFactoryBean.setQuartzProperties(quartzProperties);
         return schedulerFactoryBean;
     }
