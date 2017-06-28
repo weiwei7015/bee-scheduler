@@ -252,6 +252,7 @@ pre.log {
     word-break: break-all;
     word-wrap: break-word;
     overflow: auto;
+    white-space: pre-wrap;
     /*border: 1px solid #ccc;*/
     /*border-radius: 4px;*/
 }
