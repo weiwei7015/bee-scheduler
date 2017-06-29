@@ -36,11 +36,9 @@
 
         <div v-loading="queryLoading">
             <template v-if="!queryResult.result || queryResult.result.length == 0">
-                <div class="box">
+                <div class="box no-border">
                     <div class="box-body">
-                        <div class="text-center text-text-silver">暂无任务，立即
-                            <el-button type="text" @click="newTaskDialogVisible = true">创建任务</el-button>
-                        </div>
+                        <div class="text-center text-text-silver">暂无记录</div>
                     </div>
                 </div>
             </template>

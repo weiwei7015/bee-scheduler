@@ -170,10 +170,6 @@ h4 {
     border-top: 1px solid #D3DCE6;
 }
 
-.box .box-header.no-border, .box-footer.no-border {
-    border-bottom: none;
-}
-
 /******* form *******/
 .form-label-muted .el-form-item__label {
     color: #99A9BF;
@@ -292,6 +288,10 @@ pre.log {
 
 .bg-orange {
     background-color: #f19c00;
+}
+
+.no-border {
+    border: none !important;
 }
 
 div.hr {
