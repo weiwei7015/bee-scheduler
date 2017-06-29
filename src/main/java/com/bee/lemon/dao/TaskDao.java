@@ -63,6 +63,7 @@ public class TaskDao extends DaoBase {
             task.setStartTime(rs.getLong("startTime"));
             task.setEndTime(rs.getLong("endTime"));
             task.setMisfireInstr(rs.getInt("misfireInstr"));
+            task.setState(rs.getString("state"));
             task.setDescription(rs.getString("description"));
 
             try {
