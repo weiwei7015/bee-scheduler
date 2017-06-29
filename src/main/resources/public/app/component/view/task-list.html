@@ -58,17 +58,17 @@
                                 <h3 class="no-margin" style="line-height: 34px">{{item.group+"."+item.name}}<span class="text-gray">（{{item.jobComponent}}）</span></h3>
                             </el-col>
                             <el-col :span="12" class="text-right">
-                                <el-button type="text" v-if="item.state !== 'PAUSED'" @click="pauseTask(item.name,item.group)">暂停</el-button>
-                                <el-button type="text" v-if="item.state === 'PAUSED'" @click="resumeTask(item.name,item.group)">恢复</el-button>
+                                <el-button type="text" v-if="item.state !== 'PAUSED' && item.state !== 'PAUSED_BLOCKED'" @click="pauseTask(item.name,item.group)">暂停</el-button>
+                                <el-button type="text" v-if="item.state === 'PAUSED' || item.state === 'PAUSED_BLOCKED'" @click="resumeTask(item.name,item.group)">恢复</el-button>
                                 <el-button type="text" @click="executeTask(item.name,item.group)">执行</el-button>
                                 <el-button type="text" @click="openEditTaskDialog(item.name,item.group)">编辑</el-button>
                                 <el-button type="text" @click="deleteTask(item.name,item.group)">删除</el-button>
                             </el-col>
                         </el-row>
                         <div>
-                            <span class="text-silver">执行计划：</span>{{item.cron}} | <span class="text-silver">下次执行：</span>{{$moment(item.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}} | <span class="text-silver">状态：</span><el-tag type="gray" close-transition>{{item.state}}</el-tag>
-                            <!--<el-tag v-if="item.state !== 'PAUSED'" type="primary" close-transition>调度中</el-tag>-->
-                            <!--<el-tag v-if="item.state === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>-->
+                            <span class="text-silver">执行计划：</span>{{item.cron}} | <span class="text-silver">下次执行：</span>{{$moment(item.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}} |
+                            <span class="text-silver">状态：</span>
+                            <el-tag :type="item.state == 'WAITING'?'primary':item.state == 'ACQUIRED'?'success':item.state == 'PAUSED'?'warning':'gray'" close-transition>{{item.state}}</el-tag>
                         </div>
                     </div>
                     <div class="box-footer"><span class="text-silver">{{item.description||"无描述"}}</span></div>
