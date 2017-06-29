@@ -4,8 +4,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.lemon.core.SystemInitializer;
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,8 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
@@ -42,8 +41,8 @@ public class BootStrap {
         for (String arg : args) {
             stringBuilder.append(arg + " ");
         }
-        if (!Pattern.matches(".* --datafile=\\S+ .*", stringBuilder)) {
-            throw new RuntimeException("--datafile must be specified in args");
+        if (!Pattern.matches(".* --dburl=\\S+ .*", stringBuilder)) {
+            throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false)");
         }
 
         app.run(args);

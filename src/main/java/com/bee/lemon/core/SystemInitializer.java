@@ -34,7 +34,7 @@ public class SystemInitializer {
     }
 
     private void initEmbeddedTask() throws SchedulerException {
-        logger.info("初始化内置任务(EmbeddedClearHistoryJob)");
+        logger.info("init embedded task(EmbeddedClearHistoryJob) ...");
         Scheduler scheduler = applicationContext.getBean(Scheduler.class);
 
         String name = "ClearTaskHistoryJob";
@@ -58,7 +58,7 @@ public class SystemInitializer {
 
     // 初始化Job组件
     public void initJobComponents() throws Exception {
-        logger.info("初始化Job组件");
+        logger.info("init job component ...");
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         SimpleMetadataReaderFactory simpleMetadataReaderFactory = new SimpleMetadataReaderFactory(resourcePatternResolver);
         Resource[] resources = resourcePatternResolver.getResources("classpath*:com/bee/lemon/core/job/*.class");
@@ -74,22 +74,23 @@ public class SystemInitializer {
 
     // 初始化Scheduler
     public void initScheduler() throws SchedulerException {
-        logger.info("初始化Scheduler");
+        logger.info("init Scheduler ...");
         // 获取Scheduler
         Scheduler scheduler = applicationContext.getBean(Scheduler.class);
         // 注册监听
         scheduler.getListenerManager().addJobListener(new TaskEventRecorder());
         scheduler.getListenerManager().addTriggerListener(new TaskEventRecorder());
         scheduler.getListenerManager().addSchedulerListener(new TaskEventRecorder());
-        // 检查scheduler状态
-        for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.<JobKey>anyGroup())) {
-            try {
-                logger.info(Class.forName(scheduler.getJobDetail(jobKey).getJobClass().getName()) + "-正常");
-            } catch (ClassNotFoundException | JobPersistenceException e) {
-                logger.warn("" + jobKey + "相关的Job组件已卸载，将被删除");
-                scheduler.deleteJob(jobKey);
-            }
-        }
+//        // 检查scheduler状态
+//        for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.<JobKey>anyGroup())) {
+//            try {
+//                Class<?> jobClass = Class.forName(scheduler.getJobDetail(jobKey).getJobClass().getName());
+//                logger.info(jobKey + "-正常");
+//            } catch (ClassNotFoundException | JobPersistenceException e) {
+//                logger.warn("" + jobKey + "相关的Job组件已卸载，将被删除");
+//                scheduler.deleteJob(jobKey);
+//            }
+//        }
         // 启动Scheduler
         scheduler.startDelayed(5);
     }

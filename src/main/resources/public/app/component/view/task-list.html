@@ -50,7 +50,7 @@
                     <div class="box-body">
                         <el-row>
                             <el-col :span="12">
-                                <h3 class="no-margin" style="line-height: 34px">{{item.name}}<span class="text-gray">（{{item.group}}）</span></h3>
+                                <h3 class="no-margin" style="line-height: 34px">{{item.group+"."+item.name}}<span class="text-gray">（{{item.jobComponent}}）</span></h3>
                             </el-col>
                             <el-col :span="12" class="text-right">
                                 <el-button type="text" v-if="item.state !== 'PAUSED'" @click="pauseTask(item.name,item.group)">暂停</el-button>
