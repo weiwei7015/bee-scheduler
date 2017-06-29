@@ -102,13 +102,14 @@ public class DubboInvokerJobComponent extends JobComponent {
         } else {
             ret.append(referenceConfig.getRegistry()).append("/");
         }
-        if (!StringUtils.isBlank(referenceConfig.getGroup())) {
+        if (StringUtils.isNotBlank(referenceConfig.getGroup())) {
             ret.append(referenceConfig.getGroup()).append("/");
         }
         ret.append(iName);
-        if (!StringUtils.isBlank(referenceConfig.getVersion())) {
+        if (StringUtils.isNotBlank(referenceConfig.getVersion())) {
             ret.append(":").append(referenceConfig.getVersion());
         }
+
         return ret.toString();
     };
 
@@ -190,7 +191,7 @@ public class DubboInvokerJobComponent extends JobComponent {
 
             ReferenceConfigCache referenceConfigCache = ReferenceConfigCache.getCache("DEFAULT", REFERENCE_CONFIG_CACHE_KEY_GENERATOR);
             GenericService genericService = referenceConfigCache.get(referenceConfig);
-            // GenericService genericService = referenceConfig.get();
+//             GenericService genericService = referenceConfig.get();
 
             // 解析类型别名
             JSONArray paramTypeJsonArray = methodParamsType;
