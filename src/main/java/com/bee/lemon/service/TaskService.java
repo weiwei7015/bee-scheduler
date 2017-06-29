@@ -2,24 +2,29 @@ package com.bee.lemon.service;
 
 
 import com.bee.lemon.model.Pageable;
+import com.bee.lemon.model.Task;
 import com.bee.lemon.model.TaskHistory;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * @author weiwei1
+ * @author weiwei
  */
 public interface TaskService {
-    public int insertTaskHistories(List<TaskHistory> taskHistoryList);
+    int insertTaskHistories(List<TaskHistory> taskHistoryList);
 
-    public int insertTaskHistory(TaskHistory taskHistory);
+    int insertTaskHistory(TaskHistory taskHistory);
 
-    public Pageable<TaskHistory> queryTaskHistories(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page);
+    Pageable<Task> queryTask(String name, String group, String state, int page);
 
-    public TaskHistory queryHistory(String fireId);
+    Pageable<TaskHistory> queryTaskHistory(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page);
 
-    public List<String> getTaskHistoryGroups();
+    Task getTask(String name, String group);
 
-    public int clearHistoryBefore(Date date);
+    TaskHistory getTaskHistory(String fireId);
+
+    List<String> getTaskHistoryGroups();
+
+    int clearHistoryBefore(Date date);
 }

@@ -1,11 +1,10 @@
 package com.bee.lemon.dao;
 
+import com.bee.lemon.dao.DaoBase;
 import com.bee.lemon.model.Pageable;
 import com.bee.lemon.model.TaskHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Condition;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,14 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author weiwei1
+ * @author weiwei
  */
 @Repository
-//@ConditionalOnProperty(name = "", havingValue = "")
 public class TaskHistoryDao extends DaoBase {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     public int insert(final List<TaskHistory> taskHistoryList) {
         String sql = "INSERT INTO TASK_HISTORY(FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -66,10 +61,10 @@ public class TaskHistoryDao extends DaoBase {
 
     public Pageable<TaskHistory> query(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, int page) {
         List<Object> args = new ArrayList<>();
-        StringBuffer sqlQueryResultCount = new StringBuffer("SELECT COUNT(1) FROM TASK_HISTORY");
-        StringBuffer sqlQueryResult = new StringBuffer("SELECT LIMIT ? ? * FROM TASK_HISTORY");
+        StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM TASK_HISTORY");
+        StringBuilder sqlQueryResult = new StringBuilder("SELECT * FROM TASK_HISTORY");
 
-        StringBuffer sqlWhere = new StringBuffer(" WHERE 1=1");
+        StringBuilder sqlWhere = new StringBuilder(" WHERE 1=1");
         if (fireId != null) {
             sqlWhere.append(" AND FIRE_ID = ?");
             args.add(fireId);
@@ -101,11 +96,9 @@ public class TaskHistoryDao extends DaoBase {
         // 查询记录总数
         Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());
         // 查询记录
-        // sqlQueryResult.append(sqlWhere).append(" ORDER BY START_TIME DESC LIMIT ?,?");
-
-        args.add(0, (page - 1) * getPageSize());
-        args.add(1, getPageSize());
-        sqlQueryResult.append(sqlWhere).append(" ORDER BY START_TIME DESC");
+        sqlQueryResult.append(sqlWhere).append(" ORDER BY START_TIME DESC LIMIT ?,?");
+        args.add((page - 1) * getPageSize());
+        args.add(getPageSize());
         List<TaskHistory> result = jdbcTemplate.query(sqlQueryResult.toString(), new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), args.toArray());
 
         return new Pageable<>(page, getPageSize(), resultTotal, result);
@@ -113,8 +106,7 @@ public class TaskHistoryDao extends DaoBase {
 
     public TaskHistory query(String fireId) {
         String sql = "SELECT * FROM TASK_HISTORY WHERE FIRE_ID = ?";
-        TaskHistory history = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), fireId);
-        return history;
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), fireId);
     }
 
     public List<String> getTaskHistoryGroups() {

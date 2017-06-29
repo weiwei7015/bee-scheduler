@@ -36,7 +36,8 @@ define(['text!view/task-history-list.html'], function (tpl) {
                     taskName: queryFormModel.name,
                     taskGroup: queryFormModel.group,
                     triggerType: queryFormModel.triggerType,
-                    state: queryFormModel.status
+                    state: queryFormModel.status,
+                    page: 1
                 };
                 vm.load(queryModel);
             },

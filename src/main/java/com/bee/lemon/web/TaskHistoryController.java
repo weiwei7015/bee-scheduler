@@ -7,9 +7,7 @@ import com.bee.lemon.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +33,7 @@ public class TaskHistoryController {
     public HttpResponseBodyWrapper taskHistoryList(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) {
         Map<String, Object> model = new HashMap<>();
         // 查询任务历史信息
-        Pageable<TaskHistory> result = taskService.queryTaskHistories(fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
+        Pageable<TaskHistory> result = taskService.queryTaskHistory(fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
         return new HttpResponseBodyWrapper(result);
     }
 
@@ -43,6 +41,6 @@ public class TaskHistoryController {
     @GetMapping("/task/history/detail")
     public HttpResponseBodyWrapper taskHistoryDetail(String fireId) throws Exception {
         Map<String, Object> model = new HashMap<>();
-        return new HttpResponseBodyWrapper(taskService.queryHistory(fireId));
+        return new HttpResponseBodyWrapper(taskService.getTaskHistory(fireId));
     }
 }

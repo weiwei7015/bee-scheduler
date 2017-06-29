@@ -1,7 +1,9 @@
 package com.bee.lemon.service.impl;
 
+import com.bee.lemon.dao.TaskDao;
 import com.bee.lemon.dao.TaskHistoryDao;
 import com.bee.lemon.model.Pageable;
+import com.bee.lemon.model.Task;
 import com.bee.lemon.model.TaskHistory;
 import com.bee.lemon.service.TaskService;
 import org.apache.commons.lang3.StringUtils;
@@ -14,8 +16,11 @@ import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
+
     @Autowired
     private TaskHistoryDao taskHistoryDao;
+    @Autowired
+    private TaskDao taskDao;
 
     @Override
     public int insertTaskHistories(List<TaskHistory> taskHistoryList) {
@@ -30,7 +35,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Pageable<TaskHistory> queryTaskHistories(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) {
+    public Pageable<TaskHistory> queryTaskHistory(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) {
         // 默认值处理
         if (page == null) {
             page = 1;
@@ -43,7 +48,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskHistory queryHistory(String fireId) {
+    public TaskHistory getTaskHistory(String fireId) {
         return taskHistoryDao.query(fireId);
     }
 
@@ -57,4 +62,14 @@ public class TaskServiceImpl implements TaskService {
         return taskHistoryDao.clearBefore(date);
     }
 
+
+    @Override
+    public Pageable<Task> queryTask(String name, String group, String state, int page) {
+        return taskDao.query(name, group, state, page);
+    }
+
+    @Override
+    public Task getTask(String name, String group) {
+        return taskDao.get(name, group);
+    }
 }

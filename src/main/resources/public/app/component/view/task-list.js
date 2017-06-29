@@ -33,10 +33,10 @@ define(['text!view/task-list.html'], function (tpl) {
                 queryFormModel: {
                     name: '',
                     group: '',
-                    status: 'ALL'
+                    status: ''
                 },
                 currentQueryModel: null,
-                taskList: [],
+                queryResult: {},
                 taskGroups: [],
                 jobComponentList: {},
                 newTaskDialogVisible: false,
@@ -88,7 +88,8 @@ define(['text!view/task-list.html'], function (tpl) {
                 var queryModel = {
                     taskName: queryFormModel.name,
                     taskGroup: queryFormModel.group,
-                    state: queryFormModel.status
+                    state: queryFormModel.status,
+                    page: 1
                 };
                 vm.load(queryModel);
             },
@@ -98,16 +99,20 @@ define(['text!view/task-list.html'], function (tpl) {
                 vm.currentQueryModel = queryModel;
 
                 vm.queryLoading = true;
-                vm.taskList = [];
+                vm.queryResult = {};
                 vm.$http.get("/task/list", {params: queryModel}).then(function (re) {
                     vm.queryLoading = false;
-                    vm.taskList = re.body.data;
+                    vm.queryResult = re.body.data;
                 }, function () {
                     vm.queryLoading = false;
-                    vm.taskList = [];
+                    vm.queryResult = {};
                 });
             },
             reload: function () {
+                this.load(this.currentQueryModel);
+            },
+            changePage: function (val) {
+                this.currentQueryModel.page = val;
                 this.load(this.currentQueryModel);
             },
             postNewTask: function () {

@@ -6,7 +6,9 @@ import com.bee.lemon.core.RamStore;
 import com.bee.lemon.core.job.JobComponent;
 import com.bee.lemon.exception.BizzException;
 import com.bee.lemon.model.HttpResponseBodyWrapper;
+import com.bee.lemon.model.Pageable;
 import com.bee.lemon.model.Task;
+import com.bee.lemon.service.TaskService;
 import com.bee.lemon.util.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
@@ -27,34 +29,37 @@ public class TaskController {
     @Autowired
     private Scheduler scheduler;
 
+    @Autowired
+    private TaskService taskService;
+
     @ResponseBody
     @GetMapping("/task/list")
-    public HttpResponseBodyWrapper task(String state, String taskName, String taskGroup) throws Exception {
-        // 默认查询ALL状态的任务
-        state = StringUtils.isEmpty(state) ? "ALL" : state.toUpperCase();
-        taskName = StringUtils.trimToEmpty(taskName);
-        taskGroup = StringUtils.trimToEmpty(taskGroup);
+    public HttpResponseBodyWrapper task(String state, String taskName, String taskGroup, Integer page) throws Exception {
+        state = StringUtils.trimToNull(state);
+        taskName = StringUtils.trimToNull(taskName);
+        taskGroup = StringUtils.trimToNull(taskGroup);
+        page = page == null ? 1 : page;
 
-        List<Task> taskList = new ArrayList<>();
+//        List<Task> taskList = new ArrayList<>();
+//        Set<TriggerKey> triggerKeys;
+//        if (StringUtils.isEmpty(taskGroup)) {
+//            triggerKeys = scheduler.getTriggerKeys(GroupMatcher.<TriggerKey>anyGroup());
+//        } else {
+//            triggerKeys = scheduler.getTriggerKeys(GroupMatcher.<TriggerKey>groupEquals(taskGroup));
+//        }
+//        for (TriggerKey triggerKey : triggerKeys) {
+//            Trigger trigger = scheduler.getTrigger(triggerKey);
+//            JobDetail jobDetail = scheduler.getJobDetail(trigger.getJobKey());
+//            if (JobComponent.class.isAssignableFrom(jobDetail.getJobClass())) {
+//                Task task = new Task(trigger, jobDetail, scheduler.getTriggerState(triggerKey), RamStore.jobs.get(jobDetail.getJobClass().getName()));
+//                if (StringUtils.containsIgnoreCase(jobDetail.getKey().getName(), taskName) && (StringUtils.equals(state, "ALL") || StringUtils.equals(task.getTriggerState().toString(), state))) {
+//                    taskList.add(task);
+//                }
+//            }
+//        }
 
-        Set<TriggerKey> triggerKeys;
-        if (StringUtils.isEmpty(taskGroup)) {
-            triggerKeys = scheduler.getTriggerKeys(GroupMatcher.<TriggerKey>anyGroup());
-        } else {
-            triggerKeys = scheduler.getTriggerKeys(GroupMatcher.<TriggerKey>groupEquals(taskGroup));
-        }
-        for (TriggerKey triggerKey : triggerKeys) {
-            Trigger trigger = scheduler.getTrigger(triggerKey);
-            JobDetail jobDetail = scheduler.getJobDetail(trigger.getJobKey());
-            if (JobComponent.class.isAssignableFrom(jobDetail.getJobClass())) {
-                Task task = new Task(trigger, jobDetail, scheduler.getTriggerState(triggerKey), RamStore.jobs.get(jobDetail.getJobClass().getName()));
-                if (StringUtils.containsIgnoreCase(jobDetail.getKey().getName(), taskName) && (StringUtils.equals(state, "ALL") || StringUtils.equals(task.getTriggerState().toString(), state))) {
-                    taskList.add(task);
-                }
-            }
-        }
-
-        return new HttpResponseBodyWrapper(taskList);
+        Pageable<Task> queryResult = taskService.queryTask(taskName, taskGroup, state, page);
+        return new HttpResponseBodyWrapper(queryResult);
     }
 
 

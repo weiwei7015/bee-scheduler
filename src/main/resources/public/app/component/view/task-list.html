@@ -21,7 +21,7 @@
             </el-form-item>
             <el-form-item label="状态">
                 <el-select v-model="queryFormModel.status" placeholder="" style="width: 100px">
-                    <el-option label="全部" value="ALL"></el-option>
+                    <el-option label="全部" value=""></el-option>
                     <el-option label="调度中" value="NORMAL"></el-option>
                     <el-option label="已暂停" value="PAUSED"></el-option>
                 </el-select>
@@ -35,7 +35,7 @@
         </el-form>
 
         <div v-loading="queryLoading">
-            <template v-if="taskList.length == 0">
+            <template v-if="!queryResult.result || queryResult.result.length == 0">
                 <div class="box">
                     <div class="box-body">
                         <div class="text-center text-text-silver">暂无任务，立即
@@ -45,31 +45,34 @@
                 </div>
             </template>
             <div class="spr"></div>
-            <template v-for="item in taskList">
+            <template v-for="item in queryResult.result">
                 <div class="box">
                     <div class="box-body">
                         <el-row>
                             <el-col :span="12">
-                                <h3 class="no-margin" style="line-height: 34px">{{item.jobDetail.fullName}}<span class="text-gray">（{{item.jobComponent.name}}）</span></h3>
+                                <h3 class="no-margin" style="line-height: 34px">{{item.name}}<span class="text-gray">（{{item.group}}）</span></h3>
                             </el-col>
                             <el-col :span="12" class="text-right">
-                                <el-button type="text" v-if="item.triggerState === 'NORMAL'" @click="pauseTask(item.jobDetail.name,item.jobDetail.group)">暂停</el-button>
-                                <el-button type="text" v-if="item.triggerState === 'PAUSED'" @click="resumeTask(item.jobDetail.name,item.jobDetail.group)">恢复</el-button>
-                                <el-button type="text" @click="executeTask(item.jobDetail.name,item.jobDetail.group)">执行</el-button>
-                                <el-button type="text" @click="openEditTaskDialog(item.jobDetail.name,item.jobDetail.group)">编辑</el-button>
-                                <el-button type="text" @click="deleteTask(item.jobDetail.name,item.jobDetail.group)">删除</el-button>
+                                <el-button type="text" v-if="item.state !== 'PAUSED'" @click="pauseTask(item.name,item.group)">暂停</el-button>
+                                <el-button type="text" v-if="item.state === 'PAUSED'" @click="resumeTask(item.name,item.group)">恢复</el-button>
+                                <el-button type="text" @click="executeTask(item.name,item.group)">执行</el-button>
+                                <el-button type="text" @click="openEditTaskDialog(item.name,item.group)">编辑</el-button>
+                                <el-button type="text" @click="deleteTask(item.name,item.group)">删除</el-button>
                             </el-col>
                         </el-row>
                         <div>
-                            执行计划：{{item.trigger.cronExpression}}
-                            <el-tag v-if="item.triggerState === 'NORMAL'" type="primary" close-transition>调度中，下次执行：{{$moment(item.trigger.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</el-tag>
-                            <el-tag v-if="item.triggerState === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>
+                            执行计划：{{item.cron}}
+                            <el-tag v-if="item.state !== 'PAUSED'" type="primary" close-transition>调度中，下次执行：{{$moment(item.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</el-tag>
+                            <el-tag v-if="item.state === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>
                         </div>
                     </div>
-                    <div class="box-footer"><span class="text-silver">{{item.trigger.description||"无描述"}}</span></div>
+                    <div class="box-footer"><span class="text-silver">{{item.description||"无描述"}}</span></div>
                 </div>
                 <div class="spr"></div>
             </template>
+            <div class="text-right">
+                <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
+            </div>
         </div>
 
 
