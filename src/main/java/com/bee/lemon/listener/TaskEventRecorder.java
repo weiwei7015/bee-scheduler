@@ -21,9 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @author weiwei
- *         <p>
- *         任务事件监听， 存储到通知集合
+ * @author weiwei 任务事件监听， 存储到通知集合
  */
 public class TaskEventRecorder implements JobListener, TriggerListener, SchedulerListener {
     @SuppressWarnings("unused")
