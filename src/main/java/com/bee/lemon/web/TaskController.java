@@ -104,6 +104,7 @@ public class TaskController {
         JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(name, group).build();
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(name, group).usingJobData(dataMap).withDescription(description).withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
         scheduler.scheduleJob(jobDetail, trigger);
+
     }
 
     @ResponseBody
