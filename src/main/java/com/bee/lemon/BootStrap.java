@@ -39,7 +39,7 @@ public class BootStrap {
         //检查启动参数
         StringBuilder stringBuilder = new StringBuilder(" ");
         for (String arg : args) {
-            stringBuilder.append(arg + " ");
+            stringBuilder.append(arg).append(" ");
         }
         if (!Pattern.matches(".* --dburl=\\S+ .*", stringBuilder)) {
             throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false)");
@@ -84,17 +84,14 @@ public class BootStrap {
     // 系统启动监听器，用于系统启动完成后的初始化操作
     @Bean
     public ApplicationListener<ContextRefreshedEvent> applicationListener() {
-        return new ApplicationListener<ContextRefreshedEvent>() {
-            @Override
-            public void onApplicationEvent(ContextRefreshedEvent event) {
-                ApplicationContext applicationContext = event.getApplicationContext();
-                try {
-                    logger.info("SpringContext Refreshed!");
-                    SystemInitializer systemInitializer = new SystemInitializer(applicationContext);
-                    systemInitializer.init();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        return event -> {
+            ApplicationContext applicationContext = event.getApplicationContext();
+            try {
+                logger.info("SpringContext Refreshed!");
+                SystemInitializer systemInitializer = new SystemInitializer(applicationContext);
+                systemInitializer.init();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
     }

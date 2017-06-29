@@ -20,10 +20,17 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="状态">
-                <el-select v-model="queryFormModel.status" placeholder="" style="width: 100px">
+                <el-select v-model="queryFormModel.status" placeholder="" style="width: 150px">
                     <el-option label="全部" value=""></el-option>
-                    <el-option label="调度中" value="NORMAL"></el-option>
-                    <el-option label="已暂停" value="PAUSED"></el-option>
+                    <el-option label="WAITING" value="WAITING"></el-option>
+                    <el-option label="ACQUIRED" value="ACQUIRED"></el-option>
+                    <el-option label="PAUSED" value="PAUSED"></el-option>
+                    <el-option label="EXECUTING" value="EXECUTING"></el-option>
+                    <el-option label="COMPLETE" value="COMPLETE"></el-option>
+                    <el-option label="BLOCKED" value="BLOCKED"></el-option>
+                    <el-option label="PAUSED_BLOCKED" value="PAUSED_BLOCKED"></el-option>
+                    <el-option label="ERROR" value="ERROR"></el-option>
+                    <el-option label="DELETED" value="DELETED"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -59,9 +66,9 @@
                             </el-col>
                         </el-row>
                         <div>
-                            执行计划：{{item.cron}}
-                            <el-tag v-if="item.state !== 'PAUSED'" type="primary" close-transition>调度中，下次执行：{{$moment(item.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</el-tag>
-                            <el-tag v-if="item.state === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>
+                            <span class="text-silver">执行计划：</span>{{item.cron}} | <span class="text-silver">下次执行：</span>{{$moment(item.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}} | <span class="text-silver">状态：</span><el-tag type="gray" close-transition>{{item.state}}</el-tag>
+                            <!--<el-tag v-if="item.state !== 'PAUSED'" type="primary" close-transition>调度中</el-tag>-->
+                            <!--<el-tag v-if="item.state === 'PAUSED'" type="danger" close-transition>已暂停</el-tag>-->
                         </div>
                     </div>
                     <div class="box-footer"><span class="text-silver">{{item.description||"无描述"}}</span></div>

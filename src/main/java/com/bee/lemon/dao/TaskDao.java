@@ -56,7 +56,8 @@ public class TaskDao extends DaoBase {
             task.setName(rs.getString("name"));
             task.setGroup(rs.getString("group"));
             task.setTriggerType(rs.getString("triggerType"));
-            task.setJobComponent(rs.getString("jobComponent"));
+            String jobComponent = rs.getString("jobComponent");
+            task.setJobComponent(jobComponent.substring(jobComponent.lastIndexOf(".") + 1));
             task.setCron(rs.getString("cron"));
             task.setPrevFireTime(rs.getLong("prevFireTime"));
             task.setNextFireTime(rs.getLong("nextFireTime"));
