@@ -1,17 +1,8 @@
 define(['text!view/task-list.html'], function (tpl) {
 
-
-    //定义子组件
-    var ace_editor = function (resolver) {
-        require(['part/ace-editor'], resolver);
-    };
-
-
     return {
         template: tpl,
-        components: {
-            "ace-editor": ace_editor
-        },
+        components: {},
         data: function () {
             var vm = this;
 
@@ -250,7 +241,7 @@ define(['text!view/task-list.html'], function (tpl) {
                     //...
                 });
             },
-            goCreateTask:function () {
+            goCreateTask: function () {
                 this.$router.push("/task/new");
             }
         }

@@ -6,22 +6,11 @@
                 <el-breadcrumb-item>创建任务</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title">创建任务</div>
+        <div class="title">创建任务 <span class="sub-title"><el-button type="text" size="mini" icon="document" @click="helpDialogVisible = true">使用帮助</el-button></span></div>
     </div>
     <div class="content-body">
         <div style="width: 800px">
             <el-form :model="newTaskFormModel" ref="newTaskForm" label-width="100px">
-                <el-form-item>
-                    <div class="text-silver">
-                        <i class="el-icon-information"></i> 创建任务前，请
-                        <el-button type="text" @click="helpDialogVisible = true">查看帮助</el-button>
-                    </div>
-                </el-form-item>
-                <el-form-item label="Job组件" prop="jobComponent" :rules="validators.jobComponent">
-                    <el-select v-model="newTaskFormModel.jobComponent" placeholder="请选择Job组件" style="width: 100%">
-                        <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key"></el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
                     <el-input v-model="newTaskFormModel.name"></el-input>
                 </el-form-item>
@@ -39,7 +28,7 @@
                 <template v-if="newTaskFormModel.scheduleType == 1"><!--Simple-->
                     <el-form-item label="执行频率" style="width: 300px">
                         <el-input placeholder="请输入时间间隔" v-model="newTaskFormModel.scheduleTypeSimpleOptions.interval">
-                            <template slot="prepend">每</template>
+                            <template slot="prepend">每隔</template>
                             <template slot="append">毫秒</template>
                         </el-input>
                     </el-form-item>
@@ -53,7 +42,7 @@
                         <el-input v-model="newTaskFormModel.scheduleTypeSimpleOptions.repeatCount"></el-input>
                     </el-form-item>
                     <el-form-item label="Misfire策略">
-                        <el-select v-model="newTaskFormModel.scheduleTypeSimpleOptions.misfireHandlingType" placeholder="请选择">
+                        <el-select v-model="newTaskFormModel.scheduleTypeSimpleOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
                             <el-option label="SmartPolicy" :value="0"></el-option>
                             <el-option label="FireNow" :value="1"></el-option>
                             <el-option label="NextWithExistingCount" :value="2"></el-option>
@@ -67,7 +56,7 @@
                 <template v-if="newTaskFormModel.scheduleType == 2"><!--CalendarInterval-->
                     <el-form-item label="执行频率" style="width: 300px">
                         <el-input placeholder="请输入时间间隔" v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.interval">
-                            <template slot="prepend">每</template>
+                            <template slot="prepend">每隔</template>
                             <el-select slot="append" v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.intervalUnit" placeholder="请选择" style="width: 65px">
                                 <el-option label="秒" :value="1"></el-option>
                                 <el-option label="分" :value="2"></el-option>
@@ -80,7 +69,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item label="Misfire策略">
-                        <el-select v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.misfireHandlingType" placeholder="请选择">
+                        <el-select v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
                             <el-option label="SmartPolicy" :value="0"></el-option>
                             <el-option label="DoNothing" :value="1"></el-option>
                             <el-option label="FireAndProceed" :value="2"></el-option>
@@ -91,7 +80,7 @@
                 <template v-if="newTaskFormModel.scheduleType == 3"><!--DailyTimeInterval-->
                     <el-form-item label="执行频率" style="width: 300px">
                         <el-input placeholder="请输入时间间隔" v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.interval">
-                            <template slot="prepend">每</template>
+                            <template slot="prepend">每隔</template>
                             <el-select slot="append" v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.intervalUnit" placeholder="请选择" style="width: 65px">
                                 <el-option label="秒" :value="1"></el-option>
                                 <el-option label="分" :value="2"></el-option>
@@ -117,7 +106,7 @@
                         </el-checkbox-group>
                     </el-form-item>
                     <el-form-item label="Misfire策略">
-                        <el-select v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType" placeholder="请选择">
+                        <el-select v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
                             <el-option label="SmartPolicy" :value="0"></el-option>
                             <el-option label="DoNothing" :value="1"></el-option>
                             <el-option label="FireAndProceed" :value="2"></el-option>
@@ -130,7 +119,7 @@
                         <el-input v-model="newTaskFormModel.scheduleTypeCronOptions.cron" placeholder="请输入Cron表达式"></el-input>
                     </el-form-item>
                     <el-form-item label="Misfire策略">
-                        <el-select v-model="newTaskFormModel.scheduleTypeCronOptions.misfireHandlingType" placeholder="请选择">
+                        <el-select v-model="newTaskFormModel.scheduleTypeCronOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
                             <el-option label="SmartPolicy" :value="0"></el-option>
                             <el-option label="DoNothing" :value="1"></el-option>
                             <el-option label="FireAndProceed" :value="2"></el-option>
@@ -138,6 +127,11 @@
                         </el-select>
                     </el-form-item>
                 </template>
+                <el-form-item label="Job组件" prop="jobComponent" :rules="validators.jobComponent">
+                    <el-select v-model="newTaskFormModel.jobComponent" placeholder="请选择Job组件" style="width: 100%">
+                        <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="任务参数" prop="params">
                     <el-input type="textarea" v-model="newTaskFormModel.params" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入JSON格式的参数"></el-input>
                     <!--<div class="el-input-wrapper">
@@ -176,6 +170,7 @@
 
         <!--Dialogs-->
         <el-dialog title="Help" :visible.sync="helpDialogVisible">
+            <span slot="title"><i class="el-icon-document"></i> 使用帮助</span>
             <div class="box">
                 <div class="box-body">
                     <div><i class="el-icon-information text-warning"></i> SimpleTrigger：</div>

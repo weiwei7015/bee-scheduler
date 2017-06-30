@@ -141,6 +141,11 @@ h4 {
     font-weight: normal;
     color: #48576a;
 }
+.content .content-header .title .sub-title {
+    font-size: 12px;
+    font-weight: normal;
+    color: #99A9BF;
+}
 
 .content .content-header .breadcrumb {
     float: right;

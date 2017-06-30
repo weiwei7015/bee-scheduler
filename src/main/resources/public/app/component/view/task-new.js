@@ -12,9 +12,6 @@ define(['text!view/task-new.html'], function (tpl) {
                 ],
                 taskName: [
                     {required: true, message: '请输入任务名称', trigger: 'blur'}
-                ],
-                taskCron: [
-                    {required: true, message: '请输入任务执行计划（CRON表达式）', trigger: 'blur'}
                 ]
             };
 
@@ -27,7 +24,7 @@ define(['text!view/task-new.html'], function (tpl) {
                     jobComponent: '',
                     name: '',
                     group: '',
-                    scheduleType: 1,
+                    scheduleType: 4,
                     scheduleTypeSimpleOptions: {
                         interval: 3000,
                         repeatType: 1,
@@ -36,7 +33,7 @@ define(['text!view/task-new.html'], function (tpl) {
                     },
                     scheduleTypeCalendarIntervalOptions: {
                         interval: 2,
-                        intervalUnit: 1,
+                        intervalUnit: 3,
                         misfireHandlingType: 0
                     },
                     scheduleTypeDailyTimeIntervalOptions: {
@@ -44,7 +41,7 @@ define(['text!view/task-new.html'], function (tpl) {
                         endTimeOfDay: null,
                         daysOfWeek: [],
                         interval: 2,
-                        intervalUnit: 1,
+                        intervalUnit: 3,
                         misfireHandlingType: 0
                     },
                     scheduleTypeCronOptions: {
@@ -82,14 +79,6 @@ define(['text!view/task-new.html'], function (tpl) {
                 vm.$refs["newTaskForm"].validate(function (valid) {
                     if (valid) {
                         var newTaskFormModel = vm.newTaskFormModel;
-                        var formData = new FormData();
-                        formData.append("job", newTaskFormModel.jobComponent);
-                        formData.append("name", newTaskFormModel.name);
-                        formData.append("group", newTaskFormModel.group);
-                        formData.append("cron", newTaskFormModel.cron);
-                        formData.append("params", newTaskFormModel.params);
-                        formData.append("description", newTaskFormModel.description);
-
                         vm.postNewTaskInProcess = true;
                         vm.$http.post("/task/new", newTaskFormModel).then(function (re) {
                             vm.postNewTaskInProcess = false;
@@ -100,6 +89,7 @@ define(['text!view/task-new.html'], function (tpl) {
                             vm.postNewTaskInProcess = false;
                         });
                     } else {
+                        vm.$message({message: '填写有误，请检查', type: 'warning'});
                         return false;
                     }
                 });
