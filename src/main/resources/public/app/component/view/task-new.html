@@ -1,0 +1,165 @@
+<div class="content">
+    <div class="content-header">
+        <div class="breadcrumb">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
+                <el-breadcrumb-item>创建任务</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="title">创建任务</div>
+    </div>
+    <div class="content-body">
+        <div style="width: 800px">
+            <el-form :model="newTaskFormModel" ref="newTaskForm" label-width="100px">
+                <el-form-item label="Job组件" prop="jobComponent" :rules="validators.jobComponent">
+                    <el-select v-model="newTaskFormModel.jobComponent" placeholder="请选择Job组件" style="width: 100%">
+                        <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
+                    <el-input v-model="newTaskFormModel.name"></el-input>
+                </el-form-item>
+                <el-form-item label="所属组" prop="group">
+                    <el-input v-model="newTaskFormModel.group" placeholder="默认为DEFAULT"></el-input>
+                </el-form-item>
+                <el-form-item label="调度方式" prop="cron" :rules="validators.taskCron">
+                    <el-radio-group v-model="newTaskFormModel.scheduleType">
+                        <el-radio :label="1">SimpleTrigger</el-radio>
+                        <el-radio :label="2">CalendarIntervalTrigger</el-radio>
+                        <el-radio :label="3">DailyTimeIntervalTrigger</el-radio>
+                        <el-radio :label="4">CronTrigger</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <template v-if="newTaskFormModel.scheduleType == 1"><!--Simple-->
+                    <el-form-item>
+                        <div class="box">
+                            <div class="box-body">
+                                <div><i class="el-icon-information text-warning"></i> SimpleTrigger：</div>
+                                <div>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行任务。</div>
+                            </div>
+                        </div>
+                    </el-form-item>
+                    <el-form-item label="执行频率" style="width: 300px">
+                        <el-input placeholder="请输入时间间隔" v-model="newTaskFormModel.scheduleTypeSimpleOptions.interval">
+                            <template slot="prepend">每</template>
+                            <template slot="append">毫秒</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="重复策略">
+                        <el-radio-group v-model="newTaskFormModel.scheduleTypeSimpleOptions.repeatType">
+                            <el-radio :label="1">无限重复</el-radio>
+                            <el-radio :label="2">有限次数</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item v-if="newTaskFormModel.scheduleTypeSimpleOptions.repeatType == 2" label="重复次数">
+                        <el-input v-model="newTaskFormModel.scheduleTypeSimpleOptions.repeatCount"></el-input>
+                    </el-form-item>
+                </template>
+                <template v-if="newTaskFormModel.scheduleType == 2"><!--CalendarInterval-->
+                    <el-form-item>
+                        <div class="box">
+                            <div class="box-body">
+                                <div><i class="el-icon-information text-warning"></i> CalendarIntervalTrigger：</div>
+                                <div>类似于SimpleTrigger，指定从某一个时间开始，以一定的时间间隔执行的任务。 但是不同的是SimpleTrigger指定的时间间隔为毫秒，没办法指定每隔一个月执行一次（每月的时间间隔不是固定值），而CalendarIntervalTrigger支持的间隔单位有<b>秒，分钟，小时，天，星期，月，年</b>。</div>
+                            </div>
+                        </div>
+                    </el-form-item>
+                    <el-form-item label="执行频率" style="width: 300px">
+                        <el-input placeholder="请输入时间间隔" v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.interval">
+                            <template slot="prepend">每</template>
+                            <el-select slot="append" v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.intervalUnit" placeholder="请选择" style="width: 65px">
+                                <el-option label="秒" :value="1"></el-option>
+                                <el-option label="分" :value="2"></el-option>
+                                <el-option label="时" :value="3"></el-option>
+                                <el-option label="天" :value="4"></el-option>
+                                <el-option label="周" :value="5"></el-option>
+                                <el-option label="月" :value="6"></el-option>
+                                <el-option label="年" :value="7"></el-option>
+                            </el-select>
+                        </el-input>
+                    </el-form-item>
+                </template>
+                <template v-if="newTaskFormModel.scheduleType == 3"><!--DailyTimeInterval-->
+                    <el-form-item>
+                        <div class="box">
+                            <div class="box-body">
+                                <div><i class="el-icon-information text-warning"></i> DailyTimeIntervalTrigger：</div>
+                                <div>指定每天的某个时间段内，以一定的时间间隔执行任务。并且它可以支持指定星期。它适合的任务类似于：指定每天9:00 至 18:00 ，每隔70秒执行一次，并且只要周一至周五执行。</div>
+                            </div>
+                        </div>
+                    </el-form-item>
+                    <el-form-item label="执行频率" style="width: 300px">
+                        <el-input placeholder="请输入时间间隔" v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.interval">
+                            <template slot="prepend">每</template>
+                            <el-select slot="append" v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.intervalUnit" placeholder="请选择" style="width: 65px">
+                                <el-option label="秒" :value="1"></el-option>
+                                <el-option label="分" :value="2"></el-option>
+                                <el-option label="时" :value="3"></el-option>
+                            </el-select>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="时间段开始">
+                        <el-time-picker v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.startTimeOfDay" placeholder="请选择时间"></el-time-picker>
+                    </el-form-item>
+                    <el-form-item label="时间段结束">
+                        <el-time-picker v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.endTimeOfDay" placeholder="请选择时间"></el-time-picker>
+                    </el-form-item>
+                    <el-form-item label="周几执行">
+                        <el-checkbox-group v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.daysOfWeek">
+                            <el-checkbox :label="1">周一</el-checkbox>
+                            <el-checkbox :label="2">周二</el-checkbox>
+                            <el-checkbox :label="3">周三</el-checkbox>
+                            <el-checkbox :label="4">周四</el-checkbox>
+                            <el-checkbox :label="5">周五</el-checkbox>
+                            <el-checkbox :label="6">周六</el-checkbox>
+                            <el-checkbox :label="7">周日</el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                </template>
+                <template v-if="newTaskFormModel.scheduleType == 4"><!--Cron-->
+                    <el-form-item>
+                        <div class="box">
+                            <div class="box-body">
+                                <div><i class="el-icon-information text-warning"></i> CronTrigger：</div>
+                                <div>适合于更复杂的任务，它支持通过<b>Cron</b>语法来制定执行计划</div>
+                            </div>
+                        </div>
+                    </el-form-item>
+                    <el-form-item label="Cron表达式" prop="cron" :rules="validators.taskCron">
+                        <el-input v-model="newTaskFormModel.scheduleTypeCronOptions.cron" placeholder="请输入Cron表达式"></el-input>
+                    </el-form-item>
+                </template>
+                <el-form-item label="启动选项">
+                    <el-radio-group v-model="newTaskFormModel.startAtType">
+                        <el-radio :label="1">立即启动</el-radio>
+                        <el-radio :label="2">指定时间启动</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="newTaskFormModel.startAtType == 2" label="启动时间">
+                    <el-date-picker v-model="newTaskFormModel.startAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="Misfire策略">
+                    <el-radio-group v-model="newTaskFormModel.misfireHandlingType">
+                        <el-radio :label="1">DoNothing</el-radio>
+                        <el-radio :label="2">FireAndProceed</el-radio>
+                        <el-radio :label="3">IgnoreMisfires</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="任务参数" prop="params">
+                    <div class="el-input-wrapper">
+                        <ace-editor theme="eclipse" height="180" mode="json" :simpleStyle="true" ref="newTaskParamEditor" v-model="newTaskFormModel.params"></ace-editor>
+                    </div>
+                </el-form-item>
+                <el-form-item label="任务描述" prop="description">
+                    <el-input type="textarea" v-model="newTaskFormModel.description" placeholder="请详细描述该任务"></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
+
+        <div class="spr"></div>
+        <div>
+            <el-button @click="newTaskDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="postNewTask" :loading="postNewTaskInProcess">保 存</el-button>
+        </div>
+    </div>
+</div>

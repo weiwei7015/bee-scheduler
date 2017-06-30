@@ -3,10 +3,10 @@ require.config({
     paths: {
         view: '/public/app/component/view',
         part: '/public/app/component/part',
-        vue: '/public/lib/vue.min',
+        vue: '/public/lib/vue',
         vue_router: '/public/lib/vue-router.min',
         vue_resource: '/public/lib/vue-resource.min',
-        ELEMENT: '/public/lib/element-ui-1.3.5/index',
+        ELEMENT: '/public/lib/element-ui-1.3.7/index',
         ace: '/public/lib/ace-1.2.7/lib/ace',
         moment: '/public/lib/moment.min',
         smoothScroll: '/public/lib/smooth-scroll.min',
@@ -30,6 +30,9 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
 
     //定义视图组件
     var views = {
+        login: function (resolver) {
+            require(['view/login'], resolver);
+        },
         index: function (resolver) {
             require(['view/index'], resolver);
         },
@@ -38,6 +41,9 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
         },
         taskList: function (resolver) {
             require(['view/task-list'], resolver);
+        },
+        taskNew: function (resolver) {
+            require(['view/task-new'], resolver);
         },
         taskHistoryList: function (resolver) {
             require(['view/task-history-list'], resolver);
@@ -53,13 +59,14 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
     //配置根路由器
     var router = new VueRouter({
         routes: [
-            {path: '/login', component: views.home},
+            {path: '/login', component: views.login},
             {
                 path: '/', component: views.index,
                 children: [
                     {path: '', redirect: '/task/list'},
                     {path: '/dashboard', component: views.dashboard},
                     {path: '/task/list', component: views.taskList},
+                    {path: '/task/new', component: views.taskNew},
                     {path: '/task/history/list', component: views.taskHistoryList},
                     {path: '/task/history/detail/:fireId', component: views.taskHistoryDetail},
                     // {path: '', redirect: '/home'},
