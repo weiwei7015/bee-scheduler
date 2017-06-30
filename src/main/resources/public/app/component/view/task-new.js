@@ -28,6 +28,7 @@ define(['text!view/task-new.html'], function (tpl) {
 
             var data = {
                 validators: validators,
+                helpDialogVisible: false,
                 jobComponentList: {},
                 postNewTaskInProcess: false,
                 newTaskFormModel: {
