@@ -249,6 +249,9 @@ define(['text!view/task-list.html'], function (tpl) {
                 }).catch(function () {
                     //...
                 });
+            },
+            goCreateTask:function () {
+                this.$router.push("/task/new");
             }
         }
     };
