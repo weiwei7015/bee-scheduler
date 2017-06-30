@@ -52,6 +52,17 @@
                     <el-form-item v-if="newTaskFormModel.scheduleTypeSimpleOptions.repeatType == 2" label="重复次数">
                         <el-input v-model="newTaskFormModel.scheduleTypeSimpleOptions.repeatCount"></el-input>
                     </el-form-item>
+                    <el-form-item label="Misfire策略">
+                        <el-select v-model="newTaskFormModel.scheduleTypeSimpleOptions.misfireHandlingType" placeholder="请选择">
+                            <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="FireNow" :value="1"></el-option>
+                            <el-option label="NextWithExistingCount" :value="2"></el-option>
+                            <el-option label="IgnoreMisfires" :value="3"></el-option>
+                            <el-option label="NextWithRemainingCount" :value="4"></el-option>
+                            <el-option label="NowWithExistingCount" :value="5"></el-option>
+                            <el-option label="NowWithRemainingCount" :value="6"></el-option>
+                        </el-select>
+                    </el-form-item>
                 </template>
                 <template v-if="newTaskFormModel.scheduleType == 2"><!--CalendarInterval-->
                     <el-form-item label="执行频率" style="width: 300px">
@@ -67,6 +78,14 @@
                                 <el-option label="年" :value="7"></el-option>
                             </el-select>
                         </el-input>
+                    </el-form-item>
+                    <el-form-item label="Misfire策略">
+                        <el-select v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.misfireHandlingType" placeholder="请选择">
+                            <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="DoNothing" :value="1"></el-option>
+                            <el-option label="FireAndProceed" :value="2"></el-option>
+                            <el-option label="IgnoreMisfires" :value="3"></el-option>
+                        </el-select>
                     </el-form-item>
                 </template>
                 <template v-if="newTaskFormModel.scheduleType == 3"><!--DailyTimeInterval-->
@@ -97,10 +116,26 @@
                             <el-checkbox :label="1">周日</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
+                    <el-form-item label="Misfire策略">
+                        <el-select v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType" placeholder="请选择">
+                            <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="DoNothing" :value="1"></el-option>
+                            <el-option label="FireAndProceed" :value="2"></el-option>
+                            <el-option label="IgnoreMisfires" :value="3"></el-option>
+                        </el-select>
+                    </el-form-item>
                 </template>
                 <template v-if="newTaskFormModel.scheduleType == 4"><!--Cron-->
                     <el-form-item label="Cron表达式" prop="cron" :rules="validators.taskCron">
                         <el-input v-model="newTaskFormModel.scheduleTypeCronOptions.cron" placeholder="请输入Cron表达式"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Misfire策略">
+                        <el-select v-model="newTaskFormModel.scheduleTypeCronOptions.misfireHandlingType" placeholder="请选择">
+                            <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="DoNothing" :value="1"></el-option>
+                            <el-option label="FireAndProceed" :value="2"></el-option>
+                            <el-option label="IgnoreMisfires" :value="3"></el-option>
+                        </el-select>
                     </el-form-item>
                 </template>
                 <el-form-item label="启动选项">
@@ -111,43 +146,6 @@
                 </el-form-item>
                 <el-form-item v-if="newTaskFormModel.startAtType == 2" label="启动时间">
                     <el-date-picker v-model="newTaskFormModel.startAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="Misfire策略">
-                    <template v-if="newTaskFormModel.scheduleType == 1">
-                        <el-select v-model="newTaskFormModel.scheduleTypeSimpleOptions.misfireHandlingType" placeholder="请选择">
-                            <el-option label="SmartPolicy" :value="0"></el-option>
-                            <el-option label="FireNow" :value="1"></el-option>
-                            <el-option label="NextWithExistingCount" :value="2"></el-option>
-                            <el-option label="IgnoreMisfires" :value="3"></el-option>
-                            <el-option label="NextWithRemainingCount" :value="4"></el-option>
-                            <el-option label="NowWithExistingCount" :value="5"></el-option>
-                            <el-option label="NowWithRemainingCount" :value="6"></el-option>
-                        </el-select>
-                    </template>
-                    <template v-if="newTaskFormModel.scheduleType == 2">
-                        <el-select v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.misfireHandlingType" placeholder="请选择">
-                            <el-option label="SmartPolicy" :value="0"></el-option>
-                            <el-option label="DoNothing" :value="1"></el-option>
-                            <el-option label="FireAndProceed" :value="2"></el-option>
-                            <el-option label="IgnoreMisfires" :value="3"></el-option>
-                        </el-select>
-                    </template>
-                    <template v-if="newTaskFormModel.scheduleType == 3">
-                        <el-select v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType" placeholder="请选择">
-                            <el-option label="SmartPolicy" :value="0"></el-option>
-                            <el-option label="DoNothing" :value="1"></el-option>
-                            <el-option label="FireAndProceed" :value="2"></el-option>
-                            <el-option label="IgnoreMisfires" :value="3"></el-option>
-                        </el-select>
-                    </template>
-                    <template v-if="newTaskFormModel.scheduleType == 4">
-                        <el-select v-model="newTaskFormModel.scheduleTypeCronOptions.misfireHandlingType" placeholder="请选择">
-                            <el-option label="SmartPolicy" :value="0"></el-option>
-                            <el-option label="DoNothing" :value="1"></el-option>
-                            <el-option label="FireAndProceed" :value="2"></el-option>
-                            <el-option label="IgnoreMisfires" :value="3"></el-option>
-                        </el-select>
-                    </template>
                 </el-form-item>
                 <el-form-item label="任务参数" prop="params">
                     <div class="el-input-wrapper">
