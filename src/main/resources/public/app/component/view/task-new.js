@@ -61,6 +61,8 @@ define(['text!view/task-new.html'], function (tpl) {
                     },
                     startAtType: 1,
                     startAt: null,
+                    endAtType: 1,
+                    endAt: null,
                     params: '',
                     description: ''
                 }
@@ -97,7 +99,7 @@ define(['text!view/task-new.html'], function (tpl) {
                         formData.append("description", newTaskFormModel.description);
 
                         vm.postNewTaskInProcess = true;
-                        vm.$http.post("/task/new", formData).then(function (re) {
+                        vm.$http.post("/task/new", newTaskFormModel).then(function (re) {
                             vm.postNewTaskInProcess = false;
                             vm.newTaskDialogVisible = false;
                             vm.$message({message: '任务创建成功！', type: 'success'});

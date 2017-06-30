@@ -28,7 +28,7 @@
                 <el-form-item label="所属组" prop="group">
                     <el-input v-model="newTaskFormModel.group" placeholder="默认为DEFAULT"></el-input>
                 </el-form-item>
-                <el-form-item label="调度方式" prop="cron" :rules="validators.taskCron">
+                <el-form-item label="调度方式">
                     <el-radio-group v-model="newTaskFormModel.scheduleType">
                         <el-radio :label="1">SimpleTrigger</el-radio>
                         <el-radio :label="2">CalendarIntervalTrigger</el-radio>
@@ -138,15 +138,6 @@
                         </el-select>
                     </el-form-item>
                 </template>
-                <el-form-item label="启动选项">
-                    <el-radio-group v-model="newTaskFormModel.startAtType">
-                        <el-radio :label="1">立即启动</el-radio>
-                        <el-radio :label="2">指定时间启动</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item v-if="newTaskFormModel.startAtType == 2" label="启动时间">
-                    <el-date-picker v-model="newTaskFormModel.startAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
-                </el-form-item>
                 <el-form-item label="任务参数" prop="params">
                     <el-input type="textarea" v-model="newTaskFormModel.params" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入JSON格式的参数"></el-input>
                     <!--<div class="el-input-wrapper">
@@ -155,6 +146,24 @@
                 </el-form-item>
                 <el-form-item label="任务描述" prop="description">
                     <el-input type="textarea" v-model="newTaskFormModel.description" :autosize="{minRows: 2, maxRows: 5}" placeholder="请详细描述该任务"></el-input>
+                </el-form-item>
+                <el-form-item label="激活选项">
+                    <el-radio-group v-model="newTaskFormModel.startAtType">
+                        <el-radio :label="1">立即激活</el-radio>
+                        <el-radio :label="2">指定时间激活</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="newTaskFormModel.startAtType == 2" label="激活时间">
+                    <el-date-picker v-model="newTaskFormModel.startAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="销毁选项">
+                    <el-radio-group v-model="newTaskFormModel.endAtType">
+                        <el-radio :label="1">永不销毁</el-radio>
+                        <el-radio :label="2">指定时间销毁</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="newTaskFormModel.endAtType == 2" label="销毁时间">
+                    <el-date-picker v-model="newTaskFormModel.endAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
                 </el-form-item>
             </el-form>
         </div>

@@ -78,9 +78,13 @@ public class TaskController {
         String name = StringUtils.trim(task.getString("name"));
         String group = StringUtils.trimToNull(task.getString("group"));
         String job = StringUtils.trim(task.getString("jobComponent"));
-        Integer scheduleType = task.getInteger("scheduleType");
+        int scheduleType = task.getIntValue("scheduleType");
         String params = StringUtils.trimToEmpty(task.getString("params"));
         String description = StringUtils.trim(task.getString("description"));
+        int startAtType = task.getIntValue("startAtType");
+        Date startAt = task.getDate("startAt");
+        int endAtType = task.getIntValue("endAtType");
+        Date endAt = task.getDate("endAt");
 
 
         if (StringUtils.isEmpty(job)) {
@@ -107,13 +111,22 @@ public class TaskController {
 
         TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(name, group).usingJobData(dataMap).withDescription(description);
 
+        if (startAtType == 1) {
+            triggerBuilder.startNow();
+        } else {
+            triggerBuilder.startAt(startAt);
+        }
+        if (endAtType != 1) {
+            triggerBuilder.endAt(endAt);
+        }
+
 
         if (scheduleType == 1) {
             JSONObject triggerOptions = task.getJSONObject("scheduleTypeSimpleOptions");
             long interval = triggerOptions.getLongValue("interval");
             int repeatType = triggerOptions.getIntValue("repeatType");
             int repeatCount = triggerOptions.getIntValue("repeatCount");
-            Integer misfireHandlingType = task.getInteger("misfireHandlingType");
+            int misfireHandlingType = triggerOptions.getIntValue("misfireHandlingType");
 
             int finalRepeatCount = repeatType == 1 ? -1 : repeatCount;
 
@@ -135,7 +148,6 @@ public class TaskController {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
             }
 
-
             SimpleTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.scheduleJob(jobDetail, trigger);
@@ -143,7 +155,7 @@ public class TaskController {
             JSONObject triggerOptions = task.getJSONObject("scheduleTypeCalendarIntervalOptions");
             int interval = triggerOptions.getIntValue("interval");
             int intervalUnit = triggerOptions.getIntValue("intervalUnit");
-            Integer misfireHandlingType = task.getInteger("misfireHandlingType");
+            int misfireHandlingType = triggerOptions.getIntValue("misfireHandlingType");
 
             DateBuilder.IntervalUnit finalIntervalUnit = null;
             switch (intervalUnit) {
@@ -193,7 +205,7 @@ public class TaskController {
             Date startTimeOfDay = triggerOptions.getDate("startTimeOfDay");
             Date endTimeOfDay = triggerOptions.getDate("endTimeOfDay");
             JSONArray daysOfWeek = triggerOptions.getJSONArray("daysOfWeek");
-            Integer misfireHandlingType = task.getInteger("misfireHandlingType");
+            int misfireHandlingType = triggerOptions.getIntValue("misfireHandlingType");
 
             DateBuilder.IntervalUnit finalIntervalUnit = null;
             switch (intervalUnit) {
@@ -231,7 +243,7 @@ public class TaskController {
         } else if (scheduleType == 4) {
             JSONObject triggerOptions = task.getJSONObject("scheduleTypeCronOptions");
             String cron = triggerOptions.getString("cron");
-            Integer misfireHandlingType = task.getInteger("misfireHandlingType");
+            int misfireHandlingType = triggerOptions.getIntValue("misfireHandlingType");
 
 
             if (!CronExpression.isValidExpression(cron)) {
@@ -248,7 +260,9 @@ public class TaskController {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
             }
 
+
             CronTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
+
             scheduler.scheduleJob(jobDetail, trigger);
         }
 

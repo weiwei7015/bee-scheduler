@@ -66,7 +66,7 @@
                             </el-col>
                         </el-row>
                         <div>
-                            <span class="text-silver">执行计划：</span>{{item.cron}} | <span class="text-silver">下次执行：</span>{{$moment(item.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}} |
+                            <span class="text-silver">调度类型：</span>{{item.triggerType}} | <span class="text-silver">下次执行：</span>{{$moment(item.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}} |
                             <span class="text-silver">状态：</span>
                             <el-tag :type="item.state == 'WAITING'?'primary':item.state == 'ACQUIRED'?'success':item.state == 'PAUSED'?'warning':'gray'" close-transition>{{item.state}}</el-tag>
                         </div>
