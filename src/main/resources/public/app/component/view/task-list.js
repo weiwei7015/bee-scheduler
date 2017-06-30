@@ -138,7 +138,7 @@ define(['text!view/task-list.html'], function (tpl) {
                 var vm = this;
                 vm.editTaskDialogVisible = true;
                 vm.editTaskDialogLoading = true;
-                vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
+                vm.$http.get("/task/detail", {params: {name: name, group: group, aaa: "HOUR"}}).then(function (re) {
                     var taskDetail = re.body.data;
                     vm.editTaskFormModel.jobComponent = taskDetail.jobName;
                     vm.editTaskFormModel.name = taskDetail.taskName;

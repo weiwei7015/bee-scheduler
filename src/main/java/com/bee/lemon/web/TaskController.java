@@ -1,5 +1,12 @@
 package com.bee.lemon.web;
 
+import java.util.Date;
+
+import com.bee.lemon.model.TaskConfig.ScheduleTypeDailyTimeIntervalOptions;
+import com.bee.lemon.model.TaskConfig.ScheduleTypeSimpleOptions;
+import com.bee.lemon.model.TaskConfig.ScheduleTypeCronOptions;
+import com.bee.lemon.model.TaskConfig.ScheduleTypeCalendarIntervalOptions;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +16,7 @@ import com.bee.lemon.exception.BizzException;
 import com.bee.lemon.model.HttpResponseBodyWrapper;
 import com.bee.lemon.model.Pageable;
 import com.bee.lemon.model.Task;
+import com.bee.lemon.model.TaskConfig;
 import com.bee.lemon.service.TaskService;
 import com.bee.lemon.util.Constants;
 import org.apache.commons.lang3.StringUtils;
@@ -74,123 +82,74 @@ public class TaskController {
 
     @ResponseBody
     @PostMapping("/task/new")
-    public void newTask(@RequestBody JSONObject task) throws Exception {
-        String name = StringUtils.trim(task.getString("name"));
-        String group = StringUtils.trimToNull(task.getString("group"));
-        String job = StringUtils.trim(task.getString("jobComponent"));
-        int scheduleType = task.getIntValue("scheduleType");
-        String params = StringUtils.trimToEmpty(task.getString("params"));
-        String description = StringUtils.trim(task.getString("description"));
-        int startAtType = task.getIntValue("startAtType");
-        Date startAt = task.getDate("startAt");
-        int endAtType = task.getIntValue("endAtType");
-        Date endAt = task.getDate("endAt");
-
-
-        if (StringUtils.isEmpty(job)) {
+    public void newTask(@RequestBody TaskConfig taskConfig) throws Exception {
+        if (StringUtils.isEmpty(taskConfig.getJobComponent())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请选择Job组件");
         }
-        if (StringUtils.isEmpty(name)) {
+        if (StringUtils.isEmpty(taskConfig.getName())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请输入任务名称");
         }
-
-
-        if (StringUtils.isNotEmpty(params)) {
+        if (StringUtils.isNotEmpty(taskConfig.getParams())) {
             try {
-                JSON.parseObject(params);
+                JSON.parseObject(taskConfig.getParams());
             } catch (Exception e) {
                 throw new BizzException(BizzException.error_code_invalid_params, "任务参数输入有误，必须是JSON格式");
             }
         }
 
 
-        Class<? extends JobComponent> jobComponentClass = RamStore.jobs.get(job).getClass();
+        Class<? extends JobComponent> jobComponentClass = RamStore.jobs.get(taskConfig.getJobComponent()).getClass();
         JobDataMap dataMap = new JobDataMap();
-        dataMap.put(Constants.TASK_PARAM_JOB_DATA_KEY, params);
-        JobDetail jobDetail = JobBuilder.newJob(jobComponentClass).withIdentity(name, group).build();
+        dataMap.put(Constants.TASK_PARAM_JOB_DATA_KEY, taskConfig.getParams());
+        JobDetail jobDetail = JobBuilder.newJob(jobComponentClass).withIdentity(taskConfig.getName(), taskConfig.getGroup()).build();
 
-        TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(name, group).usingJobData(dataMap).withDescription(description);
+        TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskConfig.getName(), taskConfig.getGroup()).usingJobData(dataMap).withDescription(taskConfig.getDescription());
 
-        if (startAtType == 1) {
+        if (taskConfig.getStartAtType() == 1) {
             triggerBuilder.startNow();
         } else {
-            triggerBuilder.startAt(startAt);
+            triggerBuilder.startAt(taskConfig.getStartAt());
         }
-        if (endAtType != 1) {
-            triggerBuilder.endAt(endAt);
+        if (taskConfig.getEndAtType() != 1) {
+            triggerBuilder.endAt(taskConfig.getEndAt());
         }
 
 
-        if (scheduleType == 1) {
-            JSONObject triggerOptions = task.getJSONObject("scheduleTypeSimpleOptions");
-            long interval = triggerOptions.getLongValue("interval");
-            int repeatType = triggerOptions.getIntValue("repeatType");
-            int repeatCount = triggerOptions.getIntValue("repeatCount");
-            int misfireHandlingType = triggerOptions.getIntValue("misfireHandlingType");
-
-            int finalRepeatCount = repeatType == 1 ? -1 : repeatCount;
+        if (taskConfig.getScheduleType() == 1) {
+            ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
 
             SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
-            scheduleBuilder.withIntervalInMilliseconds(interval)
-                    .withRepeatCount(finalRepeatCount);
+            scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
+                    .withRepeatCount(scheduleOptions.getRepeatType() == 1 ? -1 : scheduleOptions.getRepeatCount());
 
-            if (misfireHandlingType == 1) {
+            if (scheduleOptions.getMisfireHandlingType() == 1) {
                 scheduleBuilder.withMisfireHandlingInstructionFireNow();
-            } else if (misfireHandlingType == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
-            } else if (misfireHandlingType == 3) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (misfireHandlingType == 4) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 4) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount();
-            } else if (misfireHandlingType == 5) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 5) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
-            } else if (misfireHandlingType == 6) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 6) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
             }
 
             SimpleTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.scheduleJob(jobDetail, trigger);
-        } else if (scheduleType == 2) {
-            JSONObject triggerOptions = task.getJSONObject("scheduleTypeCalendarIntervalOptions");
-            int interval = triggerOptions.getIntValue("interval");
-            int intervalUnit = triggerOptions.getIntValue("intervalUnit");
-            int misfireHandlingType = triggerOptions.getIntValue("misfireHandlingType");
-
-            DateBuilder.IntervalUnit finalIntervalUnit = null;
-            switch (intervalUnit) {
-                case 1:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.SECOND;
-                    break;
-                case 2:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.MINUTE;
-                    break;
-                case 3:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.HOUR;
-                    break;
-                case 4:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.DAY;
-                    break;
-                case 5:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.MONTH;
-                    break;
-                case 6:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.WEEK;
-                    break;
-                case 7:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.YEAR;
-                    break;
-            }
+        } else if (taskConfig.getScheduleType() == 2) {
+            ScheduleTypeCalendarIntervalOptions scheduleOptions = taskConfig.getScheduleTypeCalendarIntervalOptions();
 
             CalendarIntervalScheduleBuilder scheduleBuilder = CalendarIntervalScheduleBuilder.calendarIntervalSchedule();
-            scheduleBuilder.withInterval(interval, finalIntervalUnit);
+            scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
 
-
-            if (misfireHandlingType == 1) {
+            if (scheduleOptions.getMisfireHandlingType() == 1) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (misfireHandlingType == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (misfireHandlingType == 3) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
             }
 
@@ -198,74 +157,47 @@ public class TaskController {
             CalendarIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.scheduleJob(jobDetail, trigger);
-        } else if (scheduleType == 3) {
-            JSONObject triggerOptions = task.getJSONObject("scheduleTypeDailyTimeIntervalOptions");
-            int interval = triggerOptions.getIntValue("interval");
-            int intervalUnit = triggerOptions.getIntValue("intervalUnit");
-            Date startTimeOfDay = triggerOptions.getDate("startTimeOfDay");
-            Date endTimeOfDay = triggerOptions.getDate("endTimeOfDay");
-            JSONArray daysOfWeek = triggerOptions.getJSONArray("daysOfWeek");
-            int misfireHandlingType = triggerOptions.getIntValue("misfireHandlingType");
-
-            DateBuilder.IntervalUnit finalIntervalUnit = null;
-            switch (intervalUnit) {
-                case 1:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.SECOND;
-                    break;
-                case 2:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.MINUTE;
-                    break;
-                case 3:
-                    finalIntervalUnit = DateBuilder.IntervalUnit.HOUR;
-                    break;
-            }
-
-
-            Integer[] finalDaysOfWeek = daysOfWeek.toArray(new Integer[daysOfWeek.size()]);
+        } else if (taskConfig.getScheduleType() == 3) {
+            ScheduleTypeDailyTimeIntervalOptions scheduleOptions = taskConfig.getScheduleTypeDailyTimeIntervalOptions();
 
             DailyTimeIntervalScheduleBuilder scheduleBuilder = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule();
-            scheduleBuilder.withInterval(interval, finalIntervalUnit)
-                    .startingDailyAt(TimeOfDay.hourAndMinuteAndSecondFromDate(startTimeOfDay))
-                    .endingDailyAt(TimeOfDay.hourAndMinuteAndSecondFromDate(endTimeOfDay))
-                    .onDaysOfTheWeek(finalDaysOfWeek);
+            scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit())
+                    .startingDailyAt(scheduleOptions.getStartTimeOfDay())
+                    .endingDailyAt(scheduleOptions.getEndTimeOfDay())
+                    .onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
 
-            if (misfireHandlingType == 1) {
+            if (scheduleOptions.getMisfireHandlingType() == 1) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (misfireHandlingType == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (misfireHandlingType == 3) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
             }
 
             DailyTimeIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.scheduleJob(jobDetail, trigger);
-        } else if (scheduleType == 4) {
-            JSONObject triggerOptions = task.getJSONObject("scheduleTypeCronOptions");
-            String cron = triggerOptions.getString("cron");
-            int misfireHandlingType = triggerOptions.getIntValue("misfireHandlingType");
+        } else if (taskConfig.getScheduleType() == 4) {
+            ScheduleTypeCronOptions scheduleOptions = taskConfig.getScheduleTypeCronOptions();
 
-
-            if (!CronExpression.isValidExpression(cron)) {
+            if (!CronExpression.isValidExpression(scheduleOptions.getCron())) {
                 throw new BizzException(BizzException.error_code_invalid_params, "Cron表达式输入有误");
             }
 
-            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron);
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleOptions.getCron());
 
-            if (misfireHandlingType == 1) {
+            if (scheduleOptions.getMisfireHandlingType() == 1) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (misfireHandlingType == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (misfireHandlingType == 3) {
+            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
             }
-
 
             CronTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.scheduleJob(jobDetail, trigger);
         }
-
     }
 
     @ResponseBody
@@ -298,18 +230,71 @@ public class TaskController {
     @ResponseBody
     @GetMapping("/task/detail")
     public HttpResponseBodyWrapper detail(String name, String group) throws Exception {
-        CronTrigger trigger = (CronTrigger) scheduler.getTrigger(new TriggerKey(name, group));
-        JobDetail jobDetail = scheduler.getJobDetail(trigger.getJobKey());
-        TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-        Map<String, Object> taskModel = new HashMap<>();
-        taskModel.put("jobName", RamStore.jobs.get(jobDetail.getJobClass().getName()).getName());
-        taskModel.put("taskName", jobDetail.getKey().getName());
-        taskModel.put("taskGroup", jobDetail.getKey().getGroup());
-        taskModel.put("cron", trigger.getCronExpression());
-        taskModel.put("description", trigger.getDescription());
-        taskModel.put("triggerState", triggerState);
-        taskModel.put("params", trigger.getJobDataMap().getString(Constants.TASK_PARAM_JOB_DATA_KEY));
-        return new HttpResponseBodyWrapper(taskModel);
+        Trigger abstractTrigger = scheduler.getTrigger(new TriggerKey(name, group));
+        JobDetail jobDetail = scheduler.getJobDetail(abstractTrigger.getJobKey());
+
+        TaskConfig taskConfig = new TaskConfig();
+        taskConfig.setName(abstractTrigger.getKey().getName());
+        taskConfig.setGroup(abstractTrigger.getKey().getName());
+        taskConfig.setStartAtType(abstractTrigger.getStartTime() == null ? 1 : 2);
+        taskConfig.setStartAt(abstractTrigger.getStartTime());
+        taskConfig.setEndAtType(abstractTrigger.getEndTime() == null ? 1 : 2);
+        taskConfig.setEndAt(abstractTrigger.getEndTime());
+        taskConfig.setJobComponent(jobDetail.getJobClass().getName());
+        taskConfig.setParams(abstractTrigger.getJobDataMap().getString(Constants.TASK_PARAM_JOB_DATA_KEY));
+        taskConfig.setDescription(abstractTrigger.getDescription());
+
+
+        if (abstractTrigger instanceof SimpleTrigger) {
+            SimpleTrigger trigger = (SimpleTrigger) abstractTrigger;
+
+            taskConfig.setScheduleType(1);
+
+            ScheduleTypeSimpleOptions scheduleOptions = new ScheduleTypeSimpleOptions();
+            scheduleOptions.setInterval(trigger.getRepeatInterval());
+            scheduleOptions.setRepeatType(trigger.getRepeatCount() == -1 ? 1 : 2);
+            scheduleOptions.setRepeatCount(trigger.getRepeatCount());
+            scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
+
+            taskConfig.setScheduleTypeSimpleOptions(scheduleOptions);
+        } else if (abstractTrigger instanceof CalendarIntervalTrigger) {
+            CalendarIntervalTrigger trigger = (CalendarIntervalTrigger) abstractTrigger;
+
+            taskConfig.setScheduleType(2);
+
+            ScheduleTypeCalendarIntervalOptions scheduleOptions = new ScheduleTypeCalendarIntervalOptions();
+            scheduleOptions.setInterval(trigger.getRepeatInterval());
+            scheduleOptions.setIntervalUnit(trigger.getRepeatIntervalUnit());
+            scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
+
+            taskConfig.setScheduleTypeCalendarIntervalOptions(scheduleOptions);
+        } else if (abstractTrigger instanceof DailyTimeIntervalTrigger) {
+            DailyTimeIntervalTrigger trigger = (DailyTimeIntervalTrigger) abstractTrigger;
+
+            taskConfig.setScheduleType(3);
+
+            ScheduleTypeDailyTimeIntervalOptions scheduleOptions = new ScheduleTypeDailyTimeIntervalOptions();
+            scheduleOptions.setStartTimeOfDay(trigger.getStartTimeOfDay());
+            scheduleOptions.setEndTimeOfDay(trigger.getEndTimeOfDay());
+            scheduleOptions.setDaysOfWeek(trigger.getDaysOfWeek().toArray(new Integer[trigger.getDaysOfWeek().size()]));
+            scheduleOptions.setInterval(trigger.getRepeatInterval());
+            scheduleOptions.setIntervalUnit(trigger.getRepeatIntervalUnit());
+            scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
+
+            taskConfig.setScheduleTypeDailyTimeIntervalOptions(scheduleOptions);
+        } else if (abstractTrigger instanceof CronTrigger) {
+            CronTrigger trigger = (CronTrigger) abstractTrigger;
+
+            taskConfig.setScheduleType(4);
+
+            ScheduleTypeCronOptions scheduleOptions = new ScheduleTypeCronOptions();
+            scheduleOptions.setCron(trigger.getCronExpression());
+            scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
+
+            taskConfig.setScheduleTypeCronOptions(scheduleOptions);
+        }
+
+        return new HttpResponseBodyWrapper(taskConfig);
     }
 
     @ResponseBody

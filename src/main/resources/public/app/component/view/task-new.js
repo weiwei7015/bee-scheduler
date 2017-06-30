@@ -21,7 +21,6 @@ define(['text!view/task-new.html'], function (tpl) {
                 jobComponentList: {},
                 postNewTaskInProcess: false,
                 newTaskFormModel: {
-                    jobComponent: '',
                     name: '',
                     group: '',
                     scheduleType: 4,
@@ -52,6 +51,7 @@ define(['text!view/task-new.html'], function (tpl) {
                     startAt: null,
                     endAtType: 1,
                     endAt: null,
+                    jobComponent: '',
                     params: '',
                     description: ''
                 }

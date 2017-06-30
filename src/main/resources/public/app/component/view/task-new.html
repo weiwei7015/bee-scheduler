@@ -44,12 +44,12 @@
                     <el-form-item label="Misfire策略">
                         <el-select v-model="newTaskFormModel.scheduleTypeSimpleOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
                             <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="IgnoreMisfires" :value="-1"></el-option>
                             <el-option label="FireNow" :value="1"></el-option>
-                            <el-option label="NextWithExistingCount" :value="2"></el-option>
-                            <el-option label="IgnoreMisfires" :value="3"></el-option>
+                            <el-option label="NowWithExistingCount" :value="2"></el-option>
+                            <el-option label="NowWithRemainingCount" :value="3"></el-option>
                             <el-option label="NextWithRemainingCount" :value="4"></el-option>
-                            <el-option label="NowWithExistingCount" :value="5"></el-option>
-                            <el-option label="NowWithRemainingCount" :value="6"></el-option>
+                            <el-option label="NextWithExistingCount" :value="5"></el-option>
                         </el-select>
                     </el-form-item>
                 </template>
@@ -71,9 +71,9 @@
                     <el-form-item label="Misfire策略">
                         <el-select v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
                             <el-option label="SmartPolicy" :value="0"></el-option>
-                            <el-option label="DoNothing" :value="1"></el-option>
-                            <el-option label="FireAndProceed" :value="2"></el-option>
-                            <el-option label="IgnoreMisfires" :value="3"></el-option>
+                            <el-option label="IgnoreMisfires" :value="-1"></el-option>
+                            <el-option label="FireAndProceed" :value="1"></el-option>
+                            <el-option label="DoNothing" :value="2"></el-option>
                         </el-select>
                     </el-form-item>
                 </template>
@@ -108,9 +108,9 @@
                     <el-form-item label="Misfire策略">
                         <el-select v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
                             <el-option label="SmartPolicy" :value="0"></el-option>
-                            <el-option label="DoNothing" :value="1"></el-option>
-                            <el-option label="FireAndProceed" :value="2"></el-option>
-                            <el-option label="IgnoreMisfires" :value="3"></el-option>
+                            <el-option label="IgnoreMisfires" :value="-1"></el-option>
+                            <el-option label="FireAndProceed" :value="1"></el-option>
+                            <el-option label="DoNothing" :value="2"></el-option>
                         </el-select>
                     </el-form-item>
                 </template>
@@ -121,9 +121,9 @@
                     <el-form-item label="Misfire策略">
                         <el-select v-model="newTaskFormModel.scheduleTypeCronOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
                             <el-option label="SmartPolicy" :value="0"></el-option>
-                            <el-option label="DoNothing" :value="1"></el-option>
-                            <el-option label="FireAndProceed" :value="2"></el-option>
-                            <el-option label="IgnoreMisfires" :value="3"></el-option>
+                            <el-option label="IgnoreMisfires" :value="-1"></el-option>
+                            <el-option label="FireAndProceed" :value="1"></el-option>
+                            <el-option label="DoNothing" :value="2"></el-option>
                         </el-select>
                     </el-form-item>
                 </template>
