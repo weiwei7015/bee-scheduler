@@ -39,11 +39,13 @@ define(['text!view/task-new.html'], function (tpl) {
                     scheduleTypeSimpleOptions: {
                         interval: 3000,
                         repeatType: 1,
-                        repeatCount: 10
+                        repeatCount: 10,
+                        misfireHandlingType: 0
                     },
                     scheduleTypeCalendarIntervalOptions: {
                         interval: 2,
-                        intervalUnit: 1
+                        intervalUnit: 1,
+                        misfireHandlingType: 0
                     },
                     scheduleTypeDailyTimeIntervalOptions: {
                         startTimeOfDay: null,
@@ -51,15 +53,14 @@ define(['text!view/task-new.html'], function (tpl) {
                         daysOfWeek: [],
                         interval: 2,
                         intervalUnit: 1,
-                        repeatType: 1,
-                        repeatCount: 10
+                        misfireHandlingType: 0
                     },
                     scheduleTypeCronOptions: {
-                        cron: ''
+                        cron: '',
+                        misfireHandlingType: 0
                     },
                     startAtType: 1,
                     startAt: null,
-                    misfireHandlingType: 1,
                     params: '',
                     description: ''
                 }
