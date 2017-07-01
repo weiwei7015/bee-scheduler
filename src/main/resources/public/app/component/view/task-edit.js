@@ -23,7 +23,7 @@ define(['text!view/task-edit.html'], function (tpl) {
                 jobComponentList: {},
                 postNewTaskInProcess: false,
                 initEditFormModelInProcess: false,
-                newTaskFormModel: {
+                editTaskFormModel: {
                     name: '',
                     group: '',
                     scheduleType: 4,
@@ -61,28 +61,27 @@ define(['text!view/task-edit.html'], function (tpl) {
             };
 
 
-            if (editFor === "Edit" || editFor === "Copy") {
-                var name = this.$route.params.name;
-                var group = this.$route.params.group;
-                data.initEditFormModelInProcess = true;
-                vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
-                    data.newTaskFormModel = re.body.data;
-                    data.initEditFormModelInProcess = false;
-                }, function () {
-                    data.initEditFormModelInProcess = false;
-                });
-            }
-
+            data.initEditFormModelInProcess = true;
             vm.$http.get("/job-component/list").then(function (re) {
                 data.jobComponentList = re.body.data;
+                if (editFor === "Edit" || editFor === "Copy") {
+                    var name = vm.$route.params.name;
+                    var group = vm.$route.params.group;
+                    vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
+                        data.editTaskFormModel = re.body.data;
+                        data.initEditFormModelInProcess = false;
+                    });
+                } else {
+                    data.initEditFormModelInProcess = false;
+                }
             });
 
             return data;
         },
         watch: {
-            'newTaskFormModel.jobComponent': function (newVal, oldVal) {
+            'editTaskFormModel.jobComponent': function (newVal, oldVal) {
                 var selectedJobComponent = this.jobComponentList[newVal];
-                this.newTaskFormModel.params = selectedJobComponent.paramTemplate;
+                this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
             }
         },
         methods: {
@@ -92,11 +91,11 @@ define(['text!view/task-edit.html'], function (tpl) {
             postNewTask: function () {
                 var vm = this;
 
-                vm.$refs["newTaskForm"].validate(function (valid) {
+                vm.$refs["editTaskForm"].validate(function (valid) {
                     if (valid) {
-                        var newTaskFormModel = vm.newTaskFormModel;
+                        var editTaskFormModel = vm.editTaskFormModel;
                         vm.postNewTaskInProcess = true;
-                        vm.$http.post("/task/new", newTaskFormModel).then(function (re) {
+                        vm.$http.post("/task/new", editTaskFormModel).then(function (re) {
                             vm.postNewTaskInProcess = false;
                             vm.newTaskDialogVisible = false;
                             vm.$message({message: '任务创建成功！', type: 'success'});
