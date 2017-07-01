@@ -250,48 +250,40 @@ public class TaskController {
 
             taskConfig.setScheduleType(1);
 
-            ScheduleTypeSimpleOptions scheduleOptions = new ScheduleTypeSimpleOptions();
+            ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
             scheduleOptions.setInterval(trigger.getRepeatInterval());
             scheduleOptions.setRepeatType(trigger.getRepeatCount() == -1 ? 1 : 2);
             scheduleOptions.setRepeatCount(trigger.getRepeatCount());
             scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
-
-            taskConfig.setScheduleTypeSimpleOptions(scheduleOptions);
         } else if (abstractTrigger instanceof CalendarIntervalTrigger) {
             CalendarIntervalTrigger trigger = (CalendarIntervalTrigger) abstractTrigger;
 
             taskConfig.setScheduleType(2);
 
-            ScheduleTypeCalendarIntervalOptions scheduleOptions = new ScheduleTypeCalendarIntervalOptions();
+            ScheduleTypeCalendarIntervalOptions scheduleOptions = taskConfig.getScheduleTypeCalendarIntervalOptions();
             scheduleOptions.setInterval(trigger.getRepeatInterval());
             scheduleOptions.setIntervalUnit(trigger.getRepeatIntervalUnit());
             scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
-
-            taskConfig.setScheduleTypeCalendarIntervalOptions(scheduleOptions);
         } else if (abstractTrigger instanceof DailyTimeIntervalTrigger) {
             DailyTimeIntervalTrigger trigger = (DailyTimeIntervalTrigger) abstractTrigger;
 
             taskConfig.setScheduleType(3);
 
-            ScheduleTypeDailyTimeIntervalOptions scheduleOptions = new ScheduleTypeDailyTimeIntervalOptions();
+            ScheduleTypeDailyTimeIntervalOptions scheduleOptions = taskConfig.getScheduleTypeDailyTimeIntervalOptions();
             scheduleOptions.setStartTimeOfDay(trigger.getStartTimeOfDay());
             scheduleOptions.setEndTimeOfDay(trigger.getEndTimeOfDay());
             scheduleOptions.setDaysOfWeek(trigger.getDaysOfWeek().toArray(new Integer[trigger.getDaysOfWeek().size()]));
             scheduleOptions.setInterval(trigger.getRepeatInterval());
             scheduleOptions.setIntervalUnit(trigger.getRepeatIntervalUnit());
             scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
-
-            taskConfig.setScheduleTypeDailyTimeIntervalOptions(scheduleOptions);
         } else if (abstractTrigger instanceof CronTrigger) {
             CronTrigger trigger = (CronTrigger) abstractTrigger;
 
             taskConfig.setScheduleType(4);
 
-            ScheduleTypeCronOptions scheduleOptions = new ScheduleTypeCronOptions();
+            ScheduleTypeCronOptions scheduleOptions = taskConfig.getScheduleTypeCronOptions();
             scheduleOptions.setCron(trigger.getCronExpression());
             scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
-
-            taskConfig.setScheduleTypeCronOptions(scheduleOptions);
         }
 
         return new HttpResponseBodyWrapper(taskConfig);

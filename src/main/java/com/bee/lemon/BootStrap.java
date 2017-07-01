@@ -68,7 +68,7 @@ public class BootStrap {
             public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
                 FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
                 FastJsonConfig fastJsonConfig = new FastJsonConfig();
-                fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
+                fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteMapNullValue);
 
                 fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
 

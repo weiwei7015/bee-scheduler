@@ -6,16 +6,16 @@
                 <el-breadcrumb-item>创建任务</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title">创建任务 <span class="sub-title"><el-button type="text" size="mini" icon="document" @click="helpDialogVisible = true">使用帮助</el-button></span></div>
+        <div class="title">{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}} <span class="sub-title"><el-button type="text" size="mini"  @click="helpDialogVisible = true">使用帮助</el-button></span></div>
     </div>
-    <div class="content-body">
+    <div class="content-body" v-loading="initEditFormModelInProcess">
         <div style="width: 800px">
             <el-form :model="newTaskFormModel" ref="newTaskForm" label-width="100px">
                 <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
-                    <el-input v-model="newTaskFormModel.name"></el-input>
+                    <el-input v-model="newTaskFormModel.name" :disabled="editFor!=='New'"></el-input>
                 </el-form-item>
                 <el-form-item label="所属组" prop="group">
-                    <el-input v-model="newTaskFormModel.group" placeholder="默认为DEFAULT"></el-input>
+                    <el-input v-model="newTaskFormModel.group" placeholder="默认为DEFAULT" :disabled="editFor!=='New'"></el-input>
                 </el-form-item>
                 <el-form-item label="调度方式">
                     <el-radio-group v-model="newTaskFormModel.scheduleType">

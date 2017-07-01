@@ -42,8 +42,8 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
         taskList: function (resolver) {
             require(['view/task-list'], resolver);
         },
-        taskNew: function (resolver) {
-            require(['view/task-new'], resolver);
+        taskEdit: function (resolver) {
+            require(['view/task-edit'], resolver);
         },
         taskHistoryList: function (resolver) {
             require(['view/task-history-list'], resolver);
@@ -66,7 +66,9 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
                     {path: '', redirect: '/task/list'},
                     {path: '/dashboard', component: views.dashboard},
                     {path: '/task/list', component: views.taskList},
-                    {path: '/task/new', component: views.taskNew},
+                    {path: '/task/new', component: views.taskEdit, meta: {editFor: "New"}},
+                    {path: '/task/edit/:group-:name', component: views.taskEdit, meta: {editFor: "Edit"}},
+                    {path: '/task/copy/:group-:name', component: views.taskEdit, meta: {editFor: "Copy"}},
                     {path: '/task/history/list', component: views.taskHistoryList},
                     {path: '/task/history/detail/:fireId', component: views.taskHistoryDetail},
                     // {path: '', redirect: '/home'},

@@ -5,21 +5,7 @@ define(['text!view/task-list.html'], function (tpl) {
         components: {},
         data: function () {
             var vm = this;
-
-            var validators = {
-                jobComponent: [
-                    {required: true, message: '请选择Job组件', trigger: 'change'}
-                ],
-                taskName: [
-                    {required: true, message: '请输入任务名称', trigger: 'blur'}
-                ],
-                taskCron: [
-                    {required: true, message: '请输入任务执行计划（CRON表达式）', trigger: 'blur'}
-                ]
-            };
-
             var data = {
-                validators: validators,
                 queryLoading: false,
                 queryFormModel: {
                     name: '',
@@ -29,45 +15,14 @@ define(['text!view/task-list.html'], function (tpl) {
                 currentQueryModel: null,
                 queryResult: {},
                 taskGroups: [],
-                jobComponentList: {},
-                newTaskDialogVisible: false,
-                postNewTaskInProcess: false,
-                newTaskFormModel: {
-                    jobComponent: '',
-                    name: '',
-                    group: '',
-                    cron: '',
-                    params: '',
-                    description: ''
-                },
-                editTaskDialogVisible: false,
-                editTaskDialogLoading: true,
-                postEditTaskInProcess: false,
-                editTaskFormModel: {
-                    jobComponent: '',
-                    name: '',
-                    group: '',
-                    cron: '',
-                    params: '',
-                    description: ''
-                }
+                jobComponentList: {}
             };
 
             vm.$http.get("/task/groups").then(function (re) {
-                vm.taskGroups = re.body.data;
-            });
-
-            vm.$http.get("/job-component/list").then(function (re) {
-                vm.jobComponentList = re.body.data;
+                data.taskGroups = re.body.data;
             });
 
             return data;
-        },
-        watch: {
-            'newTaskFormModel.jobComponent': function (newVal, oldVal) {
-                var selectedJobComponent = this.jobComponentList[newVal];
-                this.newTaskFormModel.params = selectedJobComponent.paramTemplate;
-            }
         },
         mounted: function () {
             this.query();
@@ -105,78 +60,6 @@ define(['text!view/task-list.html'], function (tpl) {
             changePage: function (val) {
                 this.currentQueryModel.page = val;
                 this.load(this.currentQueryModel);
-            },
-            postNewTask: function () {
-                var vm = this;
-
-                vm.$refs["newTaskForm"].validate(function (valid) {
-                    if (valid) {
-                        var newTaskFormModel = vm.newTaskFormModel;
-                        var formData = new FormData();
-                        formData.append("job", newTaskFormModel.jobComponent);
-                        formData.append("name", newTaskFormModel.name);
-                        formData.append("group", newTaskFormModel.group);
-                        formData.append("cron", newTaskFormModel.cron);
-                        formData.append("params", newTaskFormModel.params);
-                        formData.append("description", newTaskFormModel.description);
-
-                        vm.postNewTaskInProcess = true;
-                        vm.$http.post("/task/new", formData).then(function (re) {
-                            vm.postNewTaskInProcess = false;
-                            vm.newTaskDialogVisible = false;
-                            vm.$message({message: '任务创建成功！', type: 'success'});
-                            vm.query();
-                        }, function () {
-                            vm.postNewTaskInProcess = false;
-                        });
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            openEditTaskDialog: function (name, group) {
-                var vm = this;
-                vm.editTaskDialogVisible = true;
-                vm.editTaskDialogLoading = true;
-                vm.$http.get("/task/detail", {params: {name: name, group: group, aaa: "HOUR"}}).then(function (re) {
-                    var taskDetail = re.body.data;
-                    vm.editTaskFormModel.jobComponent = taskDetail.jobName;
-                    vm.editTaskFormModel.name = taskDetail.taskName;
-                    vm.editTaskFormModel.group = taskDetail.taskGroup;
-                    vm.editTaskFormModel.cron = taskDetail.cron;
-                    vm.editTaskFormModel.params = taskDetail.params;
-                    vm.editTaskFormModel.description = taskDetail.description;
-
-                    vm.editTaskDialogLoading = false;
-                });
-            },
-            postEditTask: function () {
-                var vm = this;
-
-                vm.$refs["editTaskForm"].validate(function (valid) {
-                    if (valid) {
-                        var editTaskFormModel = vm.editTaskFormModel;
-                        var formData = new FormData();
-                        formData.append("job", editTaskFormModel.jobComponent);
-                        formData.append("name", editTaskFormModel.name);
-                        formData.append("group", editTaskFormModel.group);
-                        formData.append("cron", editTaskFormModel.cron);
-                        formData.append("params", editTaskFormModel.params);
-                        formData.append("description", editTaskFormModel.description);
-
-                        vm.postEditTaskInProcess = true;
-                        vm.$http.post("/task/edit", formData).then(function (re) {
-                            vm.postEditTaskInProcess = false;
-                            vm.editTaskDialogVisible = false;
-                            vm.$message({message: '任务修改成功！', type: 'success'});
-                            vm.reload();
-                        }, function () {
-                            vm.postEditTaskInProcess = false;
-                        });
-                    } else {
-                        return false;
-                    }
-                });
             },
             pauseTask: function (name, group) {
                 var vm = this;
@@ -243,6 +126,12 @@ define(['text!view/task-list.html'], function (tpl) {
             },
             goCreateTask: function () {
                 this.$router.push("/task/new");
+            },
+            goCopyTask: function (group, name) {
+                this.$router.push("/task/copy/" + group + "-" + name);
+            },
+            goEditTask: function (group, name) {
+                this.$router.push("/task/edit/" + group + "-" + name);
             }
         }
     };

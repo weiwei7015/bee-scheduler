@@ -1,10 +1,11 @@
-define(['text!view/task-new.html'], function (tpl) {
+define(['text!view/task-edit.html'], function (tpl) {
 
     return {
         template: tpl,
         components: {},
         data: function () {
             var vm = this;
+            var editFor = vm.$route.meta.editFor;
 
             var validators = {
                 jobComponent: [
@@ -17,9 +18,11 @@ define(['text!view/task-new.html'], function (tpl) {
 
             var data = {
                 validators: validators,
+                editFor: editFor,
                 helpDialogVisible: false,
                 jobComponentList: {},
                 postNewTaskInProcess: false,
+                initEditFormModelInProcess: false,
                 newTaskFormModel: {
                     name: '',
                     group: '',
@@ -57,8 +60,21 @@ define(['text!view/task-new.html'], function (tpl) {
                 }
             };
 
+
+            if (editFor === "Edit" || editFor === "Copy") {
+                var name = this.$route.params.name;
+                var group = this.$route.params.group;
+                data.initEditFormModelInProcess = true;
+                vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
+                    data.newTaskFormModel = re.body.data;
+                    data.initEditFormModelInProcess = false;
+                }, function () {
+                    data.initEditFormModelInProcess = false;
+                });
+            }
+
             vm.$http.get("/job-component/list").then(function (re) {
-                vm.jobComponentList = re.body.data;
+                data.jobComponentList = re.body.data;
             });
 
             return data;

@@ -10,20 +10,20 @@ import java.util.Map;
  * @author weiwei
  */
 public class TaskConfig {
-    private String name;
-    private String group;
-    private Integer scheduleType;
-    private ScheduleTypeSimpleOptions scheduleTypeSimpleOptions;
-    private ScheduleTypeCalendarIntervalOptions scheduleTypeCalendarIntervalOptions;
-    private ScheduleTypeDailyTimeIntervalOptions scheduleTypeDailyTimeIntervalOptions;
-    private ScheduleTypeCronOptions scheduleTypeCronOptions;
-    private Integer startAtType;
+    private String name = "";
+    private String group = "";
+    private Integer scheduleType = 4;
+    private ScheduleTypeSimpleOptions scheduleTypeSimpleOptions = new ScheduleTypeSimpleOptions();
+    private ScheduleTypeCalendarIntervalOptions scheduleTypeCalendarIntervalOptions = new ScheduleTypeCalendarIntervalOptions();
+    private ScheduleTypeDailyTimeIntervalOptions scheduleTypeDailyTimeIntervalOptions = new ScheduleTypeDailyTimeIntervalOptions();
+    private ScheduleTypeCronOptions scheduleTypeCronOptions = new ScheduleTypeCronOptions();
+    private Integer startAtType = 1;
     private Date startAt;
-    private Integer endAtType;
+    private Integer endAtType = 1;
     private Date endAt;
-    private String jobComponent;
-    private String params;
-    private String description;
+    private String jobComponent = "";
+    private String params = "";
+    private String description = "";
 
     public String getName() {
         return name;
@@ -138,10 +138,10 @@ public class TaskConfig {
     }
 
     public static class ScheduleTypeSimpleOptions {
-        private Long interval;
-        private Integer repeatType;
-        private Integer repeatCount;
-        private Integer misfireHandlingType;
+        private Long interval = 6000l;
+        private Integer repeatType = 1;
+        private Integer repeatCount = 10;
+        private Integer misfireHandlingType = 0;
 
         public Long getInterval() {
             return interval;
@@ -177,9 +177,9 @@ public class TaskConfig {
     }
 
     public static class ScheduleTypeCalendarIntervalOptions {
-        private Integer interval;
-        private DateBuilder.IntervalUnit intervalUnit;
-        private Integer misfireHandlingType;
+        private Integer interval = 2;
+        private DateBuilder.IntervalUnit intervalUnit = DateBuilder.IntervalUnit.HOUR;
+        private Integer misfireHandlingType = 0;
 
         public Integer getInterval() {
             return interval;
@@ -209,10 +209,10 @@ public class TaskConfig {
     public static class ScheduleTypeDailyTimeIntervalOptions {
         private TimeOfDay startTimeOfDay;
         private TimeOfDay endTimeOfDay;
-        private Integer[] daysOfWeek;
-        private Integer interval;
-        private DateBuilder.IntervalUnit intervalUnit;
-        private Integer misfireHandlingType;
+        private Integer[] daysOfWeek = new Integer[0];
+        private Integer interval = 2;
+        private DateBuilder.IntervalUnit intervalUnit = DateBuilder.IntervalUnit.HOUR;
+        private Integer misfireHandlingType = 0;
 
         public TimeOfDay getStartTimeOfDay() {
             return startTimeOfDay;
@@ -264,8 +264,8 @@ public class TaskConfig {
     }
 
     public static class ScheduleTypeCronOptions {
-        private String cron;
-        private Integer misfireHandlingType;
+        private String cron = "";
+        private Integer misfireHandlingType = 0;
 
         public String getCron() {
             return cron;
