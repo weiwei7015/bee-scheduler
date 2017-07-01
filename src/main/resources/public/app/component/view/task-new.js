@@ -32,7 +32,7 @@ define(['text!view/task-new.html'], function (tpl) {
                     },
                     scheduleTypeCalendarIntervalOptions: {
                         interval: 2,
-                        intervalUnit: 3,
+                        intervalUnit: "HOUR",
                         misfireHandlingType: 0
                     },
                     scheduleTypeDailyTimeIntervalOptions: {
@@ -40,7 +40,7 @@ define(['text!view/task-new.html'], function (tpl) {
                         endTimeOfDay: null,
                         daysOfWeek: [],
                         interval: 2,
-                        intervalUnit: 3,
+                        intervalUnit: "HOUR",
                         misfireHandlingType: 0
                     },
                     scheduleTypeCronOptions: {

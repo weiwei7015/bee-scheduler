@@ -58,13 +58,13 @@
                         <el-input placeholder="请输入时间间隔" v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.interval">
                             <template slot="prepend">每隔</template>
                             <el-select slot="append" v-model="newTaskFormModel.scheduleTypeCalendarIntervalOptions.intervalUnit" placeholder="请选择" style="width: 65px">
-                                <el-option label="秒" :value="1"></el-option>
-                                <el-option label="分" :value="2"></el-option>
-                                <el-option label="时" :value="3"></el-option>
-                                <el-option label="天" :value="4"></el-option>
-                                <el-option label="周" :value="5"></el-option>
-                                <el-option label="月" :value="6"></el-option>
-                                <el-option label="年" :value="7"></el-option>
+                                <el-option label="秒" value="SECOND"></el-option>
+                                <el-option label="分" value="MINUTE"></el-option>
+                                <el-option label="时" value="HOUR"></el-option>
+                                <el-option label="天" value="DAY"></el-option>
+                                <el-option label="周" value="WEEK"></el-option>
+                                <el-option label="月" value="MONTH"></el-option>
+                                <el-option label="年" value="YEAR"></el-option>
                             </el-select>
                         </el-input>
                     </el-form-item>
@@ -82,9 +82,9 @@
                         <el-input placeholder="请输入时间间隔" v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.interval">
                             <template slot="prepend">每隔</template>
                             <el-select slot="append" v-model="newTaskFormModel.scheduleTypeDailyTimeIntervalOptions.intervalUnit" placeholder="请选择" style="width: 65px">
-                                <el-option label="秒" :value="1"></el-option>
-                                <el-option label="分" :value="2"></el-option>
-                                <el-option label="时" :value="3"></el-option>
+                                <el-option label="秒" value="SECOND"></el-option>
+                                <el-option label="分" value="MINUTE"></el-option>
+                                <el-option label="时" value="HOUR"></el-option>
                             </el-select>
                         </el-input>
                     </el-form-item>

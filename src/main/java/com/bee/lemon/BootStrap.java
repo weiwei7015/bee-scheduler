@@ -1,11 +1,16 @@
 package com.bee.lemon;
 
+import com.alibaba.fastjson.parser.DefaultJSONParser;
+import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
+import com.alibaba.fastjson.serializer.DateCodec;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.lemon.core.SystemInitializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.quartz.TimeOfDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +23,8 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -62,7 +69,25 @@ public class BootStrap {
                 FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
                 FastJsonConfig fastJsonConfig = new FastJsonConfig();
                 fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
+
                 fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+
+                ParserConfig.getGlobalInstance().putDeserializer(TimeOfDay.class, new ObjectDeserializer() {
+                    public final DateCodec dateCodec = new DateCodec();
+
+                    @Override
+                    public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
+                        Date date = dateCodec.deserialze(parser, Date.class, fieldName);
+                        return (T) TimeOfDay.hourAndMinuteAndSecondFromDate(date);
+                    }
+
+                    @Override
+                    public int getFastMatchToken() {
+                        return 0;
+                    }
+                });
+
+
                 converters.add(fastJsonHttpMessageConverter);
             }
         };
