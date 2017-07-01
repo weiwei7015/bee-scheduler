@@ -1,15 +1,6 @@
 package com.bee.lemon.web;
 
-import java.util.Date;
-
-import com.bee.lemon.model.TaskConfig.ScheduleTypeDailyTimeIntervalOptions;
-import com.bee.lemon.model.TaskConfig.ScheduleTypeSimpleOptions;
-import com.bee.lemon.model.TaskConfig.ScheduleTypeCronOptions;
-import com.bee.lemon.model.TaskConfig.ScheduleTypeCalendarIntervalOptions;
-
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.bee.lemon.core.RamStore;
 import com.bee.lemon.core.job.JobComponent;
 import com.bee.lemon.exception.BizzException;
@@ -17,18 +8,23 @@ import com.bee.lemon.model.HttpResponseBodyWrapper;
 import com.bee.lemon.model.Pageable;
 import com.bee.lemon.model.Task;
 import com.bee.lemon.model.TaskConfig;
+import com.bee.lemon.model.TaskConfig.ScheduleTypeCalendarIntervalOptions;
+import com.bee.lemon.model.TaskConfig.ScheduleTypeCronOptions;
+import com.bee.lemon.model.TaskConfig.ScheduleTypeDailyTimeIntervalOptions;
+import com.bee.lemon.model.TaskConfig.ScheduleTypeSimpleOptions;
 import com.bee.lemon.service.TaskService;
 import com.bee.lemon.util.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
-import org.quartz.Trigger.TriggerState;
-import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author weiwei
@@ -42,6 +38,13 @@ public class TaskController {
     private TaskService taskService;
 
     @ResponseBody
+    @GetMapping("/task/groups")
+    public HttpResponseBodyWrapper taskHistoryGroups() throws Exception {
+        Map<String, Object> model = new HashMap<>();
+        return new HttpResponseBodyWrapper(scheduler.getTriggerGroupNames());
+    }
+
+    @ResponseBody
     @GetMapping("/task/list")
     public HttpResponseBodyWrapper task(String state, String taskName, String taskGroup, Integer page) throws Exception {
         state = StringUtils.trimToNull(state);
@@ -49,36 +52,9 @@ public class TaskController {
         taskGroup = StringUtils.trimToNull(taskGroup);
         page = page == null ? 1 : page;
 
-//        List<Task> taskList = new ArrayList<>();
-//        Set<TriggerKey> triggerKeys;
-//        if (StringUtils.isEmpty(taskGroup)) {
-//            triggerKeys = scheduler.getTriggerKeys(GroupMatcher.<TriggerKey>anyGroup());
-//        } else {
-//            triggerKeys = scheduler.getTriggerKeys(GroupMatcher.<TriggerKey>groupEquals(taskGroup));
-//        }
-//        for (TriggerKey triggerKey : triggerKeys) {
-//            Trigger trigger = scheduler.getTrigger(triggerKey);
-//            JobDetail jobDetail = scheduler.getJobDetail(trigger.getJobKey());
-//            if (JobComponent.class.isAssignableFrom(jobDetail.getJobClass())) {
-//                Task task = new Task(trigger, jobDetail, scheduler.getTriggerState(triggerKey), RamStore.jobs.get(jobDetail.getJobClass().getName()));
-//                if (StringUtils.containsIgnoreCase(jobDetail.getKey().getName(), taskName) && (StringUtils.equals(state, "ALL") || StringUtils.equals(task.getTriggerState().toString(), state))) {
-//                    taskList.add(task);
-//                }
-//            }
-//        }
-
         Pageable<Task> queryResult = taskService.queryTask(taskName, taskGroup, state, page);
         return new HttpResponseBodyWrapper(queryResult);
     }
-
-
-    @ResponseBody
-    @GetMapping("/task/groups")
-    public HttpResponseBodyWrapper taskHistoryGroups() throws Exception {
-        Map<String, Object> model = new HashMap<>();
-        return new HttpResponseBodyWrapper(scheduler.getTriggerGroupNames());
-    }
-
 
     @ResponseBody
     @PostMapping("/task/new")
@@ -201,33 +177,6 @@ public class TaskController {
     }
 
     @ResponseBody
-    @PostMapping("/task/delete")
-    public void delete(String name, String group) throws Exception {
-        scheduler.unscheduleJob(new TriggerKey(name, group));
-    }
-
-    @ResponseBody
-    @PostMapping("/task/pause")
-    public void pause(String name, String group) throws Exception {
-        scheduler.pauseTrigger(new TriggerKey(name, group));
-    }
-
-    @ResponseBody
-    @PostMapping("/task/resume")
-    public void resume(String name, String group) throws Exception {
-        scheduler.resumeTrigger(new TriggerKey(name, group));
-    }
-
-    @ResponseBody
-    @PostMapping("/task/execute")
-    public void execute(String name, String group) throws Exception {
-        JobKey jobKey = new JobKey(name, group);
-        TriggerKey triggerKey = new TriggerKey(name, group);
-        JobDataMap jobDataMap = scheduler.getTrigger(triggerKey).getJobDataMap();
-        scheduler.triggerJob(jobKey, jobDataMap);
-    }
-
-    @ResponseBody
     @GetMapping("/task/detail")
     public HttpResponseBodyWrapper detail(String name, String group) throws Exception {
         Trigger abstractTrigger = scheduler.getTrigger(new TriggerKey(name, group));
@@ -291,9 +240,10 @@ public class TaskController {
 
     @ResponseBody
     @PostMapping("/task/edit")
-    public void edit(String name, String group, String cron, String params, String description) throws Exception {
-        cron = StringUtils.trimToEmpty(cron);
-        params = StringUtils.trimToEmpty(params);
+    public void edit(@RequestBody TaskConfig taskConfig) throws Exception {
+
+        /*String cron = StringUtils.trimToEmpty(taskConfig.get);
+        String params = StringUtils.trimToEmpty(params);
         if (!CronExpression.isValidExpression(cron)) {
             throw new BizzException(BizzException.error_code_invalid_params, "Cron表达式输入有误");
         }
@@ -309,6 +259,34 @@ public class TaskController {
         JobDataMap dataMap = new JobDataMap();
         dataMap.put(Constants.TASK_PARAM_JOB_DATA_KEY, params);
         CronTrigger newTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withDescription(description).withSchedule(CronScheduleBuilder.cronSchedule(cron)).usingJobData(dataMap).forJob(oldTrigger.getJobKey()).build();
-        scheduler.rescheduleJob(triggerKey, newTrigger);
+        scheduler.rescheduleJob(triggerKey, newTrigger);*/
+
+    }
+
+    @ResponseBody
+    @PostMapping("/task/delete")
+    public void delete(String name, String group) throws Exception {
+        scheduler.unscheduleJob(new TriggerKey(name, group));
+    }
+
+    @ResponseBody
+    @PostMapping("/task/pause")
+    public void pause(String name, String group) throws Exception {
+        scheduler.pauseTrigger(new TriggerKey(name, group));
+    }
+
+    @ResponseBody
+    @PostMapping("/task/resume")
+    public void resume(String name, String group) throws Exception {
+        scheduler.resumeTrigger(new TriggerKey(name, group));
+    }
+
+    @ResponseBody
+    @PostMapping("/task/execute")
+    public void execute(String name, String group) throws Exception {
+        JobKey jobKey = new JobKey(name, group);
+        TriggerKey triggerKey = new TriggerKey(name, group);
+        JobDataMap jobDataMap = scheduler.getTrigger(triggerKey).getJobDataMap();
+        scheduler.triggerJob(jobKey, jobDataMap);
     }
 }

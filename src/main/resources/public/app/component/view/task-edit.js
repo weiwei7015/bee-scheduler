@@ -21,7 +21,7 @@ define(['text!view/task-edit.html'], function (tpl) {
                 editFor: editFor,
                 helpDialogVisible: false,
                 jobComponentList: {},
-                postNewTaskInProcess: false,
+                postTaskInProcess: false,
                 initEditFormModelInProcess: false,
                 editTaskFormModel: {
                     name: '',
@@ -94,14 +94,14 @@ define(['text!view/task-edit.html'], function (tpl) {
                 vm.$refs["editTaskForm"].validate(function (valid) {
                     if (valid) {
                         var editTaskFormModel = vm.editTaskFormModel;
-                        vm.postNewTaskInProcess = true;
-                        vm.$http.post("/task/new", editTaskFormModel).then(function (re) {
-                            vm.postNewTaskInProcess = false;
-                            vm.newTaskDialogVisible = false;
-                            vm.$message({message: '任务创建成功！', type: 'success'});
-                            vm.query();
+                        var editFor = vm.editFor;
+                        var postUrl = editFor === "New" ? "/task/new" : "Copy" ? "/task/new" : "/task/edit";
+                        vm.postTaskInProcess = true;
+                        vm.$http.post(postUrl, editTaskFormModel).then(function (re) {
+                            vm.$message({message: '保存成功！', type: 'success'});
+                            vm.postTaskInProcess = false;
                         }, function () {
-                            vm.postNewTaskInProcess = false;
+                            vm.postTaskInProcess = false;
                         });
                     } else {
                         vm.$message({message: '填写有误，请检查', type: 'warning'});
