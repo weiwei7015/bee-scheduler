@@ -3,7 +3,7 @@ require.config({
     paths: {
         view: '/public/app/component/view',
         part: '/public/app/component/part',
-        vue: '/public/lib/vue',
+        vue: '/public/lib/vue.min',
         vue_router: '/public/lib/vue-router.min',
         vue_resource: '/public/lib/vue-resource.min',
         ELEMENT: '/public/lib/element-ui-1.3.7/index',
@@ -11,7 +11,7 @@ require.config({
         moment: '/public/lib/moment.min',
         text: '/public/lib/text'
     },
-    urlArgs: 'v=2017063001'
+    urlArgs: 'v=2017070201'
 });
 
 require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'part/helper-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog) {
