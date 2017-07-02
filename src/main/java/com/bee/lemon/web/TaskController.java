@@ -14,8 +14,10 @@ import com.bee.lemon.model.TaskConfig.ScheduleTypeDailyTimeIntervalOptions;
 import com.bee.lemon.model.TaskConfig.ScheduleTypeSimpleOptions;
 import com.bee.lemon.service.TaskService;
 import com.bee.lemon.util.Constants;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
+import org.quartz.spi.OperableTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * @author weiwei
@@ -59,6 +63,9 @@ public class TaskController {
     @ResponseBody
     @PostMapping("/task/new")
     public void newTask(@RequestBody TaskConfig taskConfig) throws Exception {
+        taskConfig.setName(StringUtils.trimToEmpty(taskConfig.getName()));
+        taskConfig.setGroup(StringUtils.trimToEmpty(taskConfig.getGroup()));
+
         if (StringUtils.isEmpty(taskConfig.getJobComponent())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请选择Job组件");
         }
@@ -71,6 +78,9 @@ public class TaskController {
             } catch (Exception e) {
                 throw new BizzException(BizzException.error_code_invalid_params, "任务参数输入有误，必须是JSON格式");
             }
+        }
+        if (Constants.TASK_GROUP_Manual.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Tmp.equalsIgnoreCase(taskConfig.getGroup())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"");
         }
 
 
@@ -373,8 +383,15 @@ public class TaskController {
     @PostMapping("/task/execute")
     public void execute(String name, String group) throws Exception {
         JobKey jobKey = new JobKey(name, group);
-        TriggerKey triggerKey = new TriggerKey(name, group);
-        JobDataMap jobDataMap = scheduler.getTrigger(triggerKey).getJobDataMap();
-        scheduler.triggerJob(jobKey, jobDataMap);
+        Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
+        JobDataMap jobDataMap = trigger.getJobDataMap();
+
+        String randomTriggerName = "MT_" + Long.toString(RandomUtils.nextLong(), 30 + (int) (System.currentTimeMillis() % 7));
+        OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_Manual).forJob(jobKey).build();
+        if (jobDataMap != null) {
+            operableTrigger.setJobDataMap(jobDataMap);
+        }
+
+        scheduler.scheduleJob(operableTrigger);
     }
 }

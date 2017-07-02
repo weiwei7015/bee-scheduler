@@ -12,8 +12,10 @@ public class TaskHistory {
 
     //触发类型：调度触发
     public static Integer TRIGGER_TYPE_SCHEDULER = 1;
-    //触发类型：人为手动触发
-    public static Integer TRIGGER_TYPE_CONTRIVED = 2;
+    //触发类型：手动触发
+    public static Integer TRIGGER_TYPE_MANUAL = 2;
+    //触发类型：临时任务
+    public static Integer TRIGGER_TYPE_TMP = 3;
 
     private String schedulerName;
     private String instanceName;

@@ -32,6 +32,7 @@
                     <el-option label="全部" value=""></el-option>
                     <el-option label="调度" value="1"></el-option>
                     <el-option label="手动" value="2"></el-option>
+                    <el-option label="临时任务" value="3"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -56,7 +57,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="触发方式" width="100">
-                        <template scope="scope">{{scope.row.triggerType === 1?"调度":scope.row.triggerType === 2?"手动":"未知"}}</template>
+                        <template scope="scope">{{scope.row.triggerType === 1?"调度":scope.row.triggerType === 2?"手动":scope.row.triggerType === 3?"临时任务":"未知"}}</template>
                     </el-table-column>
                     <el-table-column label="耗时" width="100">
                         <template scope="scope">

@@ -20,7 +20,7 @@ define(['text!part/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
                 initializing: false,
                 editTaskFormModel: {
                     name: '',
-                    group: 'TMP',
+                    group: 'Tmp',
                     scheduleType: 1,
                     scheduleTypeSimpleOptions: {
                         interval: 0,

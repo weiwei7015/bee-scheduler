@@ -9,6 +9,7 @@ import com.bee.lemon.model.Notification.NotificationType;
 import com.bee.lemon.model.TaskHistory;
 import com.bee.lemon.model.TaskHistory.TaskExecState;
 import com.bee.lemon.service.TaskService;
+import com.bee.lemon.util.Constants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.lf5.LogLevel;
@@ -68,7 +69,7 @@ public class TaskEventRecorder implements JobListener, TriggerListener, Schedule
         String taskExecLog = JobExecutionContextHelper.getExecLog(context);
         TaskHistory.TaskExecState taskExecState = TaskHistory.TaskExecState.VETOED;
         int refired = 1;
-        int triggerType = (trigger instanceof CronTrigger) ? TaskHistory.TRIGGER_TYPE_SCHEDULER : TaskHistory.TRIGGER_TYPE_CONTRIVED;
+        int triggerType = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? TaskHistory.TRIGGER_TYPE_MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? TaskHistory.TRIGGER_TYPE_TMP : TaskHistory.TRIGGER_TYPE_SCHEDULER;
 
         try {
             String schedulerName = context.getScheduler().getSchedulerName();
@@ -115,7 +116,7 @@ public class TaskEventRecorder implements JobListener, TriggerListener, Schedule
         String taskExecLog = JobExecutionContextHelper.getExecLog(context);
         TaskExecState taskExecState = jobException == null ? TaskExecState.SUCCESS : TaskExecState.FAIL;
         int refired = 1;
-        int triggerType = (trigger instanceof CronTrigger) ? TaskHistory.TRIGGER_TYPE_SCHEDULER : TaskHistory.TRIGGER_TYPE_CONTRIVED;
+        int triggerType = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? TaskHistory.TRIGGER_TYPE_MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? TaskHistory.TRIGGER_TYPE_TMP : TaskHistory.TRIGGER_TYPE_SCHEDULER;
 
         try {
             String schedulerName = context.getScheduler().getSchedulerName();
