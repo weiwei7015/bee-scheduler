@@ -16,8 +16,8 @@
                 <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
                     <el-input v-model="editTaskFormModel.name" :disabled="editFor!=='New'"></el-input>
                 </el-form-item>
-                <el-form-item label="所属组" prop="group">
-                    <el-input v-model="editTaskFormModel.group" placeholder="默认为DEFAULT" :disabled="editFor!=='New'"></el-input>
+                <el-form-item label="所属组" prop="group" :rules="validators.taskGroup">
+                    <el-input v-model="editTaskFormModel.group" placeholder="" :disabled="editFor!=='New'"></el-input>
                 </el-form-item>
                 <h4 class="no-margin">调度规则</h4>
                 <div class="hr"></div>

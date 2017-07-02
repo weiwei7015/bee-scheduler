@@ -73,6 +73,9 @@ public class TaskController {
         if (StringUtils.isEmpty(taskConfig.getName())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请输入任务名称");
         }
+        if (StringUtils.isEmpty(taskConfig.getGroup())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "请输入任务所属组");
+        }
         if (StringUtils.isNotEmpty(taskConfig.getParams())) {
             try {
                 JSON.parseObject(taskConfig.getParams());

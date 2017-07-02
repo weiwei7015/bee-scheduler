@@ -13,6 +13,9 @@ define(['text!view/task-edit.html'], function (tpl) {
                 ],
                 taskName: [
                     {required: true, message: '请输入任务名称', trigger: 'blur'}
+                ],
+                taskGroup: [
+                    {required: true, message: '请输入任务所属组', trigger: 'blur'}
                 ]
             };
 
