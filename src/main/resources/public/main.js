@@ -48,6 +48,9 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'part/helper-
         taskHistoryDetail: function (resolver) {
             require(['view/task-history-detail'], resolver);
         },
+        setting: function (resolver) {
+            require(['view/setting'], resolver);
+        },
         error_404: function (resolver) {
             require(['view/error_404'], resolver);
         }
@@ -68,13 +71,8 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'part/helper-
                     {path: '/task/copy/:group-:name', component: views.taskEdit, meta: {editFor: "Copy"}},
                     {path: '/task/history/list', component: views.taskHistoryList},
                     {path: '/task/history/detail/:fireId', component: views.taskHistoryDetail},
+                    {path: '/setting', component: views.setting},
                     // {path: '', redirect: '/home'},
-                    {path: '/manual/:manualName', component: views.manual},
-                    {path: '/promo-list/:type?', component: views.promo_list},
-                    {path: '/promo/new/:type', component: views.promo_edit, meta: {editFor: "NEW"}},
-                    {path: '/promo/edit/:id', component: views.promo_edit, meta: {editFor: "UPDATE"}},
-                    {path: '/promo/copy/:id', component: views.promo_edit, meta: {editFor: "COPY"}},
-                    {path: '/promo/detail/:id', component: views.promo_detail},
                     {path: '*', component: views.error_404}
                 ]
             }

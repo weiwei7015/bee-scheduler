@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public class TaskController {
 
     @ResponseBody
     @PostMapping("/task/new")
-    public void newTask(@RequestBody TaskConfig taskConfig) throws Exception {
+    public void newTask(@RequestBody TaskConfig taskConfig, HttpServletRequest request) throws Exception {
         taskConfig.setName(StringUtils.trimToEmpty(taskConfig.getName()));
         taskConfig.setGroup(StringUtils.trimToEmpty(taskConfig.getGroup()));
 
@@ -79,8 +80,10 @@ public class TaskController {
                 throw new BizzException(BizzException.error_code_invalid_params, "任务参数输入有误，必须是JSON格式");
             }
         }
-        if (Constants.TASK_GROUP_Manual.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Tmp.equalsIgnoreCase(taskConfig.getGroup())) {
-            throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"");
+        if (!"true".equals(request.getParameter("quicktask"))) {
+            if (Constants.TASK_GROUP_Manual.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Tmp.equalsIgnoreCase(taskConfig.getGroup())) {
+                throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"");
+            }
         }
 
 
