@@ -1,4 +1,4 @@
-define(['text!view/setting.html'], function (tpl, ace) {
+define(['text!view/settings.html'], function (tpl, ace) {
 
     return {
         template: tpl,
