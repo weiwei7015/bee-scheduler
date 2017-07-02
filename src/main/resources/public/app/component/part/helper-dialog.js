@@ -14,10 +14,12 @@ define(['text!part/helper-dialog.html', 'vue'], function (tpl, Vue) {
                 }
             }
         },
+        mounted: function () {
+        },
         methods: {
             destroyElement: function () {
                 this.$el.removeEventListener('animationend', this.destroyElement);
-                this.$destroy(true);
+                // this.$destroy(true);
                 this.$el.parentNode.removeChild(this.$el);
             },
             open: function (title) {
@@ -30,12 +32,14 @@ define(['text!part/helper-dialog.html', 'vue'], function (tpl, Vue) {
     });
 
     var HelperDialog = {
+        comp: null,
         open: function (title) {
-            var helperDialogComponent = new HelperDialogConstructor();
-            window.document.body.appendChild((helperDialogComponent).$mount().$el);
-            helperDialogComponent.helperDialogVisible = true;
+            if (this.comp === null) {
+                this.comp = (new HelperDialogConstructor()).$mount();
+            }
+            window.document.body.appendChild(this.comp.$el);
+            this.comp.helperDialogVisible = true;
             if (title) {
-                console.log(title);
             }
         }
     };

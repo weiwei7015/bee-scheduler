@@ -87,7 +87,7 @@ define(['text!view/task-edit.html'], function (tpl) {
             }
         },
         methods: {
-            cancel: function () {
+            routerGoback: function () {
                 this.$router.go(-1);
             },
             postNewTask: function () {
@@ -102,6 +102,7 @@ define(['text!view/task-edit.html'], function (tpl) {
                         vm.$http.post(postUrl, editTaskFormModel).then(function (re) {
                             vm.$message({message: '保存成功！', type: 'success'});
                             vm.postTaskInProcess = false;
+                            vm.routerGoback();
                         }, function () {
                             vm.postTaskInProcess = false;
                         });

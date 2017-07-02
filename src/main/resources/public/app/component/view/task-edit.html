@@ -134,9 +134,6 @@
                 </el-form-item>
                 <el-form-item label="任务参数" prop="params">
                     <el-input type="textarea" v-model="editTaskFormModel.params" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入JSON格式的参数"></el-input>
-                    <!--<div class="el-input-wrapper">
-                        <ace-editor theme="eclipse" height="180" mode="json" :simpleStyle="true" ref="newTaskParamEditor" v-model="editTaskFormModel.params"></ace-editor>
-                    </div>-->
                 </el-form-item>
                 <el-form-item label="任务描述" prop="description">
                     <el-input type="textarea" v-model="editTaskFormModel.description" :autosize="{minRows: 2, maxRows: 5}" placeholder="请详细描述该任务"></el-input>
@@ -164,7 +161,7 @@
 
         <div class="spr"></div>
         <div>
-            <el-button @click="cancel">取 消</el-button>
+            <el-button @click="routerGoback">取 消</el-button>
             <el-button type="primary" @click="postNewTask" :loading="postTaskInProcess">保 存</el-button>
         </div>
 

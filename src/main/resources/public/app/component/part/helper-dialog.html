@@ -1,6 +1,6 @@
 <el-dialog title="Help" :visible.sync="helperDialogVisible">
     <span slot="title"><i class="el-icon-document"></i> 使用帮助</span>
-    <div class="box">
+    <div class="box" v-once>
         <div class="box-body">
             <div><i class="el-icon-information text-warning"></i> SimpleTrigger：</div>
             <div>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行任务。</div>
