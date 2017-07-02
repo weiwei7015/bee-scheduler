@@ -11,12 +11,16 @@
     <div class="content-body" v-loading="initEditFormModelInProcess">
         <div style="width: 800px">
             <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="100px">
+                <h4 class="no-margin">基本信息</h4>
+                <div class="hr"></div>
                 <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
                     <el-input v-model="editTaskFormModel.name" :disabled="editFor!=='New'"></el-input>
                 </el-form-item>
                 <el-form-item label="所属组" prop="group">
                     <el-input v-model="editTaskFormModel.group" placeholder="默认为DEFAULT" :disabled="editFor!=='New'"></el-input>
                 </el-form-item>
+                <h4 class="no-margin">调度规则</h4>
+                <div class="hr"></div>
                 <el-form-item label="调度方式">
                     <el-radio-group v-model="editTaskFormModel.scheduleType">
                         <el-radio :label="1">SimpleTrigger</el-radio>
@@ -127,6 +131,8 @@
                         </el-select>
                     </el-form-item>
                 </template>
+                <h4 class="no-margin">任务内容</h4>
+                <div class="hr"></div>
                 <el-form-item label="Job组件" prop="jobComponent" :rules="validators.jobComponent">
                     <el-select v-model="editTaskFormModel.jobComponent" :disabled="editFor!=='New'" placeholder="请选择Job组件" style="width: 100%">
                         <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key"></el-option>
@@ -138,6 +144,8 @@
                 <el-form-item label="任务描述" prop="description">
                     <el-input type="textarea" v-model="editTaskFormModel.description" :autosize="{minRows: 2, maxRows: 5}" placeholder="请详细描述该任务"></el-input>
                 </el-form-item>
+                <h4 class="no-margin">高级选项</h4>
+                <div class="hr"></div>
                 <el-form-item label="激活选项">
                     <el-radio-group v-model="editTaskFormModel.startAtType">
                         <el-radio :label="1">立即激活</el-radio>
@@ -158,8 +166,7 @@
                 </el-form-item>
             </el-form>
         </div>
-
-        <div class="spr"></div>
+        <div class="hr"></div>
         <div>
             <el-button @click="routerGoback">取 消</el-button>
             <el-button type="primary" @click="postNewTask" :loading="postTaskInProcess">保 存</el-button>
