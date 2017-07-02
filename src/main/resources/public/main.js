@@ -9,13 +9,12 @@ require.config({
         ELEMENT: '/public/lib/element-ui-1.3.7/index',
         ace: '/public/lib/ace-1.2.7/lib/ace',
         moment: '/public/lib/moment.min',
-        smoothScroll: '/public/lib/smooth-scroll.min',
         text: '/public/lib/text'
     },
     urlArgs: 'v=2017063001'
 });
 
-require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll'], function (Vue, VueRouter, VueResource, Elem, moment, smoothScroll) {
+require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'part/helper-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog) {
 
     Vue.config.silent = true;
 
@@ -25,8 +24,6 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
     Vue.use(VueResource);
     //定义moment作为全局服务
     Vue.prototype.$moment = moment;
-    //初始化smooth-scroll插件
-    smoothScroll.init({selectorHeader: ".header", speed: 500, easing: 'easeInOutCubic', offset: 40});
 
     //定义视图组件
     var views = {
@@ -84,18 +81,12 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'smoothScroll
         ]
     });
 
+    //帮助组件注册为全局服务
+    Vue.prototype.$helperDialog = helperDialog;
+
     //配置根组件
     var app = new Vue({
-        router: router,
-        data: {
-            promoTypes: null,
-            contentLoading: false
-        },
-        methods: {
-            setContentLoading: function (flag) {
-                this.contentLoading = flag;
-            }
-        }
+        router: router
     });
 
     //Http拦截器

@@ -62,8 +62,6 @@ define(['text!view/index.html'], function (tpl) {
                     }
                 }
             });
-
-
         },
         methods: {}
     };

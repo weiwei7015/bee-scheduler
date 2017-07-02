@@ -8,6 +8,6 @@ public class HomeController {
     @RequestMapping({"/", ""})
     String home() {
         System.out.println("HomeController.home");
-        return "redirect:/public/index.html";
+        return "redirect:/public/main.html";
     }
 }

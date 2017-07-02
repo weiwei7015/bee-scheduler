@@ -39,7 +39,7 @@ public class TaskController {
 
     @ResponseBody
     @GetMapping("/task/groups")
-    public HttpResponseBodyWrapper taskHistoryGroups() throws Exception {
+    public HttpResponseBodyWrapper taskGroups() throws Exception {
         Map<String, Object> model = new HashMap<>();
         return new HttpResponseBodyWrapper(scheduler.getTriggerGroupNames());
     }
@@ -184,7 +184,7 @@ public class TaskController {
 
         TaskConfig taskConfig = new TaskConfig();
         taskConfig.setName(abstractTrigger.getKey().getName());
-        taskConfig.setGroup(abstractTrigger.getKey().getName());
+        taskConfig.setGroup(abstractTrigger.getKey().getGroup());
         taskConfig.setStartAtType(abstractTrigger.getStartTime() == null ? 1 : 2);
         taskConfig.setStartAt(abstractTrigger.getStartTime());
         taskConfig.setEndAtType(abstractTrigger.getEndTime() == null ? 1 : 2);
@@ -241,25 +241,113 @@ public class TaskController {
     @ResponseBody
     @PostMapping("/task/edit")
     public void edit(@RequestBody TaskConfig taskConfig) throws Exception {
-
-        /*String cron = StringUtils.trimToEmpty(taskConfig.get);
-        String params = StringUtils.trimToEmpty(params);
-        if (!CronExpression.isValidExpression(cron)) {
-            throw new BizzException(BizzException.error_code_invalid_params, "Cron表达式输入有误");
-        }
-        if (StringUtils.isNotEmpty(params)) {
+        if (StringUtils.isNotEmpty(taskConfig.getParams())) {
             try {
-                JSON.parseObject(params);
+                JSON.parseObject(taskConfig.getParams());
             } catch (Exception e) {
                 throw new BizzException(BizzException.error_code_invalid_params, "任务参数输入有误，必须是JSON格式");
             }
         }
-        TriggerKey triggerKey = new TriggerKey(name, group);
-        Trigger oldTrigger = scheduler.getTrigger(triggerKey);
+
         JobDataMap dataMap = new JobDataMap();
-        dataMap.put(Constants.TASK_PARAM_JOB_DATA_KEY, params);
-        CronTrigger newTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withDescription(description).withSchedule(CronScheduleBuilder.cronSchedule(cron)).usingJobData(dataMap).forJob(oldTrigger.getJobKey()).build();
-        scheduler.rescheduleJob(triggerKey, newTrigger);*/
+        dataMap.put(Constants.TASK_PARAM_JOB_DATA_KEY, taskConfig.getParams());
+
+        TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskConfig.getName(), taskConfig.getGroup()).usingJobData(dataMap).withDescription(taskConfig.getDescription());
+
+        if (taskConfig.getStartAtType() == 1) {
+            triggerBuilder.startNow();
+        } else {
+            triggerBuilder.startAt(taskConfig.getStartAt());
+        }
+        if (taskConfig.getEndAtType() != 1) {
+            triggerBuilder.endAt(taskConfig.getEndAt());
+        }
+
+
+        if (taskConfig.getScheduleType() == 1) {
+            ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
+
+            SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
+            scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
+                    .withRepeatCount(scheduleOptions.getRepeatType() == 1 ? -1 : scheduleOptions.getRepeatCount());
+
+            if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionFireNow();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
+            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+                scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 4) {
+                scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount();
+            } else if (scheduleOptions.getMisfireHandlingType() == 5) {
+                scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
+            } else if (scheduleOptions.getMisfireHandlingType() == 6) {
+                scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
+            }
+
+            SimpleTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
+
+            scheduler.rescheduleJob(trigger.getKey(), trigger);
+        } else if (taskConfig.getScheduleType() == 2) {
+            ScheduleTypeCalendarIntervalOptions scheduleOptions = taskConfig.getScheduleTypeCalendarIntervalOptions();
+
+            CalendarIntervalScheduleBuilder scheduleBuilder = CalendarIntervalScheduleBuilder.calendarIntervalSchedule();
+            scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
+
+            if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+                scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            }
+
+
+            CalendarIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
+
+            scheduler.rescheduleJob(trigger.getKey(), trigger);
+        } else if (taskConfig.getScheduleType() == 3) {
+            ScheduleTypeDailyTimeIntervalOptions scheduleOptions = taskConfig.getScheduleTypeDailyTimeIntervalOptions();
+
+            DailyTimeIntervalScheduleBuilder scheduleBuilder = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule();
+            scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit())
+                    .startingDailyAt(scheduleOptions.getStartTimeOfDay())
+                    .endingDailyAt(scheduleOptions.getEndTimeOfDay())
+                    .onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
+
+            if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+                scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            }
+
+            DailyTimeIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
+
+            scheduler.rescheduleJob(trigger.getKey(), trigger);
+        } else if (taskConfig.getScheduleType() == 4) {
+            ScheduleTypeCronOptions scheduleOptions = taskConfig.getScheduleTypeCronOptions();
+
+            if (!CronExpression.isValidExpression(scheduleOptions.getCron())) {
+                throw new BizzException(BizzException.error_code_invalid_params, "Cron表达式输入有误");
+            }
+
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleOptions.getCron());
+
+            if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+                scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            }
+
+            CronTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
+
+            scheduler.rescheduleJob(trigger.getKey(), trigger);
+        }
+
 
     }
 

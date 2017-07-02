@@ -37,7 +37,12 @@
                 <el-button type="primary" @click="query">查询</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button icon="plus" @click="goCreateTask">创建任务</el-button>
+                <el-dropdown split-button trigger="click" @click="goCreateTask" @command="handleTaskCommand">
+                    <i class="el-icon-plus"></i> 创建任务
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="execTmpTask">执行临时任务</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
             </el-form-item>
         </el-form>
 

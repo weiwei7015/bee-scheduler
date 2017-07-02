@@ -124,6 +124,11 @@ define(['text!view/task-list.html'], function (tpl) {
                     //...
                 });
             },
+            handleTaskCommand: function (command) {
+                if (command === "execTmpTask") {
+
+                }
+            },
             goCreateTask: function () {
                 this.$router.push("/task/new");
             },

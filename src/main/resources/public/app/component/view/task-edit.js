@@ -95,7 +95,7 @@ define(['text!view/task-edit.html'], function (tpl) {
                     if (valid) {
                         var editTaskFormModel = vm.editTaskFormModel;
                         var editFor = vm.editFor;
-                        var postUrl = editFor === "New" ? "/task/new" : "Copy" ? "/task/new" : "/task/edit";
+                        var postUrl = editFor === "New" ? "/task/new" : editFor === "Copy" ? "/task/new" : "/task/edit";
                         vm.postTaskInProcess = true;
                         vm.$http.post(postUrl, editTaskFormModel).then(function (re) {
                             vm.$message({message: '保存成功！', type: 'success'});
