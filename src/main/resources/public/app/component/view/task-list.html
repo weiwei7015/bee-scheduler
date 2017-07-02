@@ -84,5 +84,9 @@
                 <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
             </div>
         </div>
+
+        <!--Dialog-->
+        <quick-task-dialog :visible.sync="quickTaskDialogVisible"></quick-task-dialog>
+
     </div>
 </div>

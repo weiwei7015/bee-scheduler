@@ -1,11 +1,18 @@
 define(['text!view/task-list.html'], function (tpl) {
 
+    var quickTaskDialog = function (resolver) {
+        require(['part/quick-task-dialog'], resolver);
+    };
+
     return {
         template: tpl,
-        components: {},
+        components: {
+            'quick-task-dialog': quickTaskDialog
+        },
         data: function () {
             var vm = this;
             var data = {
+                quickTaskDialogVisible: false,
                 queryLoading: false,
                 queryFormModel: {
                     name: '',
@@ -126,7 +133,7 @@ define(['text!view/task-list.html'], function (tpl) {
             },
             handleTaskCommand: function (command) {
                 if (command === "execTmpTask") {
-
+                    this.quickTaskDialogVisible = true;
                 }
             },
             goCreateTask: function () {

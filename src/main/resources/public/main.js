@@ -3,7 +3,7 @@ require.config({
     paths: {
         view: '/public/app/component/view',
         part: '/public/app/component/part',
-        vue: '/public/lib/vue.min',
+        vue: '/public/lib/vue',
         vue_router: '/public/lib/vue-router.min',
         vue_resource: '/public/lib/vue-resource.min',
         ELEMENT: '/public/lib/element-ui-1.3.7/index',
