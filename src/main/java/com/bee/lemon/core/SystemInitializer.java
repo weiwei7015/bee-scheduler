@@ -42,8 +42,7 @@ public class SystemInitializer {
 
         String name = "ClearTaskHistoryJob";
         String group = "BuildIn";
-        String cron = "0 0 12 * * ?";
-        cron = "*/20 * * * * ?";
+        String cron = "0 0 0 */1 * ?";
         String description = "内置任务，用于清除历史任务记录";
         if (!scheduler.checkExists(new JobKey(name, group))) {
             JobDetail jobDetail = JobBuilder.newJob(BuildInJobComponent.class).withIdentity(name, group).build();
