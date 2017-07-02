@@ -6,7 +6,7 @@
                 <el-breadcrumb-item>创建任务</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title">{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}} <span class="sub-title"><el-button type="text" size="mini"  @click="helpDialogVisible = true">使用帮助</el-button></span></div>
+        <div class="title">{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}} <span class="sub-title"><el-button type="text" size="mini" @click="$helperDialog.open('hello world')">使用帮助</el-button></span></div>
     </div>
     <div class="content-body" v-loading="initEditFormModelInProcess">
         <div style="width: 800px">
@@ -168,36 +168,5 @@
             <el-button type="primary" @click="postNewTask" :loading="postTaskInProcess">保 存</el-button>
         </div>
 
-        <!--Dialogs-->
-        <el-dialog title="Help" :visible.sync="helpDialogVisible">
-            <span slot="title"><i class="el-icon-document"></i> 使用帮助</span>
-            <div class="box">
-                <div class="box-body">
-                    <div><i class="el-icon-information text-warning"></i> SimpleTrigger：</div>
-                    <div>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行任务。</div>
-                </div>
-            </div>
-            <div class="spr"></div>
-            <div class="box">
-                <div class="box-body">
-                    <div><i class="el-icon-information text-warning"></i> CalendarIntervalTrigger：</div>
-                    <div>类似于SimpleTrigger，指定从某一个时间开始，以一定的时间间隔执行的任务。 但是不同的是SimpleTrigger指定的时间间隔为毫秒，没办法指定每隔一个月执行一次（每月的时间间隔不是固定值），而CalendarIntervalTrigger支持的间隔单位有<b>秒，分钟，小时，天，星期，月，年</b>。</div>
-                </div>
-            </div>
-            <div class="spr"></div>
-            <div class="box">
-                <div class="box-body">
-                    <div><i class="el-icon-information text-warning"></i> DailyTimeIntervalTrigger：</div>
-                    <div>指定每天的某个时间段内，以一定的时间间隔执行任务。并且它可以支持指定星期。它适合的任务类似于：指定每天9:00 至 18:00 ，每隔70秒执行一次，并且只要周一至周五执行。</div>
-                </div>
-            </div>
-            <div class="spr"></div>
-            <div class="box">
-                <div class="box-body">
-                    <div><i class="el-icon-information text-warning"></i> CronTrigger：</div>
-                    <div>适合于更复杂的任务，它支持通过<b>Cron</b>语法来制定执行计划。</div>
-                </div>
-            </div>
-        </el-dialog>
     </div>
 </div>
