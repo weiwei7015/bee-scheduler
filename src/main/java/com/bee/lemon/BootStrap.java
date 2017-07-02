@@ -3,8 +3,7 @@ package com.bee.lemon;
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
-import com.alibaba.fastjson.serializer.DateCodec;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.*;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.lemon.core.SystemInitializer;
@@ -23,7 +22,9 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -70,8 +71,6 @@ public class BootStrap {
                 FastJsonConfig fastJsonConfig = new FastJsonConfig();
                 fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteMapNullValue);
 
-                fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-
                 ParserConfig.getGlobalInstance().putDeserializer(TimeOfDay.class, new ObjectDeserializer() {
                     public final DateCodec dateCodec = new DateCodec();
 
@@ -87,6 +86,27 @@ public class BootStrap {
                     }
                 });
 
+                SerializeConfig serializeConfig = new SerializeConfig();
+                serializeConfig.put(TimeOfDay.class, new ObjectSerializer() {
+                    @Override
+                    public void write(JSONSerializer serializer, Object object, Object fieldName, Type fieldType, int features) throws IOException {
+                        SerializeWriter out = serializer.getWriter();
+                        if (object == null) {
+                            serializer.getWriter().writeNull();
+                            return;
+                        }
+                        TimeOfDay timeOfDay = (TimeOfDay) object;
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Calendar.HOUR_OF_DAY, timeOfDay.getHour());
+                        cal.set(Calendar.MINUTE, timeOfDay.getMinute());
+                        cal.set(Calendar.SECOND, timeOfDay.getSecond());
+                        out.write(String.valueOf(cal.getTimeInMillis()));
+                    }
+                });
+
+                fastJsonConfig.setSerializeConfig(serializeConfig);
+
+                fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
 
                 converters.add(fastJsonHttpMessageConverter);
             }

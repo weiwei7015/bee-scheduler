@@ -1,5 +1,8 @@
 package com.bee.lemon.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.annotation.JSONType;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.quartz.DateBuilder;
 import org.quartz.TimeOfDay;
 
@@ -207,6 +210,7 @@ public class TaskConfig {
     }
 
     public static class ScheduleTypeDailyTimeIntervalOptions {
+        @JSONField()
         private TimeOfDay startTimeOfDay;
         private TimeOfDay endTimeOfDay;
         private Integer[] daysOfWeek = new Integer[0];
