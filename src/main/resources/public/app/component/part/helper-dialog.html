@@ -1,30 +1,43 @@
-<el-dialog title="Help" :visible.sync="helperDialogVisible">
+<el-dialog title="Help" size="large" :visible.sync="helperDialogVisible">
     <span slot="title"><i class="el-icon-document"></i> 使用帮助</span>
-    <div class="box" v-once>
-        <div class="box-body">
-            <div><i class="el-icon-information text-warning"></i> SimpleTrigger：</div>
-            <div>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行任务。</div>
-        </div>
-    </div>
-    <div class="spr"></div>
-    <div class="box">
-        <div class="box-body">
-            <div><i class="el-icon-information text-warning"></i> CalendarIntervalTrigger：</div>
-            <div>类似于SimpleTrigger，指定从某一个时间开始，以一定的时间间隔执行的任务。 但是不同的是SimpleTrigger指定的时间间隔为毫秒，没办法指定每隔一个月执行一次（每月的时间间隔不是固定值），而CalendarIntervalTrigger支持的间隔单位有<b>秒，分钟，小时，天，星期，月，年</b>。</div>
-        </div>
-    </div>
-    <div class="spr"></div>
-    <div class="box">
-        <div class="box-body">
-            <div><i class="el-icon-information text-warning"></i> DailyTimeIntervalTrigger：</div>
-            <div>指定每天的某个时间段内，以一定的时间间隔执行任务。并且它可以支持指定星期。它适合的任务类似于：指定每天9:00 至 18:00 ，每隔70秒执行一次，并且只要周一至周五执行。</div>
-        </div>
-    </div>
-    <div class="spr"></div>
-    <div class="box">
-        <div class="box-body">
-            <div><i class="el-icon-information text-warning"></i> CronTrigger：</div>
-            <div>适合于更复杂的任务，它支持通过<b>Cron</b>语法来制定执行计划。</div>
-        </div>
+    <div style="height: 400px;overflow: auto">
+        <el-collapse v-model="title" accordion>
+            <el-collapse-item title="执行临时任务" name="ExecTmpTask">
+                待完善...
+            </el-collapse-item>
+            <el-collapse-item title="创建任务" name="CreateTask">
+                <h3 class="no-margin">1、调度方式说明</h3>
+                <h4 class="no-margin">SimpleTrigger：</h4>
+                <div>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行任务。</div>
+                <h4 class="no-margin">CalendarIntervalTrigger：</h4>
+                <div>类似于SimpleTrigger，指定从某一个时间开始，以一定的时间间隔执行的任务。 但是不同的是SimpleTrigger指定的时间间隔为毫秒，没办法指定每隔一个月执行一次（每月的时间间隔不是固定值），而CalendarIntervalTrigger支持的间隔单位有<b>秒，分钟，小时，天，星期，月，年</b>。</div>
+                <h4 class="no-margin">DailyTimeIntervalTrigger：</h4>
+                <div>指定每天的某个时间段内，以一定的时间间隔执行任务。并且它可以支持指定星期。它适合的任务类似于：指定每天9:00 至 18:00 ，每隔70秒执行一次，并且只要周一至周五执行。</div>
+                <h4 class="no-margin">CronTrigger：</h4>
+                <div>适合于更复杂的任务，它支持通过<b>Cron</b>语法来制定执行计划。</div>
+                <h3 class="no-margin">2、Cron表达式</h3>
+                <h4 class="no-margin">格式</h4>
+                <div>
+                    Seconds Minutes Hours DayofMonth Month DayofWeek Year或<br/>
+                    Seconds Minutes Hours DayofMonth Month DayofWeek
+                </div>
+                <h4 class="no-margin">每一个域可出现的字符如下：</h4>
+                <div>
+                    Seconds:可出现", - * /"四个字符，有效范围为0-59的整数<br/>
+                    Minutes:可出现", - * /"四个字符，有效范围为0-59的整数<br/>
+                    Hours:可出现", - * /"四个字符，有效范围为0-23的整数<br/>
+                    DayofMonth:可出现", - * / ? L W C"八个字符，有效范围为0-31的整数<br/>
+                    Month:可出现", - * /"四个字符，有效范围为1-12的整数或JAN-DEC<br/>
+                    DayofWeek:可出现", - * / ? L C #"四个字符，有效范围为1-7的整数或SUN-SAT两个范围。1表示星期天，2表示星期一， 依次类推<br/>
+                    Year:可出现", - * /"四个字符
+                </div>
+            </el-collapse-item>
+            <el-collapse-item title="待完善" name="3">
+                待完善...
+            </el-collapse-item>
+            <el-collapse-item title="待完善" name="4">
+                待完善...
+            </el-collapse-item>
+        </el-collapse>
     </div>
 </el-dialog>

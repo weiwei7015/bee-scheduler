@@ -4,7 +4,8 @@ define(['text!part/helper-dialog.html', 'vue'], function (tpl, Vue) {
         components: {},
         data: function () {
             return {
-                helperDialogVisible: false
+                helperDialogVisible: false,
+                title: ""
             };
         },
         watch: {
@@ -40,6 +41,7 @@ define(['text!part/helper-dialog.html', 'vue'], function (tpl, Vue) {
             window.document.body.appendChild(this.comp.$el);
             this.comp.helperDialogVisible = true;
             if (title) {
+                this.comp.title = title;
             }
         }
     };

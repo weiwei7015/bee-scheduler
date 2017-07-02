@@ -6,7 +6,7 @@
                 <el-breadcrumb-item>创建任务</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title">{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}} <span class="sub-title"><el-button type="text" size="mini" @click="$helperDialog.open('hello world')">使用帮助</el-button></span></div>
+        <div class="title">{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}} <span class="sub-title"><el-button type="text" size="mini" @click="$helperDialog.open('CreateTask')">使用帮助</el-button></span></div>
     </div>
     <div class="content-body" v-loading="initEditFormModelInProcess">
         <div style="width: 800px">
