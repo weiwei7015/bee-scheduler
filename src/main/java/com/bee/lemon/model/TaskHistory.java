@@ -3,136 +3,143 @@ package com.bee.lemon.model;
 import java.util.Date;
 
 /**
- * @author weiwei1
- * 
- * 任务历史
+ * @author weiwei 任务历史
  */
 public class TaskHistory {
+    public enum TaskExecState {
+        SUCCESS, FAIL, VETOED
+    }
 
-	public static enum TaskExecState {
-		SUCCESS, FAIL, VETOED
-	}
+    //触发类型：调度触发
+    public static Integer TRIGGER_TYPE_SCHEDULER = 1;
+    //触发类型：人为手动触发
+    public static Integer TRIGGER_TYPE_CONTRIVED = 2;
 
-	/** 触发类型：调度触发 */
-	public static Integer TRIGGER_TYPE_SCHEDULER = 1;
-	/** 触发类型：人为手动触发 */
-	public static Integer TRIGGER_TYPE_CONTRIVED = 2;
+    private String schedulerName;
+    private String instanceName;
+    private String fireId;
+    private String taskName;
+    private String taskGroup;
+    private Date startTime;
+    private Date completeTime;
+    private Long expendTime;
+    private int refired;
+    private TaskExecState state;
+    private Integer triggerType;
+    private String log;
 
-	private Integer id;
-	private String fireId;
-	private String taskName;
-	private String taskGroup;
-	private Date startTime;
-	private Date completeTime;
-	private Long expendTime;
-	private int refired;
-	private TaskExecState state;
-	private Integer triggerType;
-	private String log;
+    public TaskHistory() {
+    }
 
-	public TaskHistory() {
-	}
+    public TaskHistory(String schedulerName, String instanceName, String fireId, String taskName, String taskGroup, Date startTime, Date completeTime, Long expendTime, int refired, TaskExecState state, Integer triggerType, String log) {
+        super();
+        this.schedulerName = schedulerName;
+        this.instanceName = instanceName;
+        this.fireId = fireId;
+        this.taskName = taskName;
+        this.taskGroup = taskGroup;
+        this.startTime = startTime;
+        this.completeTime = completeTime;
+        this.expendTime = expendTime;
+        this.refired = refired;
+        this.state = state;
+        this.triggerType = triggerType;
+        this.log = log;
+    }
 
-	public TaskHistory(String fireId, String taskName, String taskGroup, Date startTime, Date completeTime, Long expendTime, int refired, TaskExecState state, Integer triggerType, String log) {
-		super();
-		this.fireId = fireId;
-		this.taskName = taskName;
-		this.taskGroup = taskGroup;
-		this.startTime = startTime;
-		this.completeTime = completeTime;
-		this.expendTime = expendTime;
-		this.refired = refired;
-		this.state = state;
-		this.triggerType = triggerType;
-		this.log = log;
-	}
+    public String getFireId() {
+        return fireId;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public void setFireId(String fireId) {
+        this.fireId = fireId;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public String getSchedulerName() {
+        return schedulerName;
+    }
 
-	public String getTaskName() {
-		return taskName;
-	}
+    public void setSchedulerName(String schedulerName) {
+        this.schedulerName = schedulerName;
+    }
 
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
+    public String getInstanceName() {
+        return instanceName;
+    }
 
-	public String getTaskGroup() {
-		return taskGroup;
-	}
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
 
-	public void setTaskGroup(String taskGroup) {
-		this.taskGroup = taskGroup;
-	}
+    public String getTaskName() {
+        return taskName;
+    }
 
-	public String getFireId() {
-		return fireId;
-	}
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
 
-	public void setFireId(String fireId) {
-		this.fireId = fireId;
-	}
+    public String getTaskGroup() {
+        return taskGroup;
+    }
 
-	public Date getStartTime() {
-		return startTime;
-	}
+    public void setTaskGroup(String taskGroup) {
+        this.taskGroup = taskGroup;
+    }
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
+    public Date getStartTime() {
+        return startTime;
+    }
 
-	public Date getCompleteTime() {
-		return completeTime;
-	}
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
 
-	public void setCompleteTime(Date completeTime) {
-		this.completeTime = completeTime;
-	}
+    public Date getCompleteTime() {
+        return completeTime;
+    }
 
-	public Long getExpendTime() {
-		return expendTime;
-	}
+    public void setCompleteTime(Date completeTime) {
+        this.completeTime = completeTime;
+    }
 
-	public void setExpendTime(Long expendTime) {
-		this.expendTime = expendTime;
-	}
+    public Long getExpendTime() {
+        return expendTime;
+    }
 
-	public int getRefired() {
-		return refired;
-	}
+    public void setExpendTime(Long expendTime) {
+        this.expendTime = expendTime;
+    }
 
-	public void setRefired(int refired) {
-		this.refired = refired;
-	}
+    public int getRefired() {
+        return refired;
+    }
 
-	public TaskExecState getState() {
-		return state;
-	}
+    public void setRefired(int refired) {
+        this.refired = refired;
+    }
 
-	public void setState(TaskExecState state) {
-		this.state = state;
-	}
+    public TaskExecState getState() {
+        return state;
+    }
 
-	public Integer getTriggerType() {
-		return triggerType;
-	}
+    public void setState(TaskExecState state) {
+        this.state = state;
+    }
 
-	public void setTriggerType(Integer triggerType) {
-		this.triggerType = triggerType;
-	}
+    public Integer getTriggerType() {
+        return triggerType;
+    }
 
-	public String getLog() {
-		return log;
-	}
+    public void setTriggerType(Integer triggerType) {
+        this.triggerType = triggerType;
+    }
 
-	public void setLog(String log) {
-		this.log = log;
-	}
+    public String getLog() {
+        return log;
+    }
 
+    public void setLog(String log) {
+        this.log = log;
+    }
 }

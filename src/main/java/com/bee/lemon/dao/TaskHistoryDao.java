@@ -24,42 +24,12 @@ import java.util.List;
 @Repository
 public class TaskHistoryDao extends DaoBase {
 
-    public int insert(final List<TaskHistory> taskHistoryList) {
-        String sql = "INSERT INTO TASK_HISTORY(FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        int[] results = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                TaskHistory history = taskHistoryList.get(i);
-                ps.setString(1, history.getFireId());
-                ps.setString(2, history.getTaskName());
-                ps.setString(3, history.getTaskGroup());
-                ps.setTimestamp(4, new Timestamp(history.getStartTime().getTime()));
-                ps.setTimestamp(5, new Timestamp(history.getCompleteTime().getTime()));
-                ps.setLong(6, history.getExpendTime());
-                ps.setInt(7, history.getRefired());
-                ps.setString(8, history.getState().toString());
-                ps.setInt(9, history.getTriggerType());
-                ps.setString(10, history.getLog());
-            }
-
-            @Override
-            public int getBatchSize() {
-                return taskHistoryList.size();
-            }
-        });
-        int tmp = 0;
-        for (int result : results) {
-            tmp += result;
-        }
-        return tmp;
+    public TaskHistory query(String fireId) {
+        String sql = "SELECT * FROM TASK_HISTORY WHERE FIRE_ID = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), fireId);
     }
 
-    public int clearBefore(Date date) {
-        String sql = "DELETE FROM TASK_HISTORY WHERE START_TIME <= '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date) + "'");
-        return jdbcTemplate.update(sql);
-    }
-
-    public Pageable<TaskHistory> query(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, int page) {
+    public Pageable<TaskHistory> query(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, int page) {
         List<Object> args = new ArrayList<>();
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM TASK_HISTORY");
         StringBuilder sqlQueryResult = new StringBuilder("SELECT * FROM TASK_HISTORY");
@@ -104,16 +74,48 @@ public class TaskHistoryDao extends DaoBase {
         return new Pageable<>(page, getPageSize(), resultTotal, result);
     }
 
-    public TaskHistory query(String fireId) {
-        String sql = "SELECT * FROM TASK_HISTORY WHERE FIRE_ID = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), fireId);
+    public List<String> getTaskHistoryGroups(String schedulerName) {
+        List<String> result = new ArrayList<>();
+        String sql = "SELECT DISTINCT TASK_GROUP FROM TASK_HISTORY WHERE SCHED_NAME = ?";
+        result = jdbcTemplate.queryForList(sql, String.class, schedulerName);
+        return result;
     }
 
-    public List<String> getTaskHistoryGroups() {
-        List<String> result = new ArrayList<>();
-        String sql = "SELECT DISTINCT TASK_GROUP FROM TASK_HISTORY";
-        result = jdbcTemplate.queryForList(sql, String.class);
-        return result;
+    public int insert(final List<TaskHistory> taskHistoryList) {
+        String sql = "INSERT INTO TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        int[] results = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                TaskHistory history = taskHistoryList.get(i);
+                ps.setString(1, history.getSchedulerName());
+                ps.setString(2, history.getInstanceName());
+                ps.setString(3, history.getFireId());
+                ps.setString(4, history.getTaskName());
+                ps.setString(5, history.getTaskGroup());
+                ps.setTimestamp(6, new Timestamp(history.getStartTime().getTime()));
+                ps.setTimestamp(7, new Timestamp(history.getCompleteTime().getTime()));
+                ps.setLong(8, history.getExpendTime());
+                ps.setInt(9, history.getRefired());
+                ps.setString(10, history.getState().toString());
+                ps.setInt(11, history.getTriggerType());
+                ps.setString(12, history.getLog());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return taskHistoryList.size();
+            }
+        });
+        int tmp = 0;
+        for (int result : results) {
+            tmp += result;
+        }
+        return tmp;
+    }
+
+    public int clearBefore(String schedulerName, Date date) {
+        String sql = "DELETE FROM TASK_HISTORY WHERE START_TIME <= '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date) + "'");
+        return jdbcTemplate.update(sql);
     }
 
 }

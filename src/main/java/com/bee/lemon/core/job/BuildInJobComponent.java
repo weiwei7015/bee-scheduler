@@ -60,7 +60,7 @@ public class BuildInJobComponent extends JobComponent {
                 date_point.set(Calendar.DAY_OF_MONTH, date_point.get(Calendar.DAY_OF_MONTH) - keepDays);
 
                 TaskService taskService = SpringApplicationContext.getBean(TaskService.class);
-                int result = taskService.clearHistoryBefore(date_point.getTime());
+                int result = taskService.clearHistoryBefore(context.getScheduler().getSchedulerName(), date_point.getTime());
                 JobExecutionContextHelper.appendExecLog(context, "执行完成 -> " + "清除历史任务记录完毕，已成功清除 " + result + " 条记录");
 
             }

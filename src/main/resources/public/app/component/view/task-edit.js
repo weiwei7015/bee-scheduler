@@ -80,8 +80,10 @@ define(['text!view/task-edit.html'], function (tpl) {
         },
         watch: {
             'editTaskFormModel.jobComponent': function (newVal, oldVal) {
-                var selectedJobComponent = this.jobComponentList[newVal];
-                this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
+                if (this.editFor === "New") {
+                    var selectedJobComponent = this.jobComponentList[newVal];
+                    this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
+                }
             }
         },
         methods: {

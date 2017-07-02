@@ -69,8 +69,16 @@ public class TaskEventRecorder implements JobListener, TriggerListener, Schedule
         TaskHistory.TaskExecState taskExecState = TaskHistory.TaskExecState.VETOED;
         int refired = 1;
         int triggerType = (trigger instanceof CronTrigger) ? TaskHistory.TRIGGER_TYPE_SCHEDULER : TaskHistory.TRIGGER_TYPE_CONTRIVED;
-        TaskHistory taskHistory = new TaskHistory(context.getFireInstanceId(), jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), context.getFireTime(), currentTime, context.getJobRunTime(), refired, taskExecState, triggerType, taskExecLog);
-        getTaskService().insertTaskHistory(taskHistory);
+
+        try {
+            String schedulerName = context.getScheduler().getSchedulerName();
+            String schedulerInstanceId = context.getScheduler().getSchedulerInstanceId();
+
+            TaskHistory taskHistory = new TaskHistory(schedulerName, schedulerInstanceId, context.getFireInstanceId(), jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), context.getFireTime(), currentTime, context.getJobRunTime(), refired, taskExecState, triggerType, taskExecLog);
+            getTaskService().insertTaskHistory(taskHistory);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     @Override
@@ -108,8 +116,16 @@ public class TaskEventRecorder implements JobListener, TriggerListener, Schedule
         TaskExecState taskExecState = jobException == null ? TaskExecState.SUCCESS : TaskExecState.FAIL;
         int refired = 1;
         int triggerType = (trigger instanceof CronTrigger) ? TaskHistory.TRIGGER_TYPE_SCHEDULER : TaskHistory.TRIGGER_TYPE_CONTRIVED;
-        TaskHistory taskHistory = new TaskHistory(context.getFireInstanceId(), jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), context.getFireTime(), currentTime, context.getJobRunTime(), refired, taskExecState, triggerType, taskExecLog);
-        getTaskService().insertTaskHistory(taskHistory);
+
+        try {
+            String schedulerName = context.getScheduler().getSchedulerName();
+            String schedulerInstanceId = context.getScheduler().getSchedulerInstanceId();
+
+            TaskHistory taskHistory = new TaskHistory(schedulerName, schedulerInstanceId, context.getFireInstanceId(), jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), context.getFireTime(), currentTime, context.getJobRunTime(), refired, taskExecState, triggerType, taskExecLog);
+            getTaskService().insertTaskHistory(taskHistory);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     @Override

@@ -23,8 +23,36 @@ public class TaskServiceImpl implements TaskService {
     private TaskDao taskDao;
 
     @Override
-    public int insertTaskHistories(List<TaskHistory> taskHistoryList) {
-        return taskHistoryDao.insert(taskHistoryList);
+    public Task getTask(String schedulerName, String name, String group) {
+        return taskDao.get(name, group);
+    }
+
+    @Override
+    public Pageable<Task> queryTask(String schedulerName, String name, String group, String state, int page) {
+        return taskDao.query(schedulerName, name, group, state, page);
+    }
+
+    @Override
+    public TaskHistory getTaskHistory(String fireId) {
+        return taskHistoryDao.query(fireId);
+    }
+
+    @Override
+    public Pageable<TaskHistory> queryTaskHistory(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) {
+        // 默认值处理
+        if (page == null) {
+            page = 1;
+        }
+        fireId = StringUtils.trimToNull(fireId);
+        taskName = StringUtils.trimToNull(taskName);
+        taskGroup = StringUtils.trimToNull(taskGroup);
+        state = StringUtils.trimToNull(state);
+        return taskHistoryDao.query(schedulerName, fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
+    }
+
+    @Override
+    public List<String> getTaskHistoryGroups(String schedulerName) {
+        return taskHistoryDao.getTaskHistoryGroups(schedulerName);
     }
 
     @Override
@@ -35,41 +63,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Pageable<TaskHistory> queryTaskHistory(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) {
-        // 默认值处理
-        if (page == null) {
-            page = 1;
-        }
-        fireId = StringUtils.trimToNull(fireId);
-        taskName = StringUtils.trimToNull(taskName);
-        taskGroup = StringUtils.trimToNull(taskGroup);
-        state = StringUtils.trimToNull(state);
-        return taskHistoryDao.query(fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
+    public int insertTaskHistories(List<TaskHistory> taskHistoryList) {
+        return taskHistoryDao.insert(taskHistoryList);
     }
 
     @Override
-    public TaskHistory getTaskHistory(String fireId) {
-        return taskHistoryDao.query(fireId);
-    }
-
-    @Override
-    public List<String> getTaskHistoryGroups() {
-        return taskHistoryDao.getTaskHistoryGroups();
-    }
-
-    @Override
-    public int clearHistoryBefore(Date date) {
-        return taskHistoryDao.clearBefore(date);
-    }
-
-
-    @Override
-    public Pageable<Task> queryTask(String name, String group, String state, int page) {
-        return taskDao.query(name, group, state, page);
-    }
-
-    @Override
-    public Task getTask(String name, String group) {
-        return taskDao.get(name, group);
+    public int clearHistoryBefore(String schedulerName, Date date) {
+        return taskHistoryDao.clearBefore(schedulerName, date);
     }
 }

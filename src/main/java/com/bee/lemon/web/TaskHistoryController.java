@@ -4,6 +4,8 @@ import com.bee.lemon.model.HttpResponseBodyWrapper;
 import com.bee.lemon.model.Pageable;
 import com.bee.lemon.model.TaskHistory;
 import com.bee.lemon.service.TaskService;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,22 +20,24 @@ import java.util.Map;
 @Controller
 public class TaskHistoryController {
     @Autowired
+    private Scheduler scheduler;
+    @Autowired
     private TaskService taskService;
 
 
     @ResponseBody
     @GetMapping("/task/history/groups")
-    public HttpResponseBodyWrapper taskHistoryGroups() {
+    public HttpResponseBodyWrapper taskHistoryGroups() throws Exception {
         Map<String, Object> model = new HashMap<>();
-        return new HttpResponseBodyWrapper(taskService.getTaskHistoryGroups());
+        return new HttpResponseBodyWrapper(taskService.getTaskHistoryGroups(scheduler.getSchedulerName()));
     }
 
     @ResponseBody
     @GetMapping("/task/history/list")
-    public HttpResponseBodyWrapper taskHistoryList(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) {
+    public HttpResponseBodyWrapper taskHistoryList(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) throws Exception {
         Map<String, Object> model = new HashMap<>();
         // 查询任务历史信息
-        Pageable<TaskHistory> result = taskService.queryTaskHistory(fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
+        Pageable<TaskHistory> result = taskService.queryTaskHistory(scheduler.getSchedulerName(), fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
         return new HttpResponseBodyWrapper(result);
     }
 

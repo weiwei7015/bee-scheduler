@@ -118,10 +118,14 @@ public class BootStrap {
     public SchedulerFactoryBean schedulerFactoryBean() {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
         schedulerFactoryBean.setDataSource(dataSource);
-        schedulerFactoryBean.setSchedulerName("DefaultQuartzScheduler");
+        schedulerFactoryBean.setSchedulerName("BeeScheduler");
         Properties quartzProperties = new Properties();
         quartzProperties.setProperty("org.quartz.jobStore.useProperties", "true");
         quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
+        quartzProperties.setProperty("org.quartz.scheduler.instanceName", "MyClusteredScheduler");
+        quartzProperties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
+        quartzProperties.setProperty("org.quartz.jobStore.isClustered", "true");
+        quartzProperties.setProperty("org.quartz.jobStore.clusterCheckinInterval", "20000");
         schedulerFactoryBean.setQuartzProperties(quartzProperties);
         return schedulerFactoryBean;
     }

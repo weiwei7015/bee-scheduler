@@ -52,7 +52,7 @@ public class TaskController {
         taskGroup = StringUtils.trimToNull(taskGroup);
         page = page == null ? 1 : page;
 
-        Pageable<Task> queryResult = taskService.queryTask(taskName, taskGroup, state, page);
+        Pageable<Task> queryResult = taskService.queryTask(scheduler.getSchedulerName(), taskName, taskGroup, state, page);
         return new HttpResponseBodyWrapper(queryResult);
     }
 
