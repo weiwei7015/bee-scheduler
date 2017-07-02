@@ -19,7 +19,7 @@ define(['text!part/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
                 postTaskInProcess: false,
                 initializing: false,
                 editTaskFormModel: {
-                    name: vm.$moment().format("YYYYMMDD-HH-mm-ss-SSS"),
+                    name: '',
                     group: 'TMP',
                     scheduleType: 1,
                     scheduleTypeSimpleOptions: {
@@ -52,6 +52,9 @@ define(['text!part/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
                 this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
             },
             'visible': function (newVal) {
+                if (newVal) {
+                    this.editTaskFormModel.name = this.$moment().format("YYYYMMDDHHmmssSSS");
+                }
                 this.$emit('update:visible', newVal);
             }
         },
