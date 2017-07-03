@@ -1,4 +1,4 @@
-define(['text!view/task-edit.html'], function (tpl) {
+define(['text!comp/task-edit.html'], function (tpl) {
 
     return {
         template: tpl,

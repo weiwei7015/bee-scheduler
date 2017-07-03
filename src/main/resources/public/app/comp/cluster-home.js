@@ -1,4 +1,4 @@
-define(['text!view/cluster-home.html'], function (tpl, ace) {
+define(['text!comp/cluster-home.html'], function (tpl, ace) {
 
     return {
         template: tpl,

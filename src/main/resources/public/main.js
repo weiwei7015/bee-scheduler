@@ -1,8 +1,9 @@
 require.config({
     // baseUrl: '/public/lib',
     paths: {
-        view: '/public/app/component/view',
-        part: '/public/app/component/part',
+        // view: '/public/app/component/view',
+        // part: '/public/app/component/part',
+        comp: '/public/app/comp',
         vue: '/public/lib/vue.min',
         vue_router: '/public/lib/vue-router.min',
         vue_resource: '/public/lib/vue-resource.min',
@@ -14,7 +15,7 @@ require.config({
     urlArgs: 'v=2017070201'
 });
 
-require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'part/helper-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog) {
+require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog) {
 
     Vue.config.silent = true;
 
@@ -28,34 +29,34 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'part/helper-
     //定义视图组件
     var views = {
         login: function (resolver) {
-            require(['view/login'], resolver);
+            require(['comp/login'], resolver);
         },
         index: function (resolver) {
-            require(['view/index'], resolver);
+            require(['comp/index'], resolver);
         },
         dashboard: function (resolver) {
-            require(['view/dashboard'], resolver);
+            require(['comp/dashboard'], resolver);
         },
         taskList: function (resolver) {
-            require(['view/task-list'], resolver);
+            require(['comp/task-list'], resolver);
         },
         taskEdit: function (resolver) {
-            require(['view/task-edit'], resolver);
+            require(['comp/task-edit'], resolver);
         },
         taskHistoryList: function (resolver) {
-            require(['view/task-history-list'], resolver);
+            require(['comp/task-history-list'], resolver);
         },
         taskHistoryDetail: function (resolver) {
-            require(['view/task-history-detail'], resolver);
+            require(['comp/task-history-detail'], resolver);
         },
         settings: function (resolver) {
-            require(['view/settings'], resolver);
+            require(['comp/settings'], resolver);
         },
         clusterHome: function (resolver) {
-            require(['view/cluster-home'], resolver);
+            require(['comp/cluster-home'], resolver);
         },
         error_404: function (resolver) {
-            require(['view/error_404'], resolver);
+            require(['comp/error_404'], resolver);
         }
     };
 

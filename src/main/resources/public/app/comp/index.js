@@ -1,4 +1,4 @@
-define(['text!view/index.html'], function (tpl) {
+define(['text!comp/index.html'], function (tpl) {
     return {
         template: tpl,
         components: {},

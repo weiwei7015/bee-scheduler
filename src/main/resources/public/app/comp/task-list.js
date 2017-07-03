@@ -1,7 +1,7 @@
-define(['text!view/task-list.html'], function (tpl) {
+define(['text!comp/task-list.html'], function (tpl) {
 
     var quickTaskDialog = function (resolver) {
-        require(['part/quick-task-dialog'], resolver);
+        require(['comp/quick-task-dialog'], resolver);
     };
 
     return {

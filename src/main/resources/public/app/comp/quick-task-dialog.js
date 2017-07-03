@@ -1,4 +1,4 @@
-define(['text!part/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
+define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
     return {
         template: tpl,
         components: {},

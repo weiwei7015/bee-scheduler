@@ -1,4 +1,4 @@
-define(['text!part/helper-dialog.html', 'vue'], function (tpl, Vue) {
+define(['text!comp/helper-dialog.html', 'vue'], function (tpl, Vue) {
     var HelperDialogConstructor = Vue.extend({
         template: tpl,
         components: {},

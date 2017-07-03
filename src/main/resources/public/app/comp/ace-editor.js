@@ -1,4 +1,4 @@
-define(['text!part/ace-editor.html', 'ace/ace'], function (tpl, ace) {
+define(['text!comp/ace-editor.html', 'ace/ace'], function (tpl, ace) {
     var idCounter = 0;
     return {
         template: tpl,

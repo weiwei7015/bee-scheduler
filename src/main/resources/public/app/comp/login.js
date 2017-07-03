@@ -1,4 +1,4 @@
-define(['text!view/login.html'], function (tpl) {
+define(['text!comp/login.html'], function (tpl) {
 
 
     return {
