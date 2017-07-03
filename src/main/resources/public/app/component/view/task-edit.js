@@ -9,7 +9,7 @@ define(['text!view/task-edit.html'], function (tpl) {
 
             var validators = {
                 jobComponent: [
-                    {required: true, message: '请选择Job组件', trigger: 'change'}
+                    {required: true, message: '请选择任务组件', trigger: 'change'}
                 ],
                 taskName: [
                     {required: true, message: '请输入任务名称', trigger: 'blur'}

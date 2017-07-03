@@ -69,7 +69,7 @@ public class TaskController {
         taskConfig.setGroup(StringUtils.trimToEmpty(taskConfig.getGroup()));
 
         if (StringUtils.isEmpty(taskConfig.getJobComponent())) {
-            throw new BizzException(BizzException.error_code_invalid_params, "请选择Job组件");
+            throw new BizzException(BizzException.error_code_invalid_params, "请选择任务组件");
         }
         if (StringUtils.isEmpty(taskConfig.getName())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请输入任务名称");

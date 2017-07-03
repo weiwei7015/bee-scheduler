@@ -60,7 +60,7 @@ public class SystemInitializer {
         }
     }
 
-    // 初始化Job组件
+    // 初始化任务组件
     public void initJobComponents() throws Exception {
         logger.info("init job component ...");
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
@@ -91,7 +91,7 @@ public class SystemInitializer {
 //                Class<?> jobClass = Class.forName(scheduler.getJobDetail(jobKey).getJobClass().getName());
 //                logger.info(jobKey + "-正常");
 //            } catch (ClassNotFoundException | JobPersistenceException e) {
-//                logger.warn("" + jobKey + "相关的Job组件已卸载，将被删除");
+//                logger.warn("" + jobKey + "相关的任务组件已卸载，将被删除");
 //                scheduler.deleteJob(jobKey);
 //            }
 //        }

@@ -49,6 +49,7 @@
                     <el-table-column label="任务">
                         <template scope="scope">{{scope.row.taskGroup}}.{{scope.row.taskName}}</template>
                     </el-table-column>
+                    <el-table-column label="执行节点" prop="instanceName"></el-table-column>
                     <el-table-column label="状态" width="120">
                         <template scope="scope">
                             <el-tag v-if="scope.row.state === 'SUCCESS'" type="success" close-transition>SUCCESS</el-tag>
@@ -59,12 +60,12 @@
                     <el-table-column label="触发方式" width="100">
                         <template scope="scope">{{scope.row.triggerType === 1?"调度":scope.row.triggerType === 2?"手动":scope.row.triggerType === 3?"临时任务":"未知"}}</template>
                     </el-table-column>
-                    <el-table-column label="耗时" width="100">
+                    <el-table-column label="耗时" width="80">
                         <template scope="scope">
                             <span :class="{'text-danger text-bold':scope.row.expendTime > 500}">{{scope.row.expendTime}} ms</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作">
+                    <el-table-column label="操作" width="100">
                         <template scope="scope">
                             <el-button type="text" @click="showTaskHistoryDetail(scope.row.fireId)">查看日志</el-button>
                         </template>

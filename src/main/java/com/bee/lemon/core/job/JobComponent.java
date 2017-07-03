@@ -10,7 +10,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 
 /**
- * @author weiwei Job组件接口
+ * @author weiwei 任务组件接口
  */
 public abstract class JobComponent implements Job {
     @JSONField(deserialize = false, serialize = false)

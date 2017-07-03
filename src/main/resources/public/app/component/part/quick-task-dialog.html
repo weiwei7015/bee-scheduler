@@ -4,8 +4,8 @@
             <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
                 <el-input v-model="editTaskFormModel.name"></el-input>
             </el-form-item>
-            <el-form-item label="Job组件" prop="jobComponent" :rules="validators.jobComponent">
-                <el-select v-model="editTaskFormModel.jobComponent" placeholder="请选择Job组件" style="width: 100%">
+            <el-form-item label="任务组件" prop="jobComponent" :rules="validators.jobComponent">
+                <el-select v-model="editTaskFormModel.jobComponent" placeholder="请选择任务组件" style="width: 100%">
                     <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key"></el-option>
                 </el-select>
             </el-form-item>

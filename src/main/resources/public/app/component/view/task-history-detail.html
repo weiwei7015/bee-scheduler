@@ -16,7 +16,7 @@
             </h3>
         </div>
         <div class="spr"></div>
-        <div>时间：{{$moment(taskHistoryDetail.startTime).format("YYYY-MM-DD HH:mm:ss")}} | 触发：{{taskHistoryDetail.triggerType === 1?"调度":taskHistoryDetail.triggerType === 2?"手动":taskHistoryDetail.triggerType === 3?"临时任务":"未知"}} | 耗时：<span :class="{'text-danger text-bold':taskHistoryDetail.expendTime > 500}">{{taskHistoryDetail.expendTime}}ms</span></div>
+        <div>时间：{{$moment(taskHistoryDetail.startTime).format("YYYY-MM-DD HH:mm:ss")}} | 触发：{{taskHistoryDetail.triggerType === 1?"调度":taskHistoryDetail.triggerType === 2?"手动":taskHistoryDetail.triggerType === 3?"临时任务":"未知"}} | 执行节点：{{taskHistoryDetail.instanceName}} | 耗时：<span :class="{'text-danger text-bold':taskHistoryDetail.expendTime > 500}">{{taskHistoryDetail.expendTime}}ms</span></div>
         <div class="spr"></div>
         <div>
             <pre class="log">{{(new String(taskHistoryDetail.log)).replace(/\r/g, "\n")}}</pre>

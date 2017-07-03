@@ -34,7 +34,8 @@ public class TaskHistoryDao extends DaoBase {
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM TASK_HISTORY");
         StringBuilder sqlQueryResult = new StringBuilder("SELECT * FROM TASK_HISTORY");
 
-        StringBuilder sqlWhere = new StringBuilder(" WHERE 1=1");
+        StringBuilder sqlWhere = new StringBuilder(" WHERE SCHED_NAME = ?");
+        args.add(schedulerName);
         if (fireId != null) {
             sqlWhere.append(" AND FIRE_ID = ?");
             args.add(fireId);
