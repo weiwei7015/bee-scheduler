@@ -160,9 +160,15 @@ h4 {
 /******* box *******/
 .box {
     border: 1px solid #D3DCE6;
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+}
+
+.box.box-hover:hover {
+    border-color: #20A0FF;
 }
 
 .box .box-header {
+
     padding: 10px;
     border-bottom: 1px solid #D3DCE6;
 }
