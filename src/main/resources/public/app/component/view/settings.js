@@ -4,6 +4,7 @@ define(['text!view/settings.html'], function (tpl, ace) {
         template: tpl,
         components: {},
         data: function () {
+            var vm = this;
             var data = {
                 meta: {}
             };
