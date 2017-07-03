@@ -141,7 +141,7 @@ public class TaskConfig {
     }
 
     public static class ScheduleTypeSimpleOptions {
-        private Long interval = 6000l;
+        private Long interval = 30000l;
         private Integer repeatType = 1;
         private Integer repeatCount = 10;
         private Integer misfireHandlingType = 0;
