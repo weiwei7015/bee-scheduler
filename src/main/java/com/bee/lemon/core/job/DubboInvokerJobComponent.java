@@ -181,7 +181,9 @@ public class DubboInvokerJobComponent extends JobComponent {
             ReferenceConfig<GenericService> referenceConfig = new ReferenceConfig<>();
             referenceConfig.setApplication(new ApplicationConfig(Constants.SYSNAME));
             referenceConfig.setUrl(url);
-            referenceConfig.setRegistry(new RegistryConfig(registry));
+            RegistryConfig registryConfig = new RegistryConfig(registry);
+            registryConfig.setClient("curator");
+            referenceConfig.setRegistry(registryConfig);
             referenceConfig.setInterface(service);
             referenceConfig.setVersion(version);
             referenceConfig.setGroup(group);

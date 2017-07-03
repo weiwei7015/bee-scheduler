@@ -26,6 +26,7 @@ dependencies {
     compile('org.apache.commons:commons-lang3:3.5')
     compile('org.quartz-scheduler:quartz:2.3.0')
     compile('org.quartz-scheduler:quartz-jobs:2.3.0')
+    compile('org.apache.curator:curator-recipes:3.3.0')
 //    compile('org.hsqldb:hsqldb:2.4.0')
     compile('mysql:mysql-connector-java:5.1.42')
 //    compile('hsqldb:hsqldb:1.8.0.10')
@@ -36,13 +37,13 @@ dependencies {
     compile('com.alibaba:dubbo:2.5.3') {
         exclude group: 'org.springframework'
     }
-    compile('org.apache.zookeeper:zookeeper:3.4.10') {
-        exclude group: 'org.slf4j'
-        exclude group: 'log4j'
-    }
-    compile('com.101tec:zkclient:0.10') {
-        exclude group: 'org.slf4j'
-    }
+//    compile('org.apache.zookeeper:zookeeper:3.4.10') {
+//        exclude group: 'org.slf4j'
+//        exclude group: 'log4j'
+//    }
+//    compile('com.101tec:zkclient:0.10') {
+//        exclude group: 'org.slf4j'
+//    }
     compile('org.apache.kafka:kafka_2.11:0.10.2.1') {
         exclude group: 'junit'
         exclude group: 'org.slf4j'
