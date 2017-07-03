@@ -17,8 +17,8 @@ public class SettingsController {
     private Scheduler scheduler;
 
     @ResponseBody
-    @GetMapping("/settings")
-    HttpResponseBodyWrapper settings() throws Exception {
+    @GetMapping("/settings/meta")
+    HttpResponseBodyWrapper meta() throws Exception {
         HashMap<Object, Object> model = new HashMap<>();
         return new HttpResponseBodyWrapper(scheduler.getMetaData());
     }
