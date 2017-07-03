@@ -17,7 +17,8 @@ define(['text!view/task-list.html'], function (tpl) {
                 queryFormModel: {
                     name: '',
                     group: '',
-                    status: ''
+                    status: '',
+                    page: 1
                 },
                 currentQueryModel: null,
                 queryResult: {},
@@ -72,10 +73,7 @@ define(['text!view/task-list.html'], function (tpl) {
                 var vm = this;
 
                 vm.$confirm("确认暂停任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
-                    var formData = new FormData();
-                    formData.append("name", name);
-                    formData.append("group", group);
-                    vm.$http.post("/task/pause", formData).then(function (re) {
+                    vm.$http.post("/task/pause", null, {params: {name: name, group: group}}).then(function (re) {
                         vm.newTaskDialogVisible = false;
                         vm.$message({message: '任务已暂停！', type: 'success'});
                         vm.reload();
@@ -88,10 +86,7 @@ define(['text!view/task-list.html'], function (tpl) {
                 var vm = this;
 
                 vm.$confirm("确认恢复任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
-                    var formData = new FormData();
-                    formData.append("name", name);
-                    formData.append("group", group);
-                    vm.$http.post("/task/resume", formData).then(function (re) {
+                    vm.$http.post("/task/resume", null, {params: {name: name, group: group}}).then(function (re) {
                         vm.newTaskDialogVisible = false;
                         vm.$message({message: '任务已恢复！', type: 'success'});
                         vm.reload();
@@ -104,10 +99,7 @@ define(['text!view/task-list.html'], function (tpl) {
                 var vm = this;
 
                 vm.$confirm("确认执行任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
-                    var formData = new FormData();
-                    formData.append("name", name);
-                    formData.append("group", group);
-                    vm.$http.post("/task/execute", formData).then(function (re) {
+                    vm.$http.post("/task/execute", null, {params: {name: name, group: group}}).then(function (re) {
                         vm.newTaskDialogVisible = false;
                         vm.$message({message: '任务已触发！', type: 'success'});
                     });
@@ -119,10 +111,7 @@ define(['text!view/task-list.html'], function (tpl) {
                 var vm = this;
 
                 vm.$confirm("确认删除任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
-                    var formData = new FormData();
-                    formData.append("name", name);
-                    formData.append("group", group);
-                    vm.$http.post("/task/delete", formData).then(function (re) {
+                    vm.$http.post("/task/delete", null, {params: {name: name, group: group}}).then(function (re) {
                         vm.newTaskDialogVisible = false;
                         vm.$message({message: '任务已删除！', type: 'success'});
                         vm.reload();

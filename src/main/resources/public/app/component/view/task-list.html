@@ -80,9 +80,11 @@
                 </div>
                 <div class="spr"></div>
             </template>
-            <div class="text-right">
-                <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
-            </div>
+            <templat v-if="queryResult.result && queryResult.result.length > 0">
+                <div class="text-right">
+                    <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
+                </div>
+            </templat>
         </div>
 
         <!--Dialog-->

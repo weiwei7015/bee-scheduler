@@ -94,7 +94,7 @@ h4 {
 
 .header .logo img {
     height: 40px;
-    /*width: 70px;*/
+    width: 40px;
     border: none;
 }
 
@@ -141,6 +141,7 @@ h4 {
     font-weight: normal;
     color: #48576a;
 }
+
 .content .content-header .title .sub-title {
     font-size: 12px;
     font-weight: normal;
