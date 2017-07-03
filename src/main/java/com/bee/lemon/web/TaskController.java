@@ -14,6 +14,7 @@ import com.bee.lemon.model.TaskConfig.ScheduleTypeDailyTimeIntervalOptions;
 import com.bee.lemon.model.TaskConfig.ScheduleTypeSimpleOptions;
 import com.bee.lemon.service.TaskService;
 import com.bee.lemon.util.Constants;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
@@ -153,10 +154,17 @@ public class TaskController {
             ScheduleTypeDailyTimeIntervalOptions scheduleOptions = taskConfig.getScheduleTypeDailyTimeIntervalOptions();
 
             DailyTimeIntervalScheduleBuilder scheduleBuilder = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule();
-            scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit())
-                    .startingDailyAt(scheduleOptions.getStartTimeOfDay())
-                    .endingDailyAt(scheduleOptions.getEndTimeOfDay())
-                    .onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
+            scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
+
+            if (scheduleOptions.getStartTimeOfDay() != null) {
+                scheduleBuilder.startingDailyAt(scheduleOptions.getStartTimeOfDay());
+            }
+            if (scheduleOptions.getEndTimeOfDay() != null) {
+                scheduleBuilder.endingDailyAt(scheduleOptions.getEndTimeOfDay());
+            }
+            if (ArrayUtils.isNotEmpty(scheduleOptions.getDaysOfWeek())) {
+                scheduleBuilder.onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
+            }
 
             if (scheduleOptions.getMisfireHandlingType() == 1) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
@@ -326,10 +334,17 @@ public class TaskController {
             ScheduleTypeDailyTimeIntervalOptions scheduleOptions = taskConfig.getScheduleTypeDailyTimeIntervalOptions();
 
             DailyTimeIntervalScheduleBuilder scheduleBuilder = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule();
-            scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit())
-                    .startingDailyAt(scheduleOptions.getStartTimeOfDay())
-                    .endingDailyAt(scheduleOptions.getEndTimeOfDay())
-                    .onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
+            scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
+
+            if (scheduleOptions.getStartTimeOfDay() != null) {
+                scheduleBuilder.startingDailyAt(scheduleOptions.getStartTimeOfDay());
+            }
+            if (scheduleOptions.getEndTimeOfDay() != null) {
+                scheduleBuilder.endingDailyAt(scheduleOptions.getEndTimeOfDay());
+            }
+            if (ArrayUtils.isNotEmpty(scheduleOptions.getDaysOfWeek())) {
+                scheduleBuilder.onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
+            }
 
             if (scheduleOptions.getMisfireHandlingType() == 1) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
