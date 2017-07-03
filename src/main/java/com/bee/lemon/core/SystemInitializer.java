@@ -7,6 +7,8 @@ import com.bee.lemon.listener.TaskEventRecorder;
 import com.bee.lemon.util.Constants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.zookeeper.CreateMode;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.boot.ApplicationArguments;
@@ -34,6 +36,10 @@ public class SystemInitializer {
         initJobComponents();
         initScheduler();
         initEmbeddedTask();
+
+        if (applicationContext.getEnvironment().containsProperty("cluster-registry")) {
+            initClusterNodes();
+        }
     }
 
     private void initEmbeddedTask() throws SchedulerException {
@@ -96,5 +102,23 @@ public class SystemInitializer {
         // 启动Scheduler
         scheduler.startDelayed(5);
 //        scheduler.standby();
+    }
+
+    // 注册集群信息
+    public void initClusterNodes() throws Exception {
+        logger.info("init cluster nodes ...");
+
+
+        CuratorFramework curatorFramework = applicationContext.getBean(CuratorFramework.class);
+        Scheduler scheduler = applicationContext.getBean(Scheduler.class);
+
+
+        String directory = "/bee-scheduler/1.0/nodes";
+        if (curatorFramework.checkExists().forPath(directory) == null) {
+            curatorFramework.create().creatingParentsIfNeeded().forPath(directory);
+        }
+
+        curatorFramework.create().withMode(CreateMode.EPHEMERAL).forPath(directory + "/" + scheduler.getSchedulerInstanceId());
+
     }
 }

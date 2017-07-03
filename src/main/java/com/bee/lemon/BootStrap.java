@@ -6,17 +6,24 @@ import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
 import com.alibaba.fastjson.serializer.*;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.bee.lemon.core.CuratorFrameworkFactoryBean;
 import com.bee.lemon.core.SystemInitializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.curator.retry.RetryNTimes;
 import org.quartz.TimeOfDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -35,8 +42,8 @@ public class BootStrap {
 
     private Log logger = LogFactory.getLog(getClass());
 
-//    @Autowired
-//    private Environment env;
+    @Autowired
+    private Environment env;
 
     @Autowired
     private DataSource dataSource;
@@ -56,10 +63,10 @@ public class BootStrap {
         app.run(args);
     }
 
-//    @Bean
-//    public static PropertySourcesPlaceholderConfigurer PropertySourcesPlaceholderConfigurer() {
-//        return new PropertySourcesPlaceholderConfigurer();
-//    }
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer PropertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     // mvc相关配置
     @Bean
@@ -129,6 +136,16 @@ public class BootStrap {
         schedulerFactoryBean.setQuartzProperties(quartzProperties);
         return schedulerFactoryBean;
     }
+
+    //Zookeeper Client
+    @Bean
+    @ConditionalOnProperty(name = "cluster-registry")
+    public CuratorFrameworkFactoryBean curatorFramework() throws Exception {
+        String connectString = env.getProperty("cluster-registry");
+        RetryNTimes retryPolicy = new RetryNTimes(10, 5000);
+        return new CuratorFrameworkFactoryBean(connectString, retryPolicy);
+    }
+
 
     // 系统启动监听器，用于系统启动完成后的初始化操作
     @Bean

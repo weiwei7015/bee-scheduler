@@ -51,6 +51,9 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'part/helper-
         settings: function (resolver) {
             require(['view/settings'], resolver);
         },
+        clusterHome: function (resolver) {
+            require(['view/cluster-home'], resolver);
+        },
         error_404: function (resolver) {
             require(['view/error_404'], resolver);
         }
@@ -71,6 +74,7 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'part/helper-
                     {path: '/task/copy/:group-:name', component: views.taskEdit, meta: {editFor: "Copy"}},
                     {path: '/task/history/list', component: views.taskHistoryList},
                     {path: '/task/history/detail/:fireId', component: views.taskHistoryDetail},
+                    {path: '/cluster', component: views.clusterHome},
                     {path: '/settings', component: views.settings},
                     // {path: '', redirect: '/home'},
                     {path: '*', component: views.error_404}
