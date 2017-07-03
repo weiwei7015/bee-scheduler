@@ -8,7 +8,7 @@
         <div class="title">集群节点</div>
     </div>
     <div class="content-body">
-        <div style="float: left;width: 300px">
+        <div style="float: left;width: 300px" v-loading="clusterInfoLoading">
             <h4 class="no-margin">节点数量：</h4>
             <div class="hr"></div>
             <div style="font-size: 100px;color: #99A9BF;border-radius: 5px;text-align: center">{{nodes.length}}</div>
