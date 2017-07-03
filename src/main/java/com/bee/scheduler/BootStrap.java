@@ -6,6 +6,7 @@ import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
 import com.alibaba.fastjson.serializer.*;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.bee.scheduler.core.BeeSchedulerFactoryBean;
 import com.bee.scheduler.core.SystemInitializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -115,23 +116,13 @@ public class BootStrap {
         };
     }
 
-    // Quartz调度器工厂
+    //调度器工厂
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean() {
-        SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
-        schedulerFactoryBean.setDataSource(dataSource);
-        schedulerFactoryBean.setSchedulerName("BeeScheduler");
-        Properties quartzProperties = new Properties();
-        quartzProperties.setProperty("org.quartz.jobStore.useProperties", "true");
-        quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
-        quartzProperties.setProperty("org.quartz.scheduler.instanceName", "MyClusteredScheduler");
-        quartzProperties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
-        if (env.containsProperty("clusterMode")) {
-            quartzProperties.setProperty("org.quartz.jobStore.isClustered", "true");
-            quartzProperties.setProperty("org.quartz.jobStore.clusterCheckinInterval", "5000");
-        }
-        schedulerFactoryBean.setQuartzProperties(quartzProperties);
-        return schedulerFactoryBean;
+    public BeeSchedulerFactoryBean beeSchedulerFactoryBean() {
+        BeeSchedulerFactoryBean beeSchedulerFactoryBean = new BeeSchedulerFactoryBean("BeeScheduler", dataSource);
+        beeSchedulerFactoryBean.setClusterMode(env.containsProperty("clusterMode"));
+        beeSchedulerFactoryBean.setThreadPoolSize(20);
+        return beeSchedulerFactoryBean;
     }
 
     // 系统启动监听器，用于系统启动完成后的初始化操作
