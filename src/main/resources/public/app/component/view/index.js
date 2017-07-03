@@ -32,7 +32,7 @@ define(['text!view/index.html'], function (tpl) {
                     });
                 }
             };
-
+/*
             NoticeService.listenMsg(function (noticeList) {
                 for (var i in noticeList) {
                     var notice = noticeList[i];
@@ -62,6 +62,7 @@ define(['text!view/index.html'], function (tpl) {
                     }
                 }
             });
+            */
         },
         methods: {}
     };

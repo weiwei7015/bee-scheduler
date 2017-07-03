@@ -36,10 +36,6 @@ public class SystemInitializer {
         initJobComponents();
         initScheduler();
         initEmbeddedTask();
-
-        if (applicationContext.getEnvironment().containsProperty("cluster-registry")) {
-            initClusterNodes();
-        }
     }
 
     private void initEmbeddedTask() throws SchedulerException {
@@ -102,23 +98,5 @@ public class SystemInitializer {
         // 启动Scheduler
         scheduler.startDelayed(5);
 //        scheduler.standby();
-    }
-
-    // 注册集群信息
-    public void initClusterNodes() throws Exception {
-        logger.info("init cluster nodes ...");
-
-
-        CuratorFramework curatorFramework = applicationContext.getBean(CuratorFramework.class);
-        Scheduler scheduler = applicationContext.getBean(Scheduler.class);
-
-
-        String directory = "/bee-scheduler/1.0/nodes";
-        if (curatorFramework.checkExists().forPath(directory) == null) {
-            curatorFramework.create().creatingParentsIfNeeded().forPath(directory);
-        }
-
-        curatorFramework.create().withMode(CreateMode.EPHEMERAL).forPath(directory + "/" + scheduler.getSchedulerInstanceId());
-
     }
 }

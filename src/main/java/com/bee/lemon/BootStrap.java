@@ -15,12 +15,10 @@ import org.quartz.TimeOfDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
@@ -35,12 +33,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class BootStrap {
 
-    private Log logger = LogFactory.getLog(getClass());
+    private static Log logger = LogFactory.getLog(BootStrap.class);
 
     @Autowired
     private Environment env;
@@ -131,21 +130,13 @@ public class BootStrap {
         quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
         quartzProperties.setProperty("org.quartz.scheduler.instanceName", "MyClusteredScheduler");
         quartzProperties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
-        quartzProperties.setProperty("org.quartz.jobStore.isClustered", "true");
-        quartzProperties.setProperty("org.quartz.jobStore.clusterCheckinInterval", "20000");
+        if (env.containsProperty("clusterMode")) {
+            quartzProperties.setProperty("org.quartz.jobStore.isClustered", "true");
+            quartzProperties.setProperty("org.quartz.jobStore.clusterCheckinInterval", "5000");
+        }
         schedulerFactoryBean.setQuartzProperties(quartzProperties);
         return schedulerFactoryBean;
     }
-
-    //Zookeeper Client
-    @Bean
-    @ConditionalOnProperty(name = "cluster-registry")
-    public CuratorFrameworkFactoryBean curatorFramework() throws Exception {
-        String connectString = env.getProperty("cluster-registry");
-        RetryNTimes retryPolicy = new RetryNTimes(10, 5000);
-        return new CuratorFrameworkFactoryBean(connectString, retryPolicy);
-    }
-
 
     // 系统启动监听器，用于系统启动完成后的初始化操作
     @Bean
