@@ -1,0 +1,25 @@
+<div class="content">
+    <div class="content-header">
+        <div class="breadcrumb">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{path:'/task/history/list'}">历史任务</el-breadcrumb-item>
+                <el-breadcrumb-item>历史任务详情</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="title">历史任务详情</div>
+    </div>
+    <div class="content-body" v-loading="taskHistoryDetailLoading">
+        <div>
+            <h3 class="text-bold no-margin">{{taskHistoryDetail.taskGroup}}.{{taskHistoryDetail.taskName}}
+                <el-tag close-transition :type="taskHistoryDetail.state === 'SUCCESS'?'success':taskHistoryDetail.state === 'FAIL'?'danger':taskHistoryDetail.state === 'VETOED'?'warning':'gray'">{{taskHistoryDetail.state}}</el-tag>
+            </h3>
+        </div>
+        <div class="spr"></div>
+        <div>时间：{{$moment(taskHistoryDetail.startTime).format("YYYY-MM-DD HH:mm:ss")}} | 触发：{{taskHistoryDetail.triggerType === 1?"调度":taskHistoryDetail.triggerType === 2?"手动":taskHistoryDetail.triggerType === 3?"临时任务":"未知"}} | 执行节点：{{taskHistoryDetail.instanceName}} | 耗时：<span :class="{'text-danger text-bold':taskHistoryDetail.expendTime > 500}">{{taskHistoryDetail.expendTime}}ms</span></div>
+        <div class="spr"></div>
+        <div>
+            <pre class="log">{{(new String(taskHistoryDetail.log)).replace(/\r/g, "\n")}}</pre>
+        </div>
+    </div>
+</div>

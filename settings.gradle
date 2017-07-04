@@ -1,2 +1,3 @@
-rootProject.name = 'bee-scheduler'
+rootProject.name = 'bee-scheduler-multipart'
 
+include 'core', 'admin', 'cluster-node'
