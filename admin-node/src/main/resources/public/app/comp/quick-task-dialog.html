@@ -1,0 +1,21 @@
+<el-dialog title="执行临时任务" :visible.sync="visible">
+    <div v-loading="initializing">
+        <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="100px">
+            <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
+                <el-input v-model="editTaskFormModel.name"></el-input>
+            </el-form-item>
+            <el-form-item label="任务组件" prop="jobComponent" :rules="validators.jobComponent">
+                <el-select v-model="editTaskFormModel.jobComponent" placeholder="请选择任务组件" style="width: 100%">
+                    <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="任务参数" prop="params">
+                <el-input type="textarea" v-model="editTaskFormModel.params" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入JSON格式的参数"></el-input>
+            </el-form-item>
+        </el-form>
+    </div>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="visible = false" :disable="!initializing">取 消</el-button>
+        <el-button type="primary" @click="post" :loading="postTaskInProcess" :disable="!initializing">立即执行</el-button>
+    </span>
+</el-dialog>

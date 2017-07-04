@@ -1,0 +1,32 @@
+<div class="content">
+    <div class="header">
+        <a class="logo" href="/"><img src="/public/app/img/logo.png"/></a>
+        <span class="logo-text"><el-badge value="BETA">Bee Scheduler</el-badge></span>
+
+        <!--<span class="pull-right" style="margin-right: 10px;">Admin <a href="javascript:void(0);">[退出]</a></span>-->
+        <span class="pull-right" style="margin-right: 10px;">V1.0 - Beta</a></span>
+    </div>
+    <div class="main">
+        <div class="side">
+            <el-menu unique-opened="true" router="true" ref="nav" :default-active="$route.path" v-once>
+                <el-menu-item index="/dashboard">Dashboard</el-menu-item>
+                <el-menu-item index="/task/list">任务中心</el-menu-item>
+                <el-menu-item index="/task/history/list">历史任务</el-menu-item>
+                <el-menu-item index="/cluster" v-if="$AppConfig.clusterMode">集群节点</el-menu-item>
+                <el-menu-item index="/settings">系统设置</el-menu-item>
+                <!--
+                <el-menu-item index="/task-log">任务日志</el-menu-item>
+                <el-submenu index="3">
+                    <template slot="title">帮助中心</template>
+                    <el-menu-item index="3-1">任务组件手册</el-menu-item>
+                    <el-menu-item index="3-2">Cron帮助</el-menu-item>
+                    <el-menu-item index="3-3">系统帮助</el-menu-item>
+                </el-submenu>
+                -->
+            </el-menu>
+        </div>
+        <div class="content-wrapper">
+            <router-view></router-view>
+        </div>
+    </div>
+</div>
