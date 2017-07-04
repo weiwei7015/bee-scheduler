@@ -25,4 +25,4 @@ java -jar admin-node-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-sche
 java -jar cluster-node-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false"
 ```
 
-启动调度节点后，程序会自动加入集群（基于db做注册），访问管理节点能看到集群信息
+启动调度节点后，会自动加入集群（基于db做注册），访问管理节点能看到集群信息
