@@ -29,10 +29,9 @@ public class SystemInitializer {
         logger.info("init embedded task(EmbeddedClearHistoryJob) ...");
         Scheduler scheduler = applicationContext.getBean(Scheduler.class);
 
-        String name = "ClearTaskHistoryJob333";
+        String name = "ClearTaskHistoryJob";
         String group = "BuildIn";
         String cron = "0 0 0 * * ?";
-        cron = "*/5 * * * * ?";
         String description = "内置任务，用于清除历史任务记录";
         if (!scheduler.checkExists(new JobKey(name, group))) {
             JobDetail jobDetail = JobBuilder.newJob(BuildInJobComponent.class).withIdentity(name, group).build();

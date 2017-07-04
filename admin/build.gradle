@@ -1,35 +1,11 @@
 plugins {
     id 'org.springframework.boot' version '1.5.4.RELEASE'
-    id 'java'
 }
 
-group 'com.bee'
-version '1.0-RELEASE'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    mavenLocal()
-    maven { url 'http://192.168.10.220:28080/nexus/content/groups/public/' }
-    mavenCentral()
-}
 dependencies {
     compile project(':core')
     compile('org.springframework.boot:spring-boot-starter-jdbc')
     compile('mysql:mysql-connector-java:5.1.42')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-freemarker')
-}
-
-sourceSets {
-    main {
-        resources {
-//            exclude "public/node_modules/**", "public/src/**", "public/*.*"
-        }
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
 }

@@ -1,18 +1,3 @@
-plugins {
-    id 'java'
-}
-
-group 'com.bee'
-version '1.0-RELEASE'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    mavenLocal()
-    maven { url 'http://192.168.10.220:28080/nexus/content/groups/public/' }
-    mavenCentral()
-}
 dependencies {
     compile('org.springframework:spring-context-support:4.3.9.RELEASE')
     compile('org.quartz-scheduler:quartz:2.3.0')
@@ -29,16 +14,4 @@ dependencies {
         exclude group: 'junit'
         exclude group: 'org.slf4j'
     }
-}
-
-sourceSets {
-    main {
-        resources {
-//            exclude "public/node_modules/**", "public/src/**", "public/*.*"
-        }
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
 }

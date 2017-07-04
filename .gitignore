@@ -1,0 +1,5 @@
+/admin/build/
+/cluster-node/build/
+/core/build/
+.gradle/
+.idea/
