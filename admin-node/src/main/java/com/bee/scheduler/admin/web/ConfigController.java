@@ -17,7 +17,7 @@ public class ConfigController {
     @RequestMapping("/configs")
     HttpResponseBodyWrapper configs() {
         HashMap<Object, Object> model = new HashMap<>();
-        model.put("clusterMode", env.containsProperty("clusterMode"));
+        model.put("clusterMode", env.containsProperty("cluster"));
         return new HttpResponseBodyWrapper(model);
     }
 }
