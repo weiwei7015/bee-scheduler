@@ -17,7 +17,7 @@ java -jar admin-node-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-sche
 java -jar admin-node-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false" --clusterMode
 ```
 
-浏览器访问管理节点：http://ip:port，管理节点自身也是一个普通的调度节点
+浏览器访问管理节点：http://ip:port（**注意：管理节点自身也是一个普通的调度节点**）
 
 
 ###2、使用cluster-node扩展节点
