@@ -1,6 +1,6 @@
 #bee-scheduler
 ##单机运行模式:
-```
+```shell
 java -jar admin-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false"
 ```
 
