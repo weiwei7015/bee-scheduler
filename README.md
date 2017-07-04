@@ -1,4 +1,4 @@
-#bee-scheduler
+#Bee-Scheduler
 ##运行前准备
 - JAVA 1.8+
 - Mysql
