@@ -1,5 +1,5 @@
-/admin-node/build/
-/runnable-node/build/
-/core/build/
+admin-node/build/
+runnable-node/build/
+core/build/
 .gradle/
 .idea/
