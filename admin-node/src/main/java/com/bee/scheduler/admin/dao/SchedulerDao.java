@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public class SchedulerDao extends DaoBase {
     public List<ClusterSchedulerNode> getAllClusterScheduler(String schedulerName) {
-        StringBuilder sqlQueryResult = new StringBuilder("select t.SCHED_NAME 'name',t.INSTANCE_NAME 'instanceName',t.LAST_CHECKIN_TIME 'lastCheckin',t.CHECKIN_INTERVAL 'checkinInterval' from qrtz_scheduler_state t where t.SCHED_NAME = ?");
+        StringBuilder sqlQueryResult = new StringBuilder("select t.SCHED_NAME 'name',t.INSTANCE_NAME 'instanceName',t.LAST_CHECKIN_TIME 'lastCheckin',t.CHECKIN_INTERVAL 'checkinInterval' from bs_scheduler_state t where t.SCHED_NAME = ?");
 
         List<ClusterSchedulerNode> result = new ArrayList<>();
 

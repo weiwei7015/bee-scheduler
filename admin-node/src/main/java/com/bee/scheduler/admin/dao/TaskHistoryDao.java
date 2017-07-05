@@ -21,14 +21,14 @@ import java.util.List;
 public class TaskHistoryDao extends DaoBase {
 
     public TaskHistory query(String fireId) {
-        String sql = "SELECT * FROM TASK_HISTORY WHERE FIRE_ID = ?";
+        String sql = "SELECT * FROM BS_TASK_HISTORY WHERE FIRE_ID = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), fireId);
     }
 
     public Pageable<TaskHistory> query(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, int page) {
         List<Object> args = new ArrayList<>();
-        StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM TASK_HISTORY");
-        StringBuilder sqlQueryResult = new StringBuilder("SELECT * FROM TASK_HISTORY");
+        StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TASK_HISTORY");
+        StringBuilder sqlQueryResult = new StringBuilder("SELECT * FROM BS_TASK_HISTORY");
 
         StringBuilder sqlWhere = new StringBuilder(" WHERE SCHED_NAME = ?");
         args.add(schedulerName);
@@ -73,13 +73,13 @@ public class TaskHistoryDao extends DaoBase {
 
     public List<String> getTaskHistoryGroups(String schedulerName) {
         List<String> result = new ArrayList<>();
-        String sql = "SELECT DISTINCT TASK_GROUP FROM TASK_HISTORY WHERE SCHED_NAME = ?";
+        String sql = "SELECT DISTINCT TASK_GROUP FROM BS_TASK_HISTORY WHERE SCHED_NAME = ?";
         result = jdbcTemplate.queryForList(sql, String.class, schedulerName);
         return result;
     }
 
     public int insert(final List<TaskHistory> taskHistoryList) {
-        String sql = "INSERT INTO TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         int[] results = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -111,7 +111,7 @@ public class TaskHistoryDao extends DaoBase {
     }
 
     public int clearBefore(String schedulerName, Date date) {
-        String sql = "DELETE FROM TASK_HISTORY WHERE START_TIME <= '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date) + "'");
+        String sql = "DELETE FROM BS_TASK_HISTORY WHERE START_TIME <= '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date) + "'");
         return jdbcTemplate.update(sql);
     }
 

@@ -37,6 +37,7 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Properties quartzProperties = new Properties();
+        quartzProperties.setProperty("org.quartz.jobStore.tablePrefix", "BS_");
         quartzProperties.setProperty("org.quartz.jobStore.useProperties", "true");
         quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
         if (autoGenerateInstanceId || instanceId == null) {
