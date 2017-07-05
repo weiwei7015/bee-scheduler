@@ -67,7 +67,7 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
                         var editTaskFormModel = vm.editTaskFormModel;
                         vm.postTaskInProcess = true;
                         vm.$http.post("/task/new?quicktask=true", editTaskFormModel).then(function (re) {
-                            vm.$message({message: '操作成功！', type: 'success'});
+                            vm.$message({message: '任务已触发！', type: 'success'});
                             vm.postTaskInProcess = false;
                             vm.visible = false;
                         }, function () {
