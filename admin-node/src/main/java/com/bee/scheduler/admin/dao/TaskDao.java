@@ -38,8 +38,8 @@ public class TaskDao extends DaoBase {
         Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());
         // 查询记录
         sqlQueryResult.append(sqlWhere).append(" ORDER BY t1.NEXT_FIRE_TIME ASC LIMIT ?,?");
-        args.add((page - 1) * getPageSize());
-        args.add(getPageSize());
+        args.add((page - 1) * pageSize);
+        args.add(pageSize);
 
         final List<Task> result = new ArrayList<>();
 
@@ -85,7 +85,7 @@ public class TaskDao extends DaoBase {
             }
         }, args.toArray());
 
-        return new Pageable<>(page, getPageSize(), resultTotal, result);
+        return new Pageable<>(page, pageSize, resultTotal, result);
     }
 
     public Task get(String name, String group) {

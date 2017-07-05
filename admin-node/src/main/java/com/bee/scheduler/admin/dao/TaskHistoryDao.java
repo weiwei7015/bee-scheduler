@@ -22,7 +22,7 @@ public class TaskHistoryDao extends DaoBase {
 
     public TaskHistory query(String fireId) {
         String sql = "SELECT * FROM BS_TASK_HISTORY WHERE FIRE_ID = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), fireId);
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(TaskHistory.class), fireId);
     }
 
     public Pageable<TaskHistory> query(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, int page) {
@@ -64,18 +64,16 @@ public class TaskHistoryDao extends DaoBase {
         Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());
         // 查询记录
         sqlQueryResult.append(sqlWhere).append(" ORDER BY START_TIME DESC LIMIT ?,?");
-        args.add((page - 1) * getPageSize());
-        args.add(getPageSize());
+        args.add((page - 1) * pageSize);
+        args.add(pageSize);
         List<TaskHistory> result = jdbcTemplate.query(sqlQueryResult.toString(), new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), args.toArray());
 
-        return new Pageable<>(page, getPageSize(), resultTotal, result);
+        return new Pageable<>(page, pageSize, resultTotal, result);
     }
 
     public List<String> getTaskHistoryGroups(String schedulerName) {
-        List<String> result = new ArrayList<>();
         String sql = "SELECT DISTINCT TASK_GROUP FROM BS_TASK_HISTORY WHERE SCHED_NAME = ?";
-        result = jdbcTemplate.queryForList(sql, String.class, schedulerName);
-        return result;
+        return jdbcTemplate.queryForList(sql, String.class, schedulerName);
     }
 
     public int insert(final List<TaskHistory> taskHistoryList) {
