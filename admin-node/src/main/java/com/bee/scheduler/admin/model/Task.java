@@ -10,7 +10,7 @@ public class Task {
     private String group;
     private String triggerType;
     private String jobComponent;
-    private String cron;
+    private Integer priority;
     private Map<Object, Object> data;
     private String state;
     private Long nextFireTime;
@@ -24,11 +24,10 @@ public class Task {
 
     }
 
-    public Task(String name, String group, String jobComponent, String cron) {
+    public Task(String name, String group, String jobComponent) {
         this.name = name;
         this.group = group;
         this.jobComponent = jobComponent;
-        this.cron = cron;
     }
 
     public String getName() {
@@ -63,12 +62,12 @@ public class Task {
         this.jobComponent = jobComponent;
     }
 
-    public String getCron() {
-        return cron;
+    public Integer getPriority() {
+        return priority;
     }
 
-    public void setCron(String cron) {
-        this.cron = cron;
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public Map<Object, Object> getData() {

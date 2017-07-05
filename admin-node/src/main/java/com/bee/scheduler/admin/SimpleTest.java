@@ -8,37 +8,31 @@ import org.apache.curator.framework.api.CuratorListener;
 import org.apache.curator.framework.recipes.queue.DistributedQueue;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.utils.CloseableUtils;
+import sun.swing.BakedArrayList;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class SimpleTest {
     private static final String PATH = "/example/queue";
 
     public static void main(String[] args) throws Exception {
-        CuratorFramework client = null;
-        DistributedQueue<String> queue = null;
-        try {
-            client = CuratorFrameworkFactory.newClient("127.0.0.1:2181", new ExponentialBackoffRetry(1000, 3));
-            client.getCuratorListenable().addListener(new CuratorListener() {
-                @Override
-                public void eventReceived(CuratorFramework client, CuratorEvent event) throws Exception {
-                    System.out.println("CuratorEvent: " + event.getType().name());
-                }
-            });
 
+        String shell = "cmd /c ping baidu.com";
 
-            client.start();
-
-            String directory = "/bee-scheduler/1.0/nodes";
-
-
-            System.out.println("111111111");
-
-            System.out.println("================" + client.checkExists().forPath(directory));
-
-        } catch (Exception ex) {
-
-        } finally {
-            CloseableUtils.closeQuietly(queue);
-            CloseableUtils.closeQuietly(client);
+        Runtime runtime = Runtime.getRuntime();
+        Process process = runtime.exec(shell);
+        InputStream stderr = process.getInputStream();
+        InputStreamReader isr = new InputStreamReader(stderr);
+        BufferedReader br = new BufferedReader(isr);
+        String line;
+        StringBuilder back = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            back.append(line);
         }
+
+
+        System.out.println(back.toString());
     }
 }

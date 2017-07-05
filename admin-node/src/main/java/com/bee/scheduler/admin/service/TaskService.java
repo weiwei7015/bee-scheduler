@@ -1,6 +1,7 @@
 package com.bee.scheduler.admin.service;
 
 
+import com.bee.scheduler.admin.model.ExecutingTask;
 import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
 import com.bee.scheduler.admin.model.TaskHistory;
@@ -15,6 +16,8 @@ public interface TaskService {
     Task getTask(String schedulerName, String name, String group);
 
     Pageable<Task> queryTask(String schedulerName, String name, String group, String state, int page);
+
+    List<ExecutingTask> queryExcutingTask(String schedulerName);
 
     int insertTaskHistory(TaskHistory taskHistory);
 

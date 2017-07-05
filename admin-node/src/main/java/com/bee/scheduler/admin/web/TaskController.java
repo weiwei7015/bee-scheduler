@@ -63,6 +63,12 @@ public class TaskController {
     }
 
     @ResponseBody
+    @GetMapping("/task/executing/list")
+    public HttpResponseBodyWrapper executingTask() throws Exception {
+        return new HttpResponseBodyWrapper(taskService.queryExcutingTask(scheduler.getSchedulerName()));
+    }
+
+    @ResponseBody
     @PostMapping("/task/new")
     public void newTask(@RequestBody TaskConfig taskConfig, HttpServletRequest request) throws Exception {
         taskConfig.setName(StringUtils.trimToEmpty(taskConfig.getName()));

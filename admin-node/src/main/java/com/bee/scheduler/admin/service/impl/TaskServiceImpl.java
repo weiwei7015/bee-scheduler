@@ -2,6 +2,7 @@ package com.bee.scheduler.admin.service.impl;
 
 import com.bee.scheduler.admin.dao.TaskDao;
 import com.bee.scheduler.admin.dao.TaskHistoryDao;
+import com.bee.scheduler.admin.model.ExecutingTask;
 import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
 import com.bee.scheduler.admin.model.TaskHistory;
@@ -24,12 +25,17 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task getTask(String schedulerName, String name, String group) {
-        return taskDao.get(name, group);
+        return taskDao.get(schedulerName, name, group);
     }
 
     @Override
     public Pageable<Task> queryTask(String schedulerName, String name, String group, String state, int page) {
         return taskDao.query(schedulerName, name, group, state, page);
+    }
+
+    @Override
+    public List<ExecutingTask> queryExcutingTask(String schedulerName) {
+        return taskDao.queryExcuting(schedulerName);
     }
 
     @Override
