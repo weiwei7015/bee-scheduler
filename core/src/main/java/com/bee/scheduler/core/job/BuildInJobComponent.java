@@ -6,7 +6,10 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.utils.DBConnectionManager;
+import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
 
+import java.sql.Connection;
 import java.util.Calendar;
 
 /**
@@ -56,6 +59,9 @@ public class BuildInJobComponent extends JobComponent {
                 int keepDays = taskParam.getInteger("keep_days");
                 Calendar date_point = DateUtils.truncate(Calendar.getInstance(), Calendar.DAY_OF_MONTH);
                 date_point.set(Calendar.DAY_OF_MONTH, date_point.get(Calendar.DAY_OF_MONTH) - keepDays);
+
+
+                Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + context.getScheduler().getSchedulerName());
 
 //                TaskService taskService = SpringApplicationContext.getBean(TaskService.class);
 //                int result = taskService.clearHistoryBefore(context.getScheduler().getSchedulerName(), date_point.getTime());
