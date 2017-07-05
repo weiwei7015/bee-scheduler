@@ -110,7 +110,7 @@ public class TaskEventRecorder extends JobListenerSupport {
 
             Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
 
-            String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, schedulerName);
             preparedStatement.setString(2, schedulerInstanceId);

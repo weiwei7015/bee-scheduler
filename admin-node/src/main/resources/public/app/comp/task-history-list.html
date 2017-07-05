@@ -49,7 +49,7 @@
                     <el-table-column label="任务">
                         <template scope="scope">{{scope.row.taskGroup}}.{{scope.row.taskName}}</template>
                     </el-table-column>
-                    <el-table-column label="执行节点" prop="instanceName"></el-table-column>
+                    <el-table-column label="执行节点" prop="instanceId"></el-table-column>
                     <el-table-column label="状态" width="120">
                         <template scope="scope">
                             <el-tag v-if="scope.row.state === 'SUCCESS'" type="success" close-transition>SUCCESS</el-tag>

@@ -79,13 +79,13 @@ public class TaskHistoryDao extends DaoBase {
     }
 
     public int insert(final List<TaskHistory> taskHistoryList) {
-        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         int[] results = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 TaskHistory history = taskHistoryList.get(i);
                 ps.setString(1, history.getSchedulerName());
-                ps.setString(2, history.getInstanceName());
+                ps.setString(2, history.getInstanceId());
                 ps.setString(3, history.getFireId());
                 ps.setString(4, history.getTaskName());
                 ps.setString(5, history.getTaskGroup());

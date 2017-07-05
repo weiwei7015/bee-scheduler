@@ -18,7 +18,7 @@ public class TaskHistory {
     public static Integer TRIGGER_TYPE_TMP = 3;
 
     private String schedulerName;
-    private String instanceName;
+    private String instanceId;
     private String fireId;
     private String taskName;
     private String taskGroup;
@@ -33,10 +33,10 @@ public class TaskHistory {
     public TaskHistory() {
     }
 
-    public TaskHistory(String schedulerName, String instanceName, String fireId, String taskName, String taskGroup, Date startTime, Date completeTime, Long expendTime, int refired, TaskExecState state, Integer triggerType, String log) {
+    public TaskHistory(String schedulerName, String instanceId, String fireId, String taskName, String taskGroup, Date startTime, Date completeTime, Long expendTime, int refired, TaskExecState state, Integer triggerType, String log) {
         super();
         this.schedulerName = schedulerName;
-        this.instanceName = instanceName;
+        this.instanceId = instanceId;
         this.fireId = fireId;
         this.taskName = taskName;
         this.taskGroup = taskGroup;
@@ -65,12 +65,12 @@ public class TaskHistory {
         this.schedulerName = schedulerName;
     }
 
-    public String getInstanceName() {
-        return instanceName;
+    public String getInstanceId() {
+        return instanceId;
     }
 
-    public void setInstanceName(String instanceName) {
-        this.instanceName = instanceName;
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
     }
 
     public String getTaskName() {
