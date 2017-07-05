@@ -41,44 +41,48 @@ public class TaskDao extends DaoBase {
         args.add((page - 1) * getPageSize());
         args.add(getPageSize());
 
-        List<Task> result = new ArrayList<>();
+        final List<Task> result = new ArrayList<>();
 
 
-        jdbcTemplate.query(sqlQueryResult.toString(), rs -> {
-            Task task = new Task();
-            task.setName(rs.getString("name"));
-            task.setGroup(rs.getString("group"));
-            task.setTriggerType(rs.getString("triggerType"));
-            String jobComponent = rs.getString("jobComponent");
-            task.setJobComponent(jobComponent.substring(jobComponent.lastIndexOf(".") + 1));
-            task.setPrevFireTime(rs.getLong("prevFireTime"));
-            task.setNextFireTime(rs.getLong("nextFireTime"));
-            task.setStartTime(rs.getLong("startTime"));
-            task.setEndTime(rs.getLong("endTime"));
-            task.setMisfireInstr(rs.getInt("misfireInstr"));
-            task.setState(rs.getString("state"));
-            task.setDescription(rs.getString("description"));
+        jdbcTemplate.query(sqlQueryResult.toString(), new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet rs) throws SQLException {
 
-            try {
-                Blob blobLocator = rs.getBlob("data");
-                if (blobLocator != null) {
-                    InputStream binaryInput = blobLocator.getBinaryStream();
+                Task task = new Task();
+                task.setName(rs.getString("name"));
+                task.setGroup(rs.getString("group"));
+                task.setTriggerType(rs.getString("triggerType"));
+                String jobComponent = rs.getString("jobComponent");
+                task.setJobComponent(jobComponent.substring(jobComponent.lastIndexOf(".") + 1));
+                task.setPrevFireTime(rs.getLong("prevFireTime"));
+                task.setNextFireTime(rs.getLong("nextFireTime"));
+                task.setStartTime(rs.getLong("startTime"));
+                task.setEndTime(rs.getLong("endTime"));
+                task.setMisfireInstr(rs.getInt("misfireInstr"));
+                task.setState(rs.getString("state"));
+                task.setDescription(rs.getString("description"));
 
-                    Properties properties = new Properties();
-                    if (binaryInput != null) {
-                        try {
-                            properties.load(binaryInput);
-                        } finally {
-                            binaryInput.close();
+                try {
+                    Blob blobLocator = rs.getBlob("data");
+                    if (blobLocator != null) {
+                        InputStream binaryInput = blobLocator.getBinaryStream();
+
+                        Properties properties = new Properties();
+                        if (binaryInput != null) {
+                            try {
+                                properties.load(binaryInput);
+                            } finally {
+                                binaryInput.close();
+                            }
                         }
+                        Map<Object, Object> data = new HashMap<>(properties);
+                        task.setData(data);
                     }
-                    Map<Object, Object> data = new HashMap<>(properties);
-                    task.setData(data);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
                 }
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
+                result.add(task);
             }
-            result.add(task);
         }, args.toArray());
 
         return new Pageable<>(page, getPageSize(), resultTotal, result);

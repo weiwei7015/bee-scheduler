@@ -85,32 +85,35 @@ public class DubboInvokerJobComponent extends JobComponent {
         TYPE_ALIASES.put("iterator", Iterator.class);
     }
 
-    public static final KeyGenerator REFERENCE_CONFIG_CACHE_KEY_GENERATOR = referenceConfig -> {
-        String iName = referenceConfig.getInterface();
-        if (StringUtils.isBlank(iName)) {
-            Class<?> clazz = referenceConfig.getInterfaceClass();
-            iName = clazz.getName();
-        }
-        if (StringUtils.isBlank(iName)) {
-            throw new IllegalArgumentException("No interface info in ReferenceConfig" + referenceConfig);
-        }
-        StringBuilder ret = new StringBuilder();
-        if (referenceConfig.getRegistry() == null) {
-            if (StringUtils.isNotBlank(referenceConfig.getUrl())) {
-                ret.append(referenceConfig.getUrl()).append("/");
-            }
-        } else {
-            ret.append(referenceConfig.getRegistry()).append("/");
-        }
-        if (StringUtils.isNotBlank(referenceConfig.getGroup())) {
-            ret.append(referenceConfig.getGroup()).append("/");
-        }
-        ret.append(iName);
-        if (StringUtils.isNotBlank(referenceConfig.getVersion())) {
-            ret.append(":").append(referenceConfig.getVersion());
-        }
+    public static final KeyGenerator REFERENCE_CONFIG_CACHE_KEY_GENERATOR = new KeyGenerator() {
+        @Override
+        public String generateKey(ReferenceConfig<?> referenceConfig) {
 
-        return ret.toString();
+            String iName = referenceConfig.getInterface();
+            if (StringUtils.isBlank(iName)) {
+                Class<?> clazz = referenceConfig.getInterfaceClass();
+                iName = clazz.getName();
+            }
+            if (StringUtils.isBlank(iName)) {
+                throw new IllegalArgumentException("No interface info in ReferenceConfig" + referenceConfig);
+            }
+            StringBuilder ret = new StringBuilder();
+            if (referenceConfig.getRegistry() == null) {
+                if (StringUtils.isNotBlank(referenceConfig.getUrl())) {
+                    ret.append(referenceConfig.getUrl()).append("/");
+                }
+            } else {
+                ret.append(referenceConfig.getRegistry()).append("/");
+            }
+            if (StringUtils.isNotBlank(referenceConfig.getGroup())) {
+                ret.append(referenceConfig.getGroup()).append("/");
+            }
+            ret.append(iName);
+            if (StringUtils.isNotBlank(referenceConfig.getVersion())) {
+                ret.append(":").append(referenceConfig.getVersion());
+            }
+            return ret.toString();
+        }
     };
 
     @Override

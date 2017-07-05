@@ -4,8 +4,8 @@ subprojects {
     group 'com.bee'
     version '1.0-RELEASE'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
     repositories {
         mavenLocal()

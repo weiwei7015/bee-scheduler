@@ -1,7 +1,7 @@
 ![BeeScheduler](admin-node/src/main/resources/public/app/img/logo.png "BeeScheduler")
 #Bee-Scheduler
 ##运行前准备
-- JAVA 1.8+
+- JAVA 1.7+
 - Mysql
 
 ##开始
