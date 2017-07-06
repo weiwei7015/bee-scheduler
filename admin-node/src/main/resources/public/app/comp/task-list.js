@@ -4,10 +4,15 @@ define(['text!comp/task-list.html'], function (tpl) {
         require(['comp/quick-task-dialog'], resolver);
     };
 
+    var comp_task_trends_plate = function (resolver) {
+        require(['comp/task-trends-plate'], resolver);
+    };
+
     return {
         template: tpl,
         components: {
-            'quick-task-dialog': quickTaskDialog
+            'quick-task-dialog': quickTaskDialog,
+            "task-trends-plate": comp_task_trends_plate
         },
         data: function () {
             var vm = this;

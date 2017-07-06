@@ -5,8 +5,9 @@ import com.bee.scheduler.admin.dao.TaskHistoryDao;
 import com.bee.scheduler.admin.model.ExecutingTask;
 import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
-import com.bee.scheduler.admin.model.TaskHistory;
+import com.bee.scheduler.admin.model.ExecutedTask;
 import com.bee.scheduler.admin.service.TaskService;
+import com.bee.scheduler.core.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,16 +41,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<ExecutingTask> queryExcutingTask(String schedulerName) {
-        return taskDao.queryExcuting(schedulerName);
+        return taskDao.queryExecuting(schedulerName);
     }
 
     @Override
-    public TaskHistory getTaskHistory(String fireId) {
+    public ExecutedTask getTaskHistory(String fireId) {
         return taskHistoryDao.query(fireId);
     }
 
     @Override
-    public Pageable<TaskHistory> queryTaskHistory(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) {
+    public Pageable<ExecutedTask> queryTaskHistory(String schedulerName, String fireId, String taskName, String taskGroup, Constants.TaskExecState execState, Constants.TaskFiredWay firedWay, Long starTimeFrom, Long starTimeTo, Integer page, Integer pageSize) {
         // 默认值处理
         if (page == null) {
             page = 1;
@@ -57,8 +58,7 @@ public class TaskServiceImpl implements TaskService {
         fireId = StringUtils.trimToNull(fireId);
         taskName = StringUtils.trimToNull(taskName);
         taskGroup = StringUtils.trimToNull(taskGroup);
-        state = StringUtils.trimToNull(state);
-        return taskHistoryDao.query(schedulerName, fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
+        return taskHistoryDao.query(schedulerName, fireId, taskName, taskGroup, execState, firedWay, starTimeFrom, starTimeTo, page, pageSize);
     }
 
     @Override
@@ -67,14 +67,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public int insertTaskHistory(TaskHistory taskHistory) {
-        List<TaskHistory> histories = new ArrayList<>();
+    public int insertTaskHistory(ExecutedTask taskHistory) {
+        List<ExecutedTask> histories = new ArrayList<>();
         histories.add(taskHistory);
         return insertTaskHistories(histories);
     }
 
     @Override
-    public int insertTaskHistories(List<TaskHistory> taskHistoryList) {
+    public int insertTaskHistories(List<ExecutedTask> taskHistoryList) {
         return taskHistoryDao.insert(taskHistoryList);
     }
 

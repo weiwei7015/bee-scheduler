@@ -1,14 +1,14 @@
 package com.bee.scheduler.admin.dao;
 
 import com.bee.scheduler.admin.model.Pageable;
-import com.bee.scheduler.admin.model.TaskHistory;
+import com.bee.scheduler.admin.model.ExecutedTask;
+import com.bee.scheduler.core.Constants;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,15 +20,15 @@ import java.util.List;
 @Repository
 public class TaskHistoryDao extends DaoBase {
 
-    public TaskHistory query(String fireId) {
-        String sql = "SELECT * FROM BS_TASK_HISTORY WHERE FIRE_ID = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(TaskHistory.class), fireId);
+    public ExecutedTask query(String fireId) {
+        String sql = "SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.FIRED_WAY 'firedWay',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.FIRED_TIME 'firedTime',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t WHERE t.FIRE_ID = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExecutedTask.class), fireId);
     }
 
-    public Pageable<TaskHistory> query(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long starTimeFrom, Long startTimeTo, int page) {
+    public Pageable<ExecutedTask> query(String schedulerName, String fireId, String taskName, String taskGroup, Constants.TaskExecState execState, Constants.TaskFiredWay firedWay, Long starTimeFrom, Long startTimeTo, Integer page, Integer pageSize) {
         List<Object> args = new ArrayList<>();
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TASK_HISTORY");
-        StringBuilder sqlQueryResult = new StringBuilder("SELECT * FROM BS_TASK_HISTORY");
+        StringBuilder sqlQueryResult = new StringBuilder("SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.FIRED_TIME 'firedTime',t.FIRED_WAY 'firedWay',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t");
 
         StringBuilder sqlWhere = new StringBuilder(" WHERE SCHED_NAME = ?");
         args.add(schedulerName);
@@ -44,31 +44,33 @@ public class TaskHistoryDao extends DaoBase {
             sqlWhere.append(" AND TASK_GROUP LIKE ?");
             args.add("%" + taskGroup + "%");
         }
-        if (state != null) {
-            sqlWhere.append(" AND STATE = ?");
-            args.add(state);
+        if (execState != null) {
+            sqlWhere.append(" AND EXEC_STATE = ?");
+            args.add(execState);
         }
-        if (triggerType != null) {
-            sqlWhere.append(" AND TRIGGER_TYPE = ?");
-            args.add(triggerType);
+        if (firedWay != null) {
+            sqlWhere.append(" AND FIRED_WAY = ?");
+            args.add(firedWay);
         }
         if (starTimeFrom != null) {
-            sqlWhere.append(" AND START_TIME >= ?");
+            sqlWhere.append(" AND FIRED_TIME >= ?");
             args.add(starTimeFrom);
         }
         if (startTimeTo != null) {
-            sqlWhere.append(" AND START_TIME <= ?");
+            sqlWhere.append(" AND FIRED_TIME <= ?");
             args.add(startTimeTo);
         }
         // 查询记录总数
         Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());
         // 查询记录
-        sqlQueryResult.append(sqlWhere).append(" ORDER BY START_TIME DESC LIMIT ?,?");
-        args.add((page - 1) * pageSize);
-        args.add(pageSize);
-        List<TaskHistory> result = jdbcTemplate.query(sqlQueryResult.toString(), new BeanPropertyRowMapper<TaskHistory>(TaskHistory.class), args.toArray());
+        sqlQueryResult.append(sqlWhere).append(" ORDER BY FIRED_TIME DESC LIMIT ?,?");
 
-        return new Pageable<>(page, pageSize, resultTotal, result);
+        int finalPageSize = pageSize == null ? this.pageSize : pageSize;
+        args.add((page - 1) * finalPageSize);
+        args.add(finalPageSize);
+        List<ExecutedTask> result = jdbcTemplate.query(sqlQueryResult.toString(), new BeanPropertyRowMapper<>(ExecutedTask.class), args.toArray());
+
+        return new Pageable<>(page, finalPageSize, resultTotal, result);
     }
 
     public List<String> getTaskHistoryGroups(String schedulerName) {
@@ -76,29 +78,29 @@ public class TaskHistoryDao extends DaoBase {
         return jdbcTemplate.queryForList(sql, String.class, schedulerName);
     }
 
-    public int insert(final List<TaskHistory> taskHistoryList) {
-        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    public int insert(final List<ExecutedTask> executedTaskList) {
+        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         int[] results = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                TaskHistory history = taskHistoryList.get(i);
-                ps.setString(1, history.getSchedulerName());
-                ps.setString(2, history.getInstanceId());
-                ps.setString(3, history.getFireId());
-                ps.setString(4, history.getTaskName());
-                ps.setString(5, history.getTaskGroup());
-                ps.setTimestamp(6, new Timestamp(history.getStartTime().getTime()));
-                ps.setTimestamp(7, new Timestamp(history.getCompleteTime().getTime()));
-                ps.setLong(8, history.getExpendTime());
-                ps.setInt(9, history.getRefired());
-                ps.setString(10, history.getState().toString());
-                ps.setInt(11, history.getTriggerType());
-                ps.setString(12, history.getLog());
+                ExecutedTask executedTask = executedTaskList.get(i);
+                ps.setString(1, executedTask.getSchedulerName());
+                ps.setString(2, executedTask.getInstanceId());
+                ps.setString(3, executedTask.getFireId());
+                ps.setString(4, executedTask.getName());
+                ps.setString(5, executedTask.getGroup());
+                ps.setLong(6, executedTask.getFiredTime());
+                ps.setString(7, executedTask.getFiredWay().toString());
+                ps.setLong(8, executedTask.getCompleteTime());
+                ps.setLong(9, executedTask.getExpendTime());
+                ps.setInt(10, executedTask.getRefired());
+                ps.setString(11, executedTask.getExecState().toString());
+                ps.setString(12, executedTask.getLog());
             }
 
             @Override
             public int getBatchSize() {
-                return taskHistoryList.size();
+                return executedTaskList.size();
             }
         });
         int tmp = 0;
@@ -109,7 +111,7 @@ public class TaskHistoryDao extends DaoBase {
     }
 
     public int clearBefore(String schedulerName, Date date) {
-        String sql = "DELETE FROM BS_TASK_HISTORY WHERE START_TIME <= '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date) + "'");
+        String sql = "DELETE FROM BS_TASK_HISTORY WHERE FIRED_TIME <= '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date) + "'");
         return jdbcTemplate.update(sql);
     }
 

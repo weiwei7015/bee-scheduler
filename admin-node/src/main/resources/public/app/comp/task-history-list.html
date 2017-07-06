@@ -20,19 +20,19 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="状态">
-                <el-select v-model="queryFormModel.status" placeholder="" style="width: 100px">
+                <el-select v-model="queryFormModel.execState" placeholder="" style="width: 100px">
                     <el-option label="全部" value=""></el-option>
                     <el-option label="SUCCESS" value="SUCCESS"></el-option>
                     <el-option label="FAIL" value="FAIL"></el-option>
                     <el-option label="VETOED" value="VETOED"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="触发方式">
-                <el-select v-model="queryFormModel.triggerType" placeholder="" style="width: 100px">
+            <el-form-item label="执行方式">
+                <el-select v-model="queryFormModel.firedWay" placeholder="" style="width: 100px">
                     <el-option label="全部" value=""></el-option>
-                    <el-option label="调度" value="1"></el-option>
-                    <el-option label="手动" value="2"></el-option>
-                    <el-option label="临时任务" value="3"></el-option>
+                    <el-option label="调度" value="SCHEDULE"></el-option>
+                    <el-option label="手动" value="MANUAL"></el-option>
+                    <el-option label="临时任务" value="TMP"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -47,18 +47,18 @@
                         <template scope="scope">{{$moment(scope.row.startTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
                     </el-table-column>
                     <el-table-column label="任务">
-                        <template scope="scope">{{scope.row.taskGroup}}.{{scope.row.taskName}}</template>
+                        <template scope="scope">{{scope.row.group}}.{{scope.row.name}}</template>
                     </el-table-column>
                     <el-table-column label="执行节点" prop="instanceId"></el-table-column>
-                    <el-table-column label="状态" width="120">
+                    <el-table-column label="执行状态" width="120">
                         <template scope="scope">
-                            <el-tag v-if="scope.row.state === 'SUCCESS'" type="success" close-transition>SUCCESS</el-tag>
-                            <el-tag v-if="scope.row.state === 'FAIL'" type="danger" close-transition>FAIL</el-tag>
-                            <el-tag v-if="scope.row.state === 'VETOED'" type="warning" close-transition>VETOED</el-tag>
+                            <el-tag v-if="scope.row.execState === 'SUCCESS'" type="success" close-transition>SUCCESS</el-tag>
+                            <el-tag v-if="scope.row.execState === 'FAIL'" type="danger" close-transition>FAIL</el-tag>
+                            <el-tag v-if="scope.row.execState === 'VETOED'" type="warning" close-transition>VETOED</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="触发方式" width="100">
-                        <template scope="scope">{{scope.row.triggerType === 1?"调度":scope.row.triggerType === 2?"手动":scope.row.triggerType === 3?"临时任务":"未知"}}</template>
+                    <el-table-column label="执行方式" width="100">
+                        <template scope="scope">{{scope.row.firedWay === "SCHEDULE"?"调度":scope.row.firedWay === "MANUAL"?"手动":scope.row.firedWay === "TMP"?"临时任务":"未知"}}</template>
                     </el-table-column>
                     <el-table-column label="耗时" min-width="80">
                         <template scope="scope">

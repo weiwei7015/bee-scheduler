@@ -4,7 +4,8 @@ package com.bee.scheduler.admin.service;
 import com.bee.scheduler.admin.model.ExecutingTask;
 import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
-import com.bee.scheduler.admin.model.TaskHistory;
+import com.bee.scheduler.admin.model.ExecutedTask;
+import com.bee.scheduler.core.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -21,13 +22,13 @@ public interface TaskService {
 
     List<ExecutingTask> queryExcutingTask(String schedulerName);
 
-    int insertTaskHistory(TaskHistory taskHistory);
+    int insertTaskHistory(ExecutedTask taskHistory);
 
-    int insertTaskHistories(List<TaskHistory> taskHistoryList);
+    int insertTaskHistories(List<ExecutedTask> taskHistoryList);
 
-    TaskHistory getTaskHistory(String fireId);
+    ExecutedTask getTaskHistory(String fireId);
 
-    Pageable<TaskHistory> queryTaskHistory(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page);
+    Pageable<ExecutedTask> queryTaskHistory(String schedulerName, String fireId, String taskName, String taskGroup, Constants.TaskExecState execState, Constants.TaskFiredWay firedWay, Long starTimeFrom, Long starTimeTo, Integer page, Integer pageSize);
 
     List<String> getTaskHistoryGroups(String schedulerName);
 

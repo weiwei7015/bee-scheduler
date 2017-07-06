@@ -1,9 +1,11 @@
 package com.bee.scheduler.admin.web;
 
+import com.bee.scheduler.admin.model.ExecutedTask;
 import com.bee.scheduler.admin.model.HttpResponseBodyWrapper;
 import com.bee.scheduler.admin.model.Pageable;
-import com.bee.scheduler.admin.model.TaskHistory;
 import com.bee.scheduler.admin.service.TaskService;
+import com.bee.scheduler.core.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,10 +35,15 @@ public class TaskHistoryController {
 
     @ResponseBody
     @GetMapping("/task/history/list")
-    public HttpResponseBodyWrapper taskHistoryList(String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, Integer page) throws Exception {
+    public HttpResponseBodyWrapper taskHistoryList(String fireId, String taskName, String taskGroup, String execState, String execType, Long beginTime, Long endTime, Integer page) throws Exception {
         Map<String, Object> model = new HashMap<>();
+
+
+        Constants.TaskExecState enumExecState = StringUtils.isBlank(execState) ? null : Constants.TaskExecState.valueOf(execState);
+        Constants.TaskFiredWay enumExecType = StringUtils.isBlank(execType) ? null : Constants.TaskFiredWay.valueOf(execType);
+
         // 查询任务历史信息
-        Pageable<TaskHistory> result = taskService.queryTaskHistory(scheduler.getSchedulerName(), fireId, taskName, taskGroup, state, triggerType, beginTime, endTime, page);
+        Pageable<ExecutedTask> result = taskService.queryTaskHistory(scheduler.getSchedulerName(), fireId, taskName, taskGroup, enumExecState, enumExecType, beginTime, endTime, page, null);
         return new HttpResponseBodyWrapper(result);
     }
 

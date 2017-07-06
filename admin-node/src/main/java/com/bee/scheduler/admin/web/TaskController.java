@@ -1,14 +1,11 @@
 package com.bee.scheduler.admin.web;
 
 import com.alibaba.fastjson.JSON;
+import com.bee.scheduler.admin.model.*;
 import com.bee.scheduler.core.Constants;
 import com.bee.scheduler.admin.core.RamStore;
 import com.bee.scheduler.core.job.JobComponent;
 import com.bee.scheduler.admin.exception.BizzException;
-import com.bee.scheduler.admin.model.HttpResponseBodyWrapper;
-import com.bee.scheduler.admin.model.Pageable;
-import com.bee.scheduler.admin.model.Task;
-import com.bee.scheduler.admin.model.TaskConfig;
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeCalendarIntervalOptions;
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeCronOptions;
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeDailyTimeIntervalOptions;
@@ -27,8 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -63,9 +59,32 @@ public class TaskController {
     }
 
     @ResponseBody
-    @GetMapping("/task/executing/list")
-    public HttpResponseBodyWrapper executingTask() throws Exception {
-        return new HttpResponseBodyWrapper(taskService.queryExcutingTask(scheduler.getSchedulerName()));
+    @GetMapping("/task/trends")
+    public HttpResponseBodyWrapper trends() throws Exception {
+        HashMap<String, Object> data = new HashMap<>();
+
+        String schedulerName = scheduler.getSchedulerName();
+        int taskTotalCount = taskService.queryTaskCount(schedulerName, null, null, null);
+        List<ExecutingTask> executingTaskList = taskService.queryExcutingTask(schedulerName);
+
+        Pageable<ExecutedTask> taskHistoryList = taskService.queryTaskHistory(schedulerName, null, null, null, null, null, null, null, 1, 5);
+
+        List<FiredTask> taskTrends = new ArrayList<>();
+
+        taskTrends.addAll(executingTaskList);
+        taskTrends.addAll(taskHistoryList.getResult());
+
+        Collections.sort(taskTrends, new Comparator<FiredTask>() {
+            @Override
+            public int compare(FiredTask o1, FiredTask o2) {
+                return o2.getFiredTime().compareTo(o1.getFiredTime());
+            }
+        });
+
+        data.put("taskTotalCount", taskTotalCount);
+        data.put("executingTaskCount", taskTotalCount);
+        data.put("taskTrends", taskTrends);
+        return new HttpResponseBodyWrapper(data);
     }
 
     @ResponseBody

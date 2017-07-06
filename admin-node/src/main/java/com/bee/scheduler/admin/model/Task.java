@@ -6,6 +6,7 @@ import java.util.Map;
  * @author weiwei
  */
 public class Task {
+    private String schedulerName;
     private String name;
     private String group;
     private String triggerType;
@@ -24,10 +25,19 @@ public class Task {
 
     }
 
-    public Task(String name, String group, String jobComponent) {
+    public Task(String schedulerName, String name, String group, String jobComponent) {
+        this.schedulerName = schedulerName;
         this.name = name;
         this.group = group;
         this.jobComponent = jobComponent;
+    }
+
+    public String getSchedulerName() {
+        return schedulerName;
+    }
+
+    public void setSchedulerName(String schedulerName) {
+        this.schedulerName = schedulerName;
     }
 
     public String getName() {

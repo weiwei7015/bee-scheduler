@@ -3,6 +3,7 @@ package com.bee.scheduler.admin.dao;
 import com.bee.scheduler.admin.model.ExecutingTask;
 import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
+import com.bee.scheduler.core.Constants;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
@@ -115,7 +116,7 @@ public class TaskDao extends DaoBase {
         return jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());
     }
 
-    public List<ExecutingTask> queryExcuting(String schedulerName) {
+    public List<ExecutingTask> queryExecuting(String schedulerName) {
         List<Object> args = new ArrayList<>();
 
         StringBuilder sqlQueryResult = new StringBuilder("SELECT t1.TRIGGER_NAME 'name',t1.TRIGGER_GROUP 'group',t1.TRIGGER_TYPE 'triggerType',t2.JOB_CLASS_NAME 'jobComponent',t1.JOB_DATA 'data',t3.STATE 'state',t1.PREV_FIRE_TIME 'prevFireTime',t1.NEXT_FIRE_TIME 'nextFireTime',t1.START_TIME 'startTime',t1.END_TIME 'endTime',t1.MISFIRE_INSTR 'misfireInstr',t1.DESCRIPTION 'description',t3.FIRED_TIME 'fireTime' FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.SCHED_NAME = t2.SCHED_NAME AND t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP JOIN BS_FIRED_TRIGGERS t3 ON t1.TRIGGER_NAME = t3.TRIGGER_NAME AND t1.TRIGGER_GROUP = t3.TRIGGER_GROUP");
@@ -133,7 +134,8 @@ public class TaskDao extends DaoBase {
             public void processRow(ResultSet rs) throws SQLException {
                 ExecutingTask executingTask = new ExecutingTask();
                 executingTask.setName(rs.getString("name"));
-                executingTask.setGroup(rs.getString("group"));
+                String group = rs.getString("group");
+                executingTask.setGroup(group);
                 executingTask.setTriggerType(rs.getString("triggerType"));
                 String jobComponent = rs.getString("jobComponent");
                 executingTask.setJobComponent(jobComponent.substring(jobComponent.lastIndexOf(".") + 1));
@@ -145,7 +147,8 @@ public class TaskDao extends DaoBase {
                 executingTask.setState(rs.getString("state"));
                 executingTask.setDescription(rs.getString("description"));
 
-                executingTask.setFireTime(rs.getLong("fireTime"));
+                executingTask.setFiredWay(Constants.TASK_GROUP_Manual.equals(group) ? Constants.TaskFiredWay.MANUAL : Constants.TASK_GROUP_Tmp.equals(group) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE);
+                executingTask.setFiredTime(rs.getLong("fireTime"));
 
                 try {
                     Blob blobLocator = rs.getBlob("data");

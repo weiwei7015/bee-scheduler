@@ -15,7 +15,6 @@ import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -55,26 +54,28 @@ public class TaskEventRecorder extends JobListenerSupport {
 
         // 记录执行历史
         String taskExecLog = JobExecutionContextHelper.getExecLog(context);
-        int triggerType = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TASK_TRIGGER_TYPE_MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TASK_TRIGGER_TYPE_TMP : Constants.TASK_TRIGGER_TYPE_SCHEDULER;
+        Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE;
+
+
         try {
             String schedulerName = context.getScheduler().getSchedulerName();
             String schedulerInstanceId = context.getScheduler().getSchedulerInstanceId();
 
             Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
 
-            String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPENDTIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, schedulerName);
             preparedStatement.setString(2, schedulerInstanceId);
             preparedStatement.setString(3, context.getFireInstanceId());
             preparedStatement.setString(4, jobDetail.getKey().getName());
             preparedStatement.setString(5, jobDetail.getKey().getGroup());
-            preparedStatement.setTimestamp(6, new Timestamp(context.getFireTime().getTime()));
-            preparedStatement.setTimestamp(7, new Timestamp(currentTime.getTime()));
-            preparedStatement.setLong(8, context.getJobRunTime());
-            preparedStatement.setInt(9, context.getRefireCount());
-            preparedStatement.setString(10, Constants.TaskExecState_VOTED);
-            preparedStatement.setInt(11, triggerType);
+            preparedStatement.setLong(6, context.getFireTime().getTime());
+            preparedStatement.setString(7, firedWay.toString());
+            preparedStatement.setLong(8, currentTime.getTime());
+            preparedStatement.setLong(9, context.getJobRunTime());
+            preparedStatement.setInt(10, context.getRefireCount());
+            preparedStatement.setString(11, Constants.TaskExecState.VETOED.toString());
             preparedStatement.setString(12, taskExecLog);
 
             preparedStatement.execute();
@@ -101,8 +102,8 @@ public class TaskEventRecorder extends JobListenerSupport {
 
         // 记录执行历史
         String taskExecLog = JobExecutionContextHelper.getExecLog(context);
-        String taskExecState = jobException == null ? Constants.TaskExecState_SUCCESS : Constants.TaskExecState_FAIL;
-        int triggerType = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TASK_TRIGGER_TYPE_MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TASK_TRIGGER_TYPE_TMP : Constants.TASK_TRIGGER_TYPE_SCHEDULER;
+        Constants.TaskExecState execState = jobException == null ? Constants.TaskExecState.SUCCESS : Constants.TaskExecState.SUCCESS;
+        Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE;
 
         try {
             String schedulerName = context.getScheduler().getSchedulerName();
@@ -110,19 +111,19 @@ public class TaskEventRecorder extends JobListenerSupport {
 
             Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
 
-            String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, START_TIME, COMPLETE_TIME, EXPENDTIME, REFIRED, STATE, TRIGGER_TYPE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME,FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, schedulerName);
             preparedStatement.setString(2, schedulerInstanceId);
             preparedStatement.setString(3, context.getFireInstanceId());
             preparedStatement.setString(4, jobDetail.getKey().getName());
             preparedStatement.setString(5, jobDetail.getKey().getGroup());
-            preparedStatement.setTimestamp(6, new Timestamp(context.getFireTime().getTime()));
-            preparedStatement.setTimestamp(7, new Timestamp(currentTime.getTime()));
-            preparedStatement.setLong(8, context.getJobRunTime());
-            preparedStatement.setInt(9, context.getRefireCount());
-            preparedStatement.setString(10, taskExecState);
-            preparedStatement.setInt(11, triggerType);
+            preparedStatement.setLong(6, context.getFireTime().getTime());
+            preparedStatement.setString(7, firedWay.toString());
+            preparedStatement.setLong(8, currentTime.getTime());
+            preparedStatement.setLong(9, context.getJobRunTime());
+            preparedStatement.setInt(10, context.getRefireCount());
+            preparedStatement.setString(11, execState.toString());
             preparedStatement.setString(12, taskExecLog);
 
             preparedStatement.execute();

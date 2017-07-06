@@ -4,10 +4,24 @@ define(['text!comp/task-trends-plate.html'], function (tpl, ace) {
         components: {},
         data: function () {
             var vm = this;
-            var data = {taskList: []};
-            vm.$http.get("/task/executing/list").then(function (re) {
-                data.taskList = re.body.data;
-            });
+            var data = {
+                totalTaskCount: 0,
+                executingTaskCount: 0,
+                taskTrends: []
+            };
+
+            var refreshData = function () {
+                vm.$http.get("/task/trends").then(function (re) {
+                    var reData = re.body.data;
+                    data.totalTaskCount = reData.taskTotalCount;
+                    data.executingTaskCount = reData.executingTaskCount;
+                    data.taskTrends = reData.taskTrends;
+                });
+            };
+
+
+            refreshData();
+            setInterval(refreshData, 1000);
             return data;
         },
         methods: {}
