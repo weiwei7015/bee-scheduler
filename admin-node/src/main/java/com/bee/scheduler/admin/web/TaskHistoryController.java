@@ -35,12 +35,12 @@ public class TaskHistoryController {
 
     @ResponseBody
     @GetMapping("/task/history/list")
-    public HttpResponseBodyWrapper taskHistoryList(String fireId, String taskName, String taskGroup, String execState, String execType, Long beginTime, Long endTime, Integer page) throws Exception {
+    public HttpResponseBodyWrapper taskHistoryList(String fireId, String taskName, String taskGroup, String execState, String firedWay, Long beginTime, Long endTime, Integer page) throws Exception {
         Map<String, Object> model = new HashMap<>();
 
 
         Constants.TaskExecState enumExecState = StringUtils.isBlank(execState) ? null : Constants.TaskExecState.valueOf(execState);
-        Constants.TaskFiredWay enumExecType = StringUtils.isBlank(execType) ? null : Constants.TaskFiredWay.valueOf(execType);
+        Constants.TaskFiredWay enumExecType = StringUtils.isBlank(firedWay) ? null : Constants.TaskFiredWay.valueOf(firedWay);
 
         // 查询任务历史信息
         Pageable<ExecutedTask> result = taskService.queryTaskHistory(scheduler.getSchedulerName(), fireId, taskName, taskGroup, enumExecState, enumExecType, beginTime, endTime, page, null);

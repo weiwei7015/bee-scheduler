@@ -46,11 +46,11 @@ public class TaskHistoryDao extends DaoBase {
         }
         if (execState != null) {
             sqlWhere.append(" AND EXEC_STATE = ?");
-            args.add(execState);
+            args.add(execState.toString());
         }
         if (firedWay != null) {
             sqlWhere.append(" AND FIRED_WAY = ?");
-            args.add(firedWay);
+            args.add(firedWay.toString());
         }
         if (starTimeFrom != null) {
             sqlWhere.append(" AND FIRED_TIME >= ?");

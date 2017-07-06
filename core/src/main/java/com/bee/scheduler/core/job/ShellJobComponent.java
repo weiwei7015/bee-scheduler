@@ -44,13 +44,6 @@ public class ShellJobComponent extends JobComponent {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-
-        try {
-            Thread.sleep(900000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         JobDetail jobDetail = context.getJobDetail();
         JobExecutionContextHelper.appendExecLog(context, "开始执行任务 -> " + jobDetail.getKey());
         try {

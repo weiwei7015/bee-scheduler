@@ -11,8 +11,7 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                     group: '',
                     execState: '',
                     firedWay: '',
-                    page: 1,
-                    pageSize: 10
+                    page: 1
                 },
                 currentQueryModel: null,
                 queryResult: {},
@@ -35,7 +34,7 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 var queryModel = {
                     taskName: queryFormModel.name,
                     taskGroup: queryFormModel.group,
-                    execType: queryFormModel.execType,
+                    execState: queryFormModel.execState,
                     firedWay: queryFormModel.firedWay,
                     page: 1
                 };

@@ -10,6 +10,8 @@ import org.quartz.utils.DBConnectionManager;
 import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -62,12 +64,24 @@ public class BuildInJobComponent extends JobComponent {
 
 
                 Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + context.getScheduler().getSchedulerName());
+                String sql = "DELETE FROM BS_TASK_HISTORY WHERE FIRED_TIME <= ?";
 
-//                TaskService taskService = SpringApplicationContext.getBean(TaskService.class);
-//                int result = taskService.clearHistoryBefore(context.getScheduler().getSchedulerName(), date_point.getTime());
-
-                int result = 666;
-                JobExecutionContextHelper.appendExecLog(context, "执行完成 -> " + "清除历史任务记录完毕，已成功清除 " + result + " 条记录");
+                PreparedStatement preparedStatement = null;
+                try {
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setLong(1, date_point.getTimeInMillis());
+                    int result = preparedStatement.executeUpdate();
+                    JobExecutionContextHelper.appendExecLog(context, "执行完成 -> " + "清除历史任务记录完毕，已成功清除 " + result + " 条记录");
+                } catch (Exception e) {
+                    log.error(e);
+                } finally {
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
+                    }
+                    if (connection != null) {
+                        connection.close();
+                    }
+                }
 
             }
         } catch (Exception e) {
