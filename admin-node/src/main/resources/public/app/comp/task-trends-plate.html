@@ -7,7 +7,7 @@
     <div class="hr"></div>
     <template v-for="item in taskTrends">
         <div class="box">
-            <div class="box-body">
+            <div class="box-body" style="max-height: 500px;overflow: auto">
                 <template v-if="item.state === 'EXECUTING'">
                     <div class="text-warning"><i class="el-icon-loading"></i> 正在执行</div>
                 </template>
