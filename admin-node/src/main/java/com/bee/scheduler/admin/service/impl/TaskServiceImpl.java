@@ -34,6 +34,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public int queryTaskCount(String schedulerName, String name, String group, String state) {
+        return taskDao.queryCount(schedulerName, name, group, state);
+    }
+
+    @Override
     public List<ExecutingTask> queryExcutingTask(String schedulerName) {
         return taskDao.queryExcuting(schedulerName);
     }

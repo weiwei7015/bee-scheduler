@@ -4,60 +4,86 @@
             <span style="color: #d3d5d9;font-size: 50px;">即将上线 : )</span>
         </div>-->
         <el-row :gutter="10">
-            <el-col :span="6">
-                <h4 class="no-margin">任务总数：</h4>
-                <div class="hr"></div>
-                <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">4234</div>
+            <el-col :span="12">
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        <h4 class="no-margin">执行中的任务：</h4>
+                        <div class="hr"></div>
+                        <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">{{executingTaskList.length}}</div>
+                    </el-col>
+                    <el-col :span="12">
+                        <h4 class="no-margin">任务总数：</h4>
+                        <div class="hr"></div>
+                        <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">{{totalTaskCount}}</div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <h4 class="no-margin">即将执行：</h4>
+                        <div class="hr"></div>
+                        <div style="height: 400px;overflow: auto">
+                            <template v-for="item in taskList">
+                                <div class="box">
+                                    <div class="box-body">
+                                        <div class="text-info"><i class="el-icon-check"></i> {{item.state}}</div>
+                                        <div>{{item.group + "." + item.name}}</div>
+                                    </div>
+                                </div>
+                                <div class="spr"></div>
+                            </template>
+                        </div>
+                    </el-col>
+                </el-row>
             </el-col>
-            <el-col :span="6">
-                <h4 class="no-margin">今日任务：</h4>
-                <div class="hr"></div>
-                <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">4234</div>
-            </el-col>
-            <el-col :span="6">
-                <h4 class="no-margin">执行中的任务：</h4>
-                <div class="hr"></div>
-                <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">23</div>
-            </el-col>
-            <el-col :span="6">
-                <h4 class="no-margin">失败任务：</h4>
-                <div class="hr"></div>
-                <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">89</div>
-            </el-col>
-        </el-row>
-        <el-row :gutter="10">
             <el-col :span="12">
                 <h4 class="no-margin">任务动态：</h4>
                 <div class="hr"></div>
-                <div class="box">
-                    <div class="box-body">
-                        <i class="el-icon-loading"></i>
-                    </div>
+                <div style="height: 800px;overflow: auto">
+                    <template v-for="item in executingTaskList">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="text-warning"><i class="el-icon-loading"></i> 正在执行 {{$moment(item.fireTime).format("YYYY-MM-DD HH:mm:ss")}}</div>
+                                <div class="spr"></div>
+                                <template v-if="item.group == 'Tmp'">
+                                    <div>临时任务（{{item.name}}）</div>
+                                </template>
+                                <template v-else-if="item.group == 'Manual'">
+                                    <div>手动任务（{{item.group + "." + item.name}})）</div>
+                                </template>
+                                <template v-else>
+                                    <div>{{item.group + "." + item.name}}</div>
+                                </template>
+                            </div>
+                        </div>
+                        <div class="spr"></div>
+                    </template>
+                    <template v-for="item in taskHistoryList">
+                        <div class="box">
+                            <div class="box-body">
+                                <template v-if="item.state=='SUCCESS'">
+                                    <div class="text-info"><i class="el-icon-circle-check"></i> {{item.state}}</div>
+                                </template>
+                                <template v-else-if="item.state=='VETOED'">
+                                    <div class="text-warning"><i class="el-icon-warning"></i> {{item.state}}</div>
+                                </template>
+                                <template v-else-if="item.state=='FAIL'">
+                                    <div class="text-danger"><i class="el-icon-circle-cross"></i> {{item.state}}</div>
+                                </template>
+                                <div class="spr"></div>
+                                <template v-if="item.triggerType == 2">
+                                    <div>{{$moment(item.startTime).format("YYYY-MM-DD HH:mm:ss")}} | 手动任务（{{item.taskGroup + "." + item.taskName}})）</div>
+                                </template>
+                                <template v-else-if="item.triggerType == 3">
+                                    <div>{{$moment(item.startTime).format("YYYY-MM-DD HH:mm:ss")}} | 临时任务（{{item.taskName}}）</div>
+                                </template>
+                                <template v-else>
+                                    <div>{{$moment(item.startTime).format("YYYY-MM-DD HH:mm:ss")}} | {{item.taskGroup + "." + item.taskName}}</div>
+                                </template>
+                            </div>
+                        </div>
+                        <div class="spr"></div>
+                    </template>
                 </div>
-                <div class="box box-primary">
-                    <div class="box-body">
-                        <i class="el-icon-loading"></i>
-                    </div>
-                </div>
-                <div class="box box-success">
-                    <div class="box-body">
-                        <i class="el-icon-loading"></i>
-                    </div>
-                </div>
-                <div class="box box-warning">
-                    <div class="box-body">
-                        <i class="el-icon-loading"></i>
-                    </div>
-                </div>
-                <div class="box box-danger">
-                    <div class="box-body">
-                        <i class="el-icon-loading"></i>
-                    </div>
-                </div>
-            </el-col>
-            <el-col :span="12">
-                <h4 class="no-margin">近期任务：</h4>
-                <div class="hr"></div>
             </el-col>
         </el-row>
     </div>

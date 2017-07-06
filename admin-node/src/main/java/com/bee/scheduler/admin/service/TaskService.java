@@ -17,6 +17,8 @@ public interface TaskService {
 
     Pageable<Task> queryTask(String schedulerName, String name, String group, String state, int page);
 
+    int queryTaskCount(String schedulerName, String name, String group, String state);
+
     List<ExecutingTask> queryExcutingTask(String schedulerName);
 
     int insertTaskHistory(TaskHistory taskHistory);

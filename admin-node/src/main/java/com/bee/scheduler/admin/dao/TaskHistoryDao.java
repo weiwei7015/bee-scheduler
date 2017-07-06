@@ -25,7 +25,7 @@ public class TaskHistoryDao extends DaoBase {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(TaskHistory.class), fireId);
     }
 
-    public Pageable<TaskHistory> query(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long beginTime, Long endTime, int page) {
+    public Pageable<TaskHistory> query(String schedulerName, String fireId, String taskName, String taskGroup, String state, Integer triggerType, Long starTimeFrom, Long startTimeTo, int page) {
         List<Object> args = new ArrayList<>();
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TASK_HISTORY");
         StringBuilder sqlQueryResult = new StringBuilder("SELECT * FROM BS_TASK_HISTORY");
@@ -52,13 +52,13 @@ public class TaskHistoryDao extends DaoBase {
             sqlWhere.append(" AND TRIGGER_TYPE = ?");
             args.add(triggerType);
         }
-        if (beginTime != null) {
+        if (starTimeFrom != null) {
             sqlWhere.append(" AND START_TIME >= ?");
-            args.add(beginTime);
+            args.add(starTimeFrom);
         }
-        if (endTime != null) {
+        if (startTimeTo != null) {
             sqlWhere.append(" AND START_TIME <= ?");
-            args.add(endTime);
+            args.add(startTimeTo);
         }
         // 查询记录总数
         Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());

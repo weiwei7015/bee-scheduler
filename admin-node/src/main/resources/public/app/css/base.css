@@ -353,6 +353,18 @@ div.spr {
     color: #ffffff;
 }
 
+.text-info {
+    color: #20A0FF;
+}
+
+.text-success {
+    color: #13CE66;
+}
+
+.text-danger {
+    color: #FF4949;
+}
+
 .text-warning {
     color: #F7BA2A;
 }
@@ -371,8 +383,4 @@ div.spr {
 
 .text-silver {
     color: #8492A6;
-}
-
-.text-danger {
-    color: #FF4949;
 }
