@@ -82,7 +82,7 @@ public class TaskController {
         });
 
         data.put("taskTotalCount", taskTotalCount);
-        data.put("executingTaskCount", taskTotalCount);
+        data.put("executingTaskCount", executingTaskList.size());
         data.put("taskTrends", taskTrends);
         return new HttpResponseBodyWrapper(data);
     }
