@@ -16,6 +16,6 @@ public class Constants {
     }
 
     public enum TaskFiredWay {
-        SCHEUDLE, MANUAL, TMP
+        SCHEDULE, MANUAL, TMP
     }
 }

@@ -7,7 +7,8 @@ define(['text!comp/task-trends-plate.html'], function (tpl, ace) {
             var data = {
                 totalTaskCount: 0,
                 executingTaskCount: 0,
-                taskTrends: []
+                taskTrends: [],
+                refreshTaskTrendsTimer: null
             };
 
             var refreshData = function () {
@@ -19,10 +20,13 @@ define(['text!comp/task-trends-plate.html'], function (tpl, ace) {
                 });
             };
 
-
             refreshData();
-            setInterval(refreshData, 1000);
+            data.refreshTaskTrendsTimer = setInterval(refreshData, 1000);
+
             return data;
+        },
+        destroyed: function () {
+            window.clearInterval(this.refreshTaskTrendsTimer);
         },
         methods: {}
     };
