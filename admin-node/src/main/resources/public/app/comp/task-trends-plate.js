@@ -21,7 +21,7 @@ define(['text!comp/task-trends-plate.html'], function (tpl, ace) {
             };
 
             refreshData();
-            data.refreshTaskTrendsTimer = setInterval(refreshData, 1000);
+            data.refreshTaskTrendsTimer = setInterval(refreshData, 2000);
 
             return data;
         },

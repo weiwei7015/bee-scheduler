@@ -56,29 +56,40 @@ public class TaskEventRecorder extends JobListenerSupport {
         String taskExecLog = JobExecutionContextHelper.getExecLog(context);
         Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE;
 
-
         try {
             String schedulerName = context.getScheduler().getSchedulerName();
             String schedulerInstanceId = context.getScheduler().getSchedulerInstanceId();
 
-            Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
-
             String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPENDTIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, schedulerName);
-            preparedStatement.setString(2, schedulerInstanceId);
-            preparedStatement.setString(3, context.getFireInstanceId());
-            preparedStatement.setString(4, jobDetail.getKey().getName());
-            preparedStatement.setString(5, jobDetail.getKey().getGroup());
-            preparedStatement.setLong(6, context.getFireTime().getTime());
-            preparedStatement.setString(7, firedWay.toString());
-            preparedStatement.setLong(8, currentTime.getTime());
-            preparedStatement.setLong(9, context.getJobRunTime());
-            preparedStatement.setInt(10, context.getRefireCount());
-            preparedStatement.setString(11, Constants.TaskExecState.VETOED.toString());
-            preparedStatement.setString(12, taskExecLog);
 
-            preparedStatement.execute();
+            Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
+            PreparedStatement preparedStatement = null;
+            try {
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, schedulerName);
+                preparedStatement.setString(2, schedulerInstanceId);
+                preparedStatement.setString(3, context.getFireInstanceId());
+                preparedStatement.setString(4, jobDetail.getKey().getName());
+                preparedStatement.setString(5, jobDetail.getKey().getGroup());
+                preparedStatement.setLong(6, context.getFireTime().getTime());
+                preparedStatement.setString(7, firedWay.toString());
+                preparedStatement.setLong(8, currentTime.getTime());
+                preparedStatement.setLong(9, context.getJobRunTime());
+                preparedStatement.setInt(10, context.getRefireCount());
+                preparedStatement.setString(11, Constants.TaskExecState.VETOED.toString());
+                preparedStatement.setString(12, taskExecLog);
+                preparedStatement.execute();
+            } catch (Exception e) {
+                connection.rollback();
+                logger.error(e);
+            } finally {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -112,21 +123,37 @@ public class TaskEventRecorder extends JobListenerSupport {
             Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
 
             String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME,FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, schedulerName);
-            preparedStatement.setString(2, schedulerInstanceId);
-            preparedStatement.setString(3, context.getFireInstanceId());
-            preparedStatement.setString(4, jobDetail.getKey().getName());
-            preparedStatement.setString(5, jobDetail.getKey().getGroup());
-            preparedStatement.setLong(6, context.getFireTime().getTime());
-            preparedStatement.setString(7, firedWay.toString());
-            preparedStatement.setLong(8, currentTime.getTime());
-            preparedStatement.setLong(9, context.getJobRunTime());
-            preparedStatement.setInt(10, context.getRefireCount());
-            preparedStatement.setString(11, execState.toString());
-            preparedStatement.setString(12, taskExecLog);
 
-            preparedStatement.execute();
+
+            PreparedStatement preparedStatement = null;
+
+            try {
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, schedulerName);
+                preparedStatement.setString(2, schedulerInstanceId);
+                preparedStatement.setString(3, context.getFireInstanceId());
+                preparedStatement.setString(4, jobDetail.getKey().getName());
+                preparedStatement.setString(5, jobDetail.getKey().getGroup());
+                preparedStatement.setLong(6, context.getFireTime().getTime());
+                preparedStatement.setString(7, firedWay.toString());
+                preparedStatement.setLong(8, currentTime.getTime());
+                preparedStatement.setLong(9, context.getJobRunTime());
+                preparedStatement.setInt(10, context.getRefireCount());
+                preparedStatement.setString(11, execState.toString());
+                preparedStatement.setString(12, taskExecLog);
+
+                preparedStatement.execute();
+            } catch (Exception e) {
+                connection.rollback();
+                logger.error(e);
+            } finally {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
