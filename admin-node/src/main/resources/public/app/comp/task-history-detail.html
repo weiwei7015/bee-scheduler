@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" v-loading="taskHistoryDetailLoading">
     <div class="content-header">
         <div class="breadcrumb">
             <el-breadcrumb separator="/">
@@ -9,7 +9,7 @@
         </div>
         <div class="title">历史任务详情</div>
     </div>
-    <div class="content-body" v-loading="taskHistoryDetailLoading">
+    <div class="content-body" v-show="!taskHistoryDetailLoading">
         <div>
             <h3 class="text-bold no-margin">{{taskHistoryDetail.group}}.{{taskHistoryDetail.name}}
                 <el-tag close-transition :type="taskHistoryDetail.execState === 'SUCCESS'?'success':taskHistoryDetail.execState === 'FAIL'?'danger':taskHistoryDetail.execState === 'VETOED'?'warning':'gray'">{{taskHistoryDetail.execState}}</el-tag>

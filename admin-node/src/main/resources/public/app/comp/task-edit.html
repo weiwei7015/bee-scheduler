@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" v-loading="initEditFormModelInProcess">
     <div class="content-header">
         <div class="breadcrumb">
             <el-breadcrumb separator="/">
@@ -8,7 +8,7 @@
         </div>
         <div class="title">{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}} <span class="sub-title"><el-button type="text" size="mini" @click="$helperDialog.open('CreateTask')">使用帮助</el-button></span></div>
     </div>
-    <div class="content-body" v-loading="initEditFormModelInProcess">
+    <div class="content-body" v-show="!initEditFormModelInProcess">
         <div style="width: 800px">
             <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="100px">
                 <h4 class="no-margin">基本信息</h4>

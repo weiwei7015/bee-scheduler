@@ -32,9 +32,9 @@ h4 {
 }
 
 /**ScrollBar*/
-::-webkit-scrollbar {
-    width: 0;
-}
+/*::-webkit-scrollbar {*/
+/*width: 0;*/
+/*}*/
 
 /******* app *******/
 .app {
@@ -108,32 +108,47 @@ h4 {
     box-sizing: border-box;
     width: 230px;
     float: left;
-    background-color: #ffffff;
     height: 100%;
     position: fixed;
     overflow: auto;
+    /*background-color: #F9FAFC;*/
+    border-right: 1px solid #c0ccda;
 }
 
 .main .content-wrapper {
-    margin-left: 230px;
-    padding: 70px 10px 10px 10px;
+    padding-left: 230px;
+    padding-top: 60px;
     box-sizing: border-box;
+    height: 100%;
 }
 
 .content-wrapper .content {
     background-color: #ffffff;
-    min-height: 500px;
+    /*min-height: 500px;*/
+    height: 100%;
     box-shadow: 0 0 10px #eee;
+    width: 100%;
+    position: relative;
 }
 
 .content .content-header {
-    padding: 15px 15px 10px 15px;
+    padding: 0 15px;
     border-bottom: 1px solid #E5E9F2;
     color: #8492A6;
+    line-height: 45px;
+    height: 45px;
+    box-sizing: border-box;
 }
 
 .content .content-body {
     padding: 20px;
+    box-sizing: border-box;
+    top: 45px;
+    bottom: 0;
+    margin: auto;
+    overflow: auto;
+    position: absolute;
+    width: 100%;
 }
 
 .content .content-header .title {
@@ -150,6 +165,10 @@ h4 {
 
 .content .content-header .breadcrumb {
     float: right;
+}
+
+.content .content-header .breadcrumb .el-breadcrumb {
+    line-height: 45px;
 }
 
 /******* special *******/

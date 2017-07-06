@@ -87,9 +87,28 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
     //帮助组件注册为全局服务
     Vue.prototype.$helperDialog = helperDialog;
 
+    // //自适应高度指令
+    // Vue.directive('auto-height', {
+    //     // 当绑定元素插入到 DOM 中。
+    //     inserted: function (el) {
+    //         // 聚焦元素
+    //         el.style.height = window.document.body.clientHeight;
+    //     }
+    // });
+
     //配置根组件
     var app = new Vue({
-        router: router
+        router: router,
+        directives: {
+            'auto-height': {
+                inserted: function (el) {
+                    el.style.height = window.document.body.clientHeight + "px";
+                    window.onresize = function () {
+                        el.style.height = window.document.body.clientHeight + "px";
+                    };
+                }
+            }
+        }
     });
 
     //Http拦截器
