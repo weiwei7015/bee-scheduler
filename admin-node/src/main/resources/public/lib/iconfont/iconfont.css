@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1499443159840'); /* IE9*/
-  src: url('iconfont.eot?t=1499443159840#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1499443159840') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1499443159840') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1499443159840#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1499443763594'); /* IE9*/
+  src: url('iconfont.eot?t=1499443763594#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1499443763594') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1499443763594') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1499443763594#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -28,6 +28,8 @@
 .icon-pause:before { content: "\e652"; }
 
 .icon-flash:before { content: "\e71b"; }
+
+.icon-404:before { content: "\e600"; }
 
 .icon-tips:before { content: "\e920"; }
 
