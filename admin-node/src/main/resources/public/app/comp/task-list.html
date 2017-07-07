@@ -40,7 +40,7 @@
                 <el-dropdown split-button trigger="click" @click="goCreateTask" @command="handleTaskCommand">
                     <i class="el-icon-plus"></i> 创建任务
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="execTmpTask">执行临时任务</el-dropdown-item>
+                        <el-dropdown-item command="execTmpTask"><i class="iconfont icon-flash"></i> 执行临时任务</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </el-form-item>
@@ -70,11 +70,11 @@
                                     <div class="text-extra-light-silver">手动任务</div>
                                 </template>
                                 <template v-else>
-                                    <el-button type="text" v-if="item.state !== 'PAUSED' && item.state !== 'PAUSED_BLOCKED'" @click="pauseTask(item.name,item.group)">暂停</el-button>
-                                    <el-button type="text" v-if="item.state === 'PAUSED' || item.state === 'PAUSED_BLOCKED'" @click="resumeTask(item.name,item.group)">恢复</el-button>
-                                    <el-button type="text" @click="executeTask(item.name,item.group)">执行</el-button>
-                                    <el-button type="text" @click="goEditTask(item.group,item.name)">编辑</el-button>
-                                    <el-button type="text" @click="deleteTask(item.name,item.group)">删除</el-button>
+                                    <el-button type="text" class="text-extra-light-silver" v-if="item.state !== 'PAUSED' && item.state !== 'PAUSED_BLOCKED'" @click="pauseTask(item.name,item.group)"><i class="iconfont icon-pause"></i></el-button>
+                                    <el-button type="text" class="text-extra-light-silver" v-if="item.state === 'PAUSED' || item.state === 'PAUSED_BLOCKED'" @click="resumeTask(item.name,item.group)"><i class="iconfont icon-Play"></i></el-button>
+                                    <el-button type="text" class="text-extra-light-silver" @click="executeTask(item.name,item.group)"><i class="iconfont icon-flash"></i></el-button>
+                                    <el-button type="text" class="text-extra-light-silver" @click="goEditTask(item.group,item.name)"><i class="iconfont icon-edit"></i></el-button>
+                                    <el-button type="text" class="text-extra-light-silver" @click="deleteTask(item.name,item.group)"><i class="iconfont icon-trash"></i></el-button>
                                 </template>
                             </el-col>
                         </el-row>
