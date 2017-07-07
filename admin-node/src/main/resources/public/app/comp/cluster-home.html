@@ -2,10 +2,11 @@
     <div class="content-header">
         <div class="breadcrumb">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item>Home</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
+                <el-breadcrumb-item>集群节点</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title">集群节点</div>
+        <div class="title"><i class="iconfont icon-icons01"></i> 集群节点</div>
     </div>
     <div class="content-body">
         <div style="float: left;width: 260px" v-loading="clusterInfoLoading">
