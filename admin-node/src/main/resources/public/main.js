@@ -98,17 +98,7 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
 
     //配置根组件
     var app = new Vue({
-        router: router,
-        directives: {
-            'auto-height': {
-                inserted: function (el) {
-                    el.style.height = window.document.body.clientHeight + "px";
-                    window.onresize = function () {
-                        el.style.height = window.document.body.clientHeight + "px";
-                    };
-                }
-            }
-        }
+        router: router
     });
 
     //Http拦截器
