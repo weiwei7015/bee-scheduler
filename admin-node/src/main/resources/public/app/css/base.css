@@ -32,18 +32,19 @@ h4 {
 
 /**ScrollBar*/
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
+    height: 8px;
     cursor: pointer;
     background-color: #F5F5F5;
 }
 
 ::-webkit-scrollbar-track {
-    border-radius: 10px;
+    border-radius: 8px;
     background-color: #EFF2F7;
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
+    border-radius: 8px;
     background-color: #c0ccda;
 }
 
@@ -121,7 +122,7 @@ h4 {
     float: left;
     position: fixed;
     overflow: auto;
-    /*background-color: #F9FAFC;*/
+    background-color: #eef1f6;
     border-right: 1px solid #c0ccda;
     top: 0;
     bottom: 0;
