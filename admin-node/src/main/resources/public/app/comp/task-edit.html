@@ -164,6 +164,9 @@
                 <el-form-item v-if="editTaskFormModel.endAtType == 2" label="销毁时间">
                     <el-date-picker v-model="editTaskFormModel.endAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
                 </el-form-item>
+                <el-form-item label="联动任务">
+                    <el-input type="textarea" v-model="editTaskFormModel.linkageRule" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入联动任务规则（JSON格式）"></el-input>
+                </el-form-item>
             </el-form>
         </div>
         <div class="hr"></div>

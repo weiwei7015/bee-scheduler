@@ -1,9 +1,8 @@
 package com.bee.scheduler.core.job;
 
 import com.alibaba.fastjson.JSONObject;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import com.bee.scheduler.core.TaskExecutionContext;
+import com.bee.scheduler.core.TaskExecutionLog;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -43,32 +42,24 @@ public class ShellJobComponent extends JobComponent {
     }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        JobDetail jobDetail = context.getJobDetail();
-        JobExecutionContextHelper.appendExecLog(context, "开始执行任务 -> " + jobDetail.getKey());
-        try {
-            JSONObject taskParam = getTaskParam(context);
-            JobExecutionContextHelper.appendExecLog(context, "任务参数 -> " + taskParam.toString());
+    public boolean run(TaskExecutionContext context) throws Exception {
+        JSONObject taskParam = context.getTaskParam();
+        TaskExecutionLog taskLogger = context.getLogger();
 
-            String shell = taskParam.getString("shell");
+        String shell = taskParam.getString("shell");
 
-            Runtime runtime = Runtime.getRuntime();
-            Process process = runtime.exec(shell);
-            InputStream stderr = process.getInputStream();
-            InputStreamReader isr = new InputStreamReader(stderr);
-            BufferedReader br = new BufferedReader(isr);
-            String line;
-            StringBuilder back = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                back.append(line + "\r");
-            }
-
-            JobExecutionContextHelper.appendExecLog(context, "执行完成 -> " + back.toString());
-        } catch (Exception e) {
-            JobExecutionException jobExecutionException = new JobExecutionException(e);
-            throw jobExecutionException;
+        Runtime runtime = Runtime.getRuntime();
+        Process process = runtime.exec(shell);
+        InputStream stderr = process.getInputStream();
+        InputStreamReader isr = new InputStreamReader(stderr);
+        BufferedReader br = new BufferedReader(isr);
+        String line;
+        StringBuilder back = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            back.append(line + "\r");
         }
+        taskLogger.info("任务执行成功 -> " + back.toString());
 
+        return true;
     }
-
 }

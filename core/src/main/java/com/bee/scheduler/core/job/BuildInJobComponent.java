@@ -1,17 +1,15 @@
 package com.bee.scheduler.core.job;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bee.scheduler.core.TaskExecutionContext;
+import com.bee.scheduler.core.TaskExecutionLog;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.utils.DBConnectionManager;
 import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -41,54 +39,43 @@ public class BuildInJobComponent extends JobComponent {
 
     @Override
     public String getParamTemplate() {
-
-        StringBuilder t = new StringBuilder();
-        t.append("{\r");
-        t.append("	\"task\":\"\"\r");
-        t.append("}");
-        return t.toString();
+        return "{\r" +
+                "	\"task\":\"\"\r" +
+                "}";
     }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        JobDetail jobDetail = context.getJobDetail();
-        JobExecutionContextHelper.appendExecLog(context, "开始执行任务 -> " + jobDetail.getKey());
-        try {
-            JSONObject taskParam = getTaskParam(context);
-            JobExecutionContextHelper.appendExecLog(context, "任务参数 -> " + taskParam.toString());
-            if (StringUtils.equals("clear_task_history", taskParam.getString("task"))) {
-                // 保留最近5天任务记录
-                int keepDays = taskParam.getInteger("keep_days");
-                Calendar date_point = DateUtils.truncate(Calendar.getInstance(), Calendar.DAY_OF_MONTH);
-                date_point.set(Calendar.DAY_OF_MONTH, date_point.get(Calendar.DAY_OF_MONTH) - keepDays);
+    public boolean run(TaskExecutionContext context) throws Exception {
+        JSONObject taskParam = context.getTaskParam();
+        TaskExecutionLog taskLogger = context.getLogger();
+
+        String task = taskParam.getString("task");
+
+        if (StringUtils.equals("clear_task_history", task)) {
+            // 保留最近5天任务记录
+            int keepDays = taskParam.getInteger("keep_days");
+            Calendar date_point = DateUtils.truncate(Calendar.getInstance(), Calendar.DAY_OF_MONTH);
+            date_point.set(Calendar.DAY_OF_MONTH, date_point.get(Calendar.DAY_OF_MONTH) - keepDays);
 
 
-                Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + context.getScheduler().getSchedulerName());
-                String sql = "DELETE FROM BS_TASK_HISTORY WHERE FIRED_TIME <= ?";
+            Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + context.getScheduler().getSchedulerName());
+            String sql = "DELETE FROM BS_TASK_HISTORY WHERE FIRED_TIME <= ?";
 
-                PreparedStatement preparedStatement = null;
-                try {
-                    preparedStatement = connection.prepareStatement(sql);
-                    preparedStatement.setLong(1, date_point.getTimeInMillis());
-                    int result = preparedStatement.executeUpdate();
-                    JobExecutionContextHelper.appendExecLog(context, "执行完成 -> " + "清除历史任务记录完毕，已成功清除 " + result + " 条记录");
-                } catch (Exception e) {
-                    log.error(e);
-                } finally {
-                    if (preparedStatement != null) {
-                        preparedStatement.close();
-                    }
-                    if (connection != null) {
-                        connection.close();
-                    }
+            PreparedStatement preparedStatement = null;
+            try {
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setLong(1, date_point.getTimeInMillis());
+                int result = preparedStatement.executeUpdate();
+                taskLogger.info("任务执行结果：清除历史任务记录完毕，已成功清除 " + result + " 条记录");
+            } finally {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
                 }
-
+                if (connection != null) {
+                    connection.close();
+                }
             }
-        } catch (Exception e) {
-            JobExecutionException jobExecutionException = new JobExecutionException(e);
-            throw jobExecutionException;
         }
-
+        return true;
     }
-
 }

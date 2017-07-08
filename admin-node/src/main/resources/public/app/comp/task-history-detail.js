@@ -19,7 +19,7 @@ define(['text!comp/task-history-detail.html'], function (tpl) {
         },
         methods: {
             formatLogContent: function (logContent) {
-                return new String(logContent).replace(/\r/g, "\n");
+                return new String(logContent).replace(/\r/g, "\n").replace(/(WARN.*)/g, "<span class='text-warning'>$1</span>").replace(/(ERROR.*)/g, "<span class='text-danger'>$1</span>");
             }
         }
     };

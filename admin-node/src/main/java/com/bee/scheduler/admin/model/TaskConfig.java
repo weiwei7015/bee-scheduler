@@ -24,6 +24,7 @@ public class TaskConfig {
     private String jobComponent = "";
     private String params = "";
     private String description = "";
+    private String linkageRule = "";
 
     public String getName() {
         return name;
@@ -135,6 +136,14 @@ public class TaskConfig {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLinkageRule() {
+        return linkageRule;
+    }
+
+    public void setLinkageRule(String linkageRule) {
+        this.linkageRule = linkageRule;
     }
 
     public static class ScheduleTypeSimpleOptions {

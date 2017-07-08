@@ -59,7 +59,8 @@ define(['text!comp/task-edit.html'], function (tpl) {
                     endAt: null,
                     jobComponent: '',
                     params: '',
-                    description: ''
+                    description: '',
+                    linkageRule: ''
                 }
             };
 

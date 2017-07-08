@@ -109,6 +109,13 @@ public class TaskController {
                 throw new BizzException(BizzException.error_code_invalid_params, "任务参数输入有误，必须是JSON格式");
             }
         }
+        if (StringUtils.isNotEmpty(taskConfig.getLinkageRule())) {
+            try {
+                JSON.parseArray(taskConfig.getLinkageRule());
+            } catch (Exception e) {
+                throw new BizzException(BizzException.error_code_invalid_params, "联动任务规则输入有误，必须是JSON格式");
+            }
+        }
         if (!"true".equals(request.getParameter("quicktask"))) {
             if (Constants.TASK_GROUP_Manual.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Tmp.equalsIgnoreCase(taskConfig.getGroup())) {
                 throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"");
@@ -118,7 +125,8 @@ public class TaskController {
 
         Class<? extends JobComponent> jobComponentClass = RamStore.jobs.get(taskConfig.getJobComponent()).getClass();
         JobDataMap dataMap = new JobDataMap();
-        dataMap.put(Constants.TASK_PARAM_JOB_DATA_KEY, taskConfig.getParams());
+        dataMap.put(Constants.JOB_DATA_KEY_TASK_PARAM, taskConfig.getParams());
+        dataMap.put(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE, taskConfig.getLinkageRule());
         JobDetail jobDetail = JobBuilder.newJob(jobComponentClass).withIdentity(taskConfig.getName(), taskConfig.getGroup()).build();
 
         TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskConfig.getName(), taskConfig.getGroup()).usingJobData(dataMap).withDescription(taskConfig.getDescription());
@@ -239,7 +247,7 @@ public class TaskController {
         taskConfig.setEndAtType(abstractTrigger.getEndTime() == null ? 1 : 2);
         taskConfig.setEndAt(abstractTrigger.getEndTime());
         taskConfig.setJobComponent(jobDetail.getJobClass().getName());
-        taskConfig.setParams(abstractTrigger.getJobDataMap().getString(Constants.TASK_PARAM_JOB_DATA_KEY));
+        taskConfig.setParams(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_PARAM));
         taskConfig.setDescription(abstractTrigger.getDescription());
 
 
@@ -297,9 +305,17 @@ public class TaskController {
                 throw new BizzException(BizzException.error_code_invalid_params, "任务参数输入有误，必须是JSON格式");
             }
         }
+        if (StringUtils.isNotEmpty(taskConfig.getLinkageRule())) {
+            try {
+                JSON.parseArray(taskConfig.getLinkageRule());
+            } catch (Exception e) {
+                throw new BizzException(BizzException.error_code_invalid_params, "联动任务规则输入有误，必须是JSON格式");
+            }
+        }
 
         JobDataMap dataMap = new JobDataMap();
-        dataMap.put(Constants.TASK_PARAM_JOB_DATA_KEY, taskConfig.getParams());
+        dataMap.put(Constants.JOB_DATA_KEY_TASK_PARAM, taskConfig.getParams());
+        dataMap.put(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE, taskConfig.getLinkageRule());
 
         TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskConfig.getName(), taskConfig.getGroup()).usingJobData(dataMap).withDescription(taskConfig.getDescription());
 

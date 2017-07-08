@@ -40,7 +40,7 @@ public class SystemInitializer {
             JSONObject taskParam = new JSONObject();
             taskParam.put("task", "clear_task_history");
             taskParam.put("keep_days", 5);
-            dataMap.put(Constants.TASK_PARAM_JOB_DATA_KEY, taskParam.toJSONString());
+            dataMap.put(Constants.JOB_DATA_KEY_TASK_PARAM, taskParam.toJSONString());
 
             CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(name, group).usingJobData(dataMap).withDescription(description).withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
             scheduler.scheduleJob(jobDetail, trigger);

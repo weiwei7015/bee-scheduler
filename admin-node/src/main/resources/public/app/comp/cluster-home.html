@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" v-loading="clusterInfoLoading">
     <div class="content-header">
         <div class="breadcrumb">
             <el-breadcrumb separator="/">
@@ -9,7 +9,7 @@
         <div class="title"><i class="iconfont icon-icons01"></i> 集群节点</div>
     </div>
     <div class="content-body">
-        <div style="float: left;width: 260px" v-loading="clusterInfoLoading">
+        <div style="float: left;width: 260px">
             <h4 class="no-margin">节点数量：</h4>
             <div class="hr"></div>
             <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">{{nodes.length}}</div>
@@ -18,7 +18,7 @@
                 <el-button @click="refreshClusterInfo">刷新</el-button>
             </div>
         </div>
-        <div style="margin-left: 280px;" v-loading="clusterInfoLoading">
+        <div style="margin-left: 280px;">
             <h4 class="no-margin">节点列表：</h4>
             <div class="hr"></div>
             <el-table :data="nodes" style="width: 100%">

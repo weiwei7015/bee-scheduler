@@ -2,11 +2,11 @@ package com.bee.scheduler.core.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bee.scheduler.core.TaskExecutionContext;
+import com.bee.scheduler.core.TaskExecutionLog;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +51,10 @@ public class KafkaProducerJobComponent extends JobComponent {
     }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        log.info("KafkaProducerJob.execute()");
-        JSONObject taskParam = getTaskParam(context);
+    public boolean run(TaskExecutionContext context) throws Exception {
+        JSONObject taskParam = context.getTaskParam();
+        TaskExecutionLog taskLogger = context.getLogger();
+
         String brokerList = taskParam.getString("brokerList");
         JSONArray messageArray = taskParam.getJSONArray("messages");
 
@@ -75,7 +76,6 @@ public class KafkaProducerJobComponent extends JobComponent {
         } finally {
             producer.close();
         }
-
+        return true;
     }
-
 }

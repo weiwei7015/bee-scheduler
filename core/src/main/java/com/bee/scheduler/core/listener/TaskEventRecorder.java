@@ -1,7 +1,8 @@
 package com.bee.scheduler.core.listener;
 
 import com.bee.scheduler.core.Constants;
-import com.bee.scheduler.core.JobExecutionContextHelper;
+import com.bee.scheduler.core.JobExecutionContextUtil;
+import com.bee.scheduler.core.TaskExecutionLog;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobDetail;
@@ -40,20 +41,23 @@ public class TaskEventRecorder extends JobListenerSupport {
     @Override
     public void jobToBeExecuted(JobExecutionContext context) {
         JobDetail jobDetail = context.getJobDetail();
-        JobExecutionContextHelper.appendExecLog(context, "任务[" + jobDetail.getKey() + "]将开始执行");
+        TaskExecutionLog taskExecutionLog = new TaskExecutionLog(context);
+
+        taskExecutionLog.info("任务[" + jobDetail.getKey() + "]将开始执行");
     }
 
     @Override
     public void jobExecutionVetoed(JobExecutionContext context) {
+        TaskExecutionLog taskExecutionLog = new TaskExecutionLog(context);
+
         JobDetail jobDetail = context.getJobDetail();
         Trigger trigger = context.getTrigger();
         Date currentTime = Calendar.getInstance().getTime();
 
-        JobExecutionContextHelper.appendExecLog(context, "任务[" + jobDetail.getKey() + "]正在运行，已被取消执行！");
+        taskExecutionLog.info("任务[" + jobDetail.getKey() + "]正在运行，已被取消执行！");
 
 
         // 记录执行历史
-        String taskExecLog = JobExecutionContextHelper.getExecLog(context);
         Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE;
 
         try {
@@ -77,7 +81,7 @@ public class TaskEventRecorder extends JobListenerSupport {
                 preparedStatement.setLong(9, context.getJobRunTime());
                 preparedStatement.setInt(10, context.getRefireCount());
                 preparedStatement.setString(11, Constants.TaskExecState.VETOED.toString());
-                preparedStatement.setString(12, taskExecLog);
+                preparedStatement.setString(12, taskExecutionLog.getLogContent());
                 preparedStatement.execute();
             } catch (Exception e) {
                 connection.rollback();
@@ -97,22 +101,23 @@ public class TaskEventRecorder extends JobListenerSupport {
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
+        TaskExecutionLog taskExecutionLog = new TaskExecutionLog(context);
+
         JobDetail jobDetail = context.getJobDetail();
         Trigger trigger = context.getTrigger();
         Date currentTime = Calendar.getInstance().getTime();
 
         if (jobException == null) {
-            JobExecutionContextHelper.appendExecLog(context, "任务[" + jobDetail.getKey() + "]执行成功！");
+            taskExecutionLog.info("任务[" + jobDetail.getKey() + "]执行成功！");
         } else {
-            JobExecutionContextHelper.appendExecLog(context, "任务[" + jobDetail.getKey() + "]失败！");
-            JobExecutionContextHelper.appendExecLog(context, "异常详情：");
-            JobExecutionContextHelper.appendExecLog(context, "摘要 -> " + jobException.getMessage());
-            JobExecutionContextHelper.appendExecLog(context, "明细 -> " + jobException);
+            taskExecutionLog.info("任务[" + jobDetail.getKey() + "]失败！");
+            taskExecutionLog.info("异常详情：");
+            taskExecutionLog.info("摘要 -> " + jobException.getMessage());
+            taskExecutionLog.info("明细 -> " + jobException);
 
         }
 
         // 记录执行历史
-        String taskExecLog = JobExecutionContextHelper.getExecLog(context);
         Constants.TaskExecState execState = jobException == null ? Constants.TaskExecState.SUCCESS : Constants.TaskExecState.FAIL;
         Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE;
 
@@ -140,7 +145,7 @@ public class TaskEventRecorder extends JobListenerSupport {
                 preparedStatement.setLong(9, context.getJobRunTime());
                 preparedStatement.setInt(10, context.getRefireCount());
                 preparedStatement.setString(11, execState.toString());
-                preparedStatement.setString(12, taskExecLog);
+                preparedStatement.setString(12, taskExecutionLog.getLogContent());
 
                 preparedStatement.execute();
             } catch (Exception e) {

@@ -9,10 +9,9 @@ import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.Constants;
+import com.bee.scheduler.core.TaskExecutionContext;
+import com.bee.scheduler.core.TaskExecutionLog;
 import org.apache.commons.lang3.StringUtils;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -155,72 +154,66 @@ public class DubboInvokerJobComponent extends JobComponent {
     }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        JobDetail jobDetail = context.getJobDetail();
-        JobExecutionContextHelper.appendExecLog(context, "开始执行任务 -> " + jobDetail.getKey());
-        try {
-            JSONObject taskParam = getTaskParam(context);
+    public boolean run(TaskExecutionContext context) throws Exception {
+        JSONObject taskParam = context.getTaskParam();
+        TaskExecutionLog taskLogger = context.getLogger();
 
-            JobExecutionContextHelper.appendExecLog(context, "任务参数 -> " + taskParam.toString());
+        String url = taskParam.getString("url");
+        String registry = taskParam.getString("registry");
+        String service = taskParam.getString("service");
+        String version = taskParam.getString("version");
+        String group = taskParam.getString("group");
+        String method = taskParam.getString("method");
+        Integer timeout = taskParam.getInteger("timeout");
+        String loadbalance = taskParam.getString("loadbalance");
 
-            String url = taskParam.getString("url");
-            String registry = taskParam.getString("registry");
-            String service = taskParam.getString("service");
-            String version = taskParam.getString("version");
-            String group = taskParam.getString("group");
-            String method = taskParam.getString("method");
-            Integer timeout = taskParam.getInteger("timeout");
-            String loadbalance = taskParam.getString("loadbalance");
+        JSONArray methodParamsType = JSONArray.parseArray(taskParam.getString("paramsType"));
+        JSONArray methodParams = JSONArray.parseArray(taskParam.getString("params"));
 
-            JSONArray methodParamsType = JSONArray.parseArray(taskParam.getString("paramsType"));
-            JSONArray methodParams = JSONArray.parseArray(taskParam.getString("params"));
+        // RegistryConfig registry = new RegistryConfig();
+        // registry.setAddress(taskParam.getString("registry"));
+        // registry.setUsername("aaa");
+        // registry.setPassword("bbb");
 
-            // RegistryConfig registry = new RegistryConfig();
-            // registry.setAddress(taskParam.getString("registry"));
-            // registry.setUsername("aaa");
-            // registry.setPassword("bbb");
+        // 泛化引用远程服务
+        ReferenceConfig<GenericService> referenceConfig = new ReferenceConfig<>();
+        referenceConfig.setApplication(new ApplicationConfig(Constants.SYSNAME));
+        referenceConfig.setUrl(url);
+        RegistryConfig registryConfig = new RegistryConfig(registry);
+        registryConfig.setClient("curator");
+        referenceConfig.setRegistry(registryConfig);
+        referenceConfig.setInterface(service);
+        referenceConfig.setVersion(version);
+        referenceConfig.setGroup(group);
+        referenceConfig.setGeneric(true);
+        referenceConfig.setTimeout(timeout);
+        referenceConfig.setLoadbalance(loadbalance);
 
-            // 泛化引用远程服务
-            ReferenceConfig<GenericService> referenceConfig = new ReferenceConfig<>();
-            referenceConfig.setApplication(new ApplicationConfig(Constants.SYSNAME));
-            referenceConfig.setUrl(url);
-            RegistryConfig registryConfig = new RegistryConfig(registry);
-            registryConfig.setClient("curator");
-            referenceConfig.setRegistry(registryConfig);
-            referenceConfig.setInterface(service);
-            referenceConfig.setVersion(version);
-            referenceConfig.setGroup(group);
-            referenceConfig.setGeneric(true);
-            referenceConfig.setTimeout(timeout);
-            referenceConfig.setLoadbalance(loadbalance);
-
-            ReferenceConfigCache referenceConfigCache = ReferenceConfigCache.getCache("DEFAULT", REFERENCE_CONFIG_CACHE_KEY_GENERATOR);
-            GenericService genericService = referenceConfigCache.get(referenceConfig);
+        ReferenceConfigCache referenceConfigCache = ReferenceConfigCache.getCache("DEFAULT", REFERENCE_CONFIG_CACHE_KEY_GENERATOR);
+        GenericService genericService = referenceConfigCache.get(referenceConfig);
 //             GenericService genericService = referenceConfig.get();
 
-            // 解析类型别名
-            JSONArray paramTypeJsonArray = methodParamsType;
-            String[] paramTypeStrArray = new String[paramTypeJsonArray.size()];
-            Class<?>[] paramTypeArray = new Class<?>[paramTypeJsonArray.size()];
+        // 解析类型别名
+        JSONArray paramTypeJsonArray = methodParamsType;
+        String[] paramTypeStrArray = new String[paramTypeJsonArray.size()];
+        Class<?>[] paramTypeArray = new Class<?>[paramTypeJsonArray.size()];
 
-            for (int i = 0; i < paramTypeJsonArray.size(); i++) {
-                String type = paramTypeJsonArray.getString(i);
-                String typeLowerCase = type.toLowerCase();
-                paramTypeStrArray[i] = TYPE_ALIASES.containsKey(typeLowerCase) ? TYPE_ALIASES.get(typeLowerCase).getName() : type;
-                paramTypeArray[i] = TYPE_ALIASES.containsKey(typeLowerCase) ? TYPE_ALIASES.get(typeLowerCase) : Map.class;
-            }
-
-            JSONArray argsJsonArray = methodParams;
-            Object[] params = new Object[argsJsonArray.size()];
-            for (int i = 0; i < argsJsonArray.size(); i++) {
-                params[i] = argsJsonArray.getObject(i, paramTypeArray[i]);
-            }
-
-            Object result = genericService.$invoke(method, paramTypeStrArray, params);
-
-            JobExecutionContextHelper.appendExecLog(context, "执行完成 -> return:" + result);
-        } catch (Exception e) {
-            throw new JobExecutionException(e);
+        for (int i = 0; i < paramTypeJsonArray.size(); i++) {
+            String type = paramTypeJsonArray.getString(i);
+            String typeLowerCase = type.toLowerCase();
+            paramTypeStrArray[i] = TYPE_ALIASES.containsKey(typeLowerCase) ? TYPE_ALIASES.get(typeLowerCase).getName() : type;
+            paramTypeArray[i] = TYPE_ALIASES.containsKey(typeLowerCase) ? TYPE_ALIASES.get(typeLowerCase) : Map.class;
         }
+
+        JSONArray argsJsonArray = methodParams;
+        Object[] params = new Object[argsJsonArray.size()];
+        for (int i = 0; i < argsJsonArray.size(); i++) {
+            params[i] = argsJsonArray.getObject(i, paramTypeArray[i]);
+        }
+
+        Object result = genericService.$invoke(method, paramTypeStrArray, params);
+
+        taskLogger.info("任务执行成功（return:" + result + ")");
+        return true;
     }
 }
