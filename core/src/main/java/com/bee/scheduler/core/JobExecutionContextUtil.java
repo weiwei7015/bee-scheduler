@@ -33,7 +33,7 @@ public class JobExecutionContextUtil {
         if (StringUtils.isBlank(mergedJobDataMap.getString(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE))) {
             return null;
         }
-        return JSONObject.parseArray(mergedJobDataMap.getString(Constants.JOB_DATA_KEY_TASK_PARAM));
+        return JSONObject.parseArray(mergedJobDataMap.getString(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE));
     }
 
     public static Map<String, Object> getContextResultMap(JobExecutionContext context) {

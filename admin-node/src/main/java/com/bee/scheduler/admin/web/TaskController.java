@@ -249,6 +249,7 @@ public class TaskController {
         taskConfig.setJobComponent(jobDetail.getJobClass().getName());
         taskConfig.setParams(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_PARAM));
         taskConfig.setDescription(abstractTrigger.getDescription());
+        taskConfig.setLinkageRule(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE));
 
 
         if (abstractTrigger instanceof SimpleTrigger) {

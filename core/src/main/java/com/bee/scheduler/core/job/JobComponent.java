@@ -71,7 +71,7 @@ public abstract class JobComponent implements Job {
         if (!runFailed && taskLinkageRule != null) {
 
 
-            System.out.println(taskLinkageRule);
+            taskLogger.warning(taskLinkageRule.toJSONString());
 
 
 //            JobKey jobKey = new JobKey(name, group);
