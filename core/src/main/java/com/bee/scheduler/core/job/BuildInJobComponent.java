@@ -58,7 +58,7 @@ public class BuildInJobComponent extends JobComponent {
             date_point.set(Calendar.DAY_OF_MONTH, date_point.get(Calendar.DAY_OF_MONTH) - keepDays);
 
 
-            Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + context.getScheduler().getSchedulerName());
+            Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + context.getJobExecutionContext().getScheduler().getSchedulerName());
             String sql = "DELETE FROM BS_TASK_HISTORY WHERE FIRED_TIME <= ?";
 
             PreparedStatement preparedStatement = null;

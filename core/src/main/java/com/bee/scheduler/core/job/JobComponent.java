@@ -53,7 +53,7 @@ public abstract class JobComponent implements Job {
             taskLogger.info("任务参数 -> " + taskParam.toString());
 
             TaskExecutionContext taskExecutionContext = new TaskExecutionContext();
-            taskExecutionContext.setScheduler(context.getScheduler());
+            taskExecutionContext.setJobExecutionContext(context);
             taskExecutionContext.setTaskParam(taskParam);
             taskExecutionContext.setLogger(taskLogger);
 
@@ -67,13 +67,13 @@ public abstract class JobComponent implements Job {
         }
 
 
-        JSONArray taskLinkageRule = JobExecutionContextUtil.getTaskLinkageRule(context);
-        if (!runFailed && taskLinkageRule != null) {
-
-
-            taskLogger.warning(taskLinkageRule.toJSONString());
-
-
+//        JSONArray taskLinkageRule = JobExecutionContextUtil.getTaskLinkageRule(context);
+//        if (!runFailed && taskLinkageRule != null) {
+//
+//
+//            taskLogger.warning(taskLinkageRule.toJSONString());
+//
+//
 //            JobKey jobKey = new JobKey(name, group);
 //            Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
 //            JobDataMap jobDataMap = trigger.getJobDataMap();
@@ -87,6 +87,6 @@ public abstract class JobComponent implements Job {
 //            scheduler.scheduleJob(operableTrigger);
 
 
-        }
+//    }
     }
 }

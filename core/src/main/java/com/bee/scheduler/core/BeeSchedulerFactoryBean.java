@@ -1,5 +1,7 @@
 package com.bee.scheduler.core;
 
+import com.bee.scheduler.core.listener.TaskLinkageHandleListener;
+import com.bee.scheduler.core.listener.TaskListenerSupport;
 import com.bee.scheduler.core.listener.TaskEventRecorder;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -7,6 +9,8 @@ import org.quartz.SchedulerFactory;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -18,7 +22,7 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
     private int threadPoolSize = 10;
     private boolean clusterMode = false;
     private long clusterCheckinInterval = 5000;
-    private TaskEventRecorder taskEventRecorder;
+    private List<TaskListenerSupport> taskListenerList = new ArrayList<>();
 
 
     public BeeSchedulerFactoryBean(String name, String instanceId, DataSource dataSource) {
@@ -26,7 +30,8 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
         this.instanceId = instanceId;
         this.setDataSource(dataSource);
 
-        taskEventRecorder = new TaskEventRecorder(dataSource);
+        taskListenerList.add(new TaskLinkageHandleListener());
+        taskListenerList.add(new TaskEventRecorder(dataSource));
     }
 
     public BeeSchedulerFactoryBean(String name, DataSource dataSource) {
@@ -55,10 +60,18 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
         super.afterPropertiesSet();
     }
 
+    public void addListener(TaskListenerSupport listener) {
+        this.taskListenerList.add(listener);
+    }
+
     @Override
     protected Scheduler createScheduler(SchedulerFactory schedulerFactory, String schedulerName) throws SchedulerException {
         Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
-        scheduler.getListenerManager().addJobListener(taskEventRecorder);
+
+        for (TaskListenerSupport listener : taskListenerList) {
+            scheduler.getListenerManager().addJobListener(listener);
+        }
+
         return scheduler;
     }
 

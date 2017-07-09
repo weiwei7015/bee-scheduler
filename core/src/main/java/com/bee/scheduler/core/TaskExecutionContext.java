@@ -1,23 +1,22 @@
 package com.bee.scheduler.core;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.quartz.Scheduler;
+import org.quartz.JobExecutionContext;
 
 /**
  * Created by weiwei on 2017/7/8.
  */
 public class TaskExecutionContext {
-    private Scheduler scheduler;
+    private JobExecutionContext jobExecutionContext;
     private JSONObject taskParam;
     private TaskExecutionLog logger;
 
-    public Scheduler getScheduler() {
-        return scheduler;
+    public JobExecutionContext getJobExecutionContext() {
+        return jobExecutionContext;
     }
 
-    public void setScheduler(Scheduler scheduler) {
-        this.scheduler = scheduler;
+    public void setJobExecutionContext(JobExecutionContext jobExecutionContext) {
+        this.jobExecutionContext = jobExecutionContext;
     }
 
     public JSONObject getTaskParam() {
