@@ -47,7 +47,7 @@ public class TaskEventRecorder extends TaskListenerSupport {
         taskLogger.warning("任务[" + jobDetail.getKey() + "]正在运行，已被取消执行！");
 
         // 记录执行历史
-        Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE;
+        Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Linkage) ? Constants.TaskFiredWay.LINKAGE : Constants.TaskFiredWay.SCHEDULE;
 
         try {
             String schedulerName = scheduler.getSchedulerName();
@@ -99,7 +99,7 @@ public class TaskEventRecorder extends TaskListenerSupport {
 
         // 记录执行历史
         Constants.TaskExecState execState = jobException == null ? Constants.TaskExecState.SUCCESS : Constants.TaskExecState.FAIL;
-        Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE;
+        Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Manual) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Tmp) ? Constants.TaskFiredWay.TMP : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_Linkage) ? Constants.TaskFiredWay.LINKAGE : Constants.TaskFiredWay.SCHEDULE;
 
         try {
             String schedulerName = scheduler.getSchedulerName();

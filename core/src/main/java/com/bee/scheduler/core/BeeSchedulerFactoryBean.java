@@ -22,16 +22,15 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
     private int threadPoolSize = 10;
     private boolean clusterMode = false;
     private long clusterCheckinInterval = 5000;
+    private DataSource dataSource;
     private List<TaskListenerSupport> taskListenerList = new ArrayList<>();
 
 
     public BeeSchedulerFactoryBean(String name, String instanceId, DataSource dataSource) {
-        this.setSchedulerName(name);
         this.instanceId = instanceId;
+        this.dataSource = dataSource;
+        this.setSchedulerName(name);
         this.setDataSource(dataSource);
-
-        taskListenerList.add(new TaskLinkageHandleListener());
-        taskListenerList.add(new TaskEventRecorder(dataSource));
     }
 
     public BeeSchedulerFactoryBean(String name, DataSource dataSource) {
@@ -67,6 +66,9 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
     @Override
     protected Scheduler createScheduler(SchedulerFactory schedulerFactory, String schedulerName) throws SchedulerException {
         Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
+
+        taskListenerList.add(new TaskLinkageHandleListener());
+        taskListenerList.add(new TaskEventRecorder(dataSource));
 
         for (TaskListenerSupport listener : taskListenerList) {
             scheduler.getListenerManager().addJobListener(listener);

@@ -65,23 +65,5 @@ public abstract class JobComponent implements Job {
         } finally {
             taskLogger.info("执行任务结束 -> " + (runFailed ? "失败" : "成功"));
         }
-
-
-//        JSONArray taskLinkageRule = JobExecutionContextUtil.getTaskLinkageRule(context);
-//        if (!runFailed && taskLinkageRule != null) {
-//            taskLogger.warning(taskLinkageRule.toJSONString());
-//            JobKey jobKey = new JobKey(name, group);
-//            Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
-//            JobDataMap jobDataMap = trigger.getJobDataMap();
-//
-//            String randomTriggerName = "MT_" + Long.toString(RandomUtils.nextLong(), 30 + (int) (System.currentTimeMillis() % 7));
-//            OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_Manual).forJob(jobKey).build();
-//            if (jobDataMap != null) {
-//                operableTrigger.setJobDataMap(jobDataMap);
-//            }
-//
-//            scheduler.scheduleJob(operableTrigger);
-//    }
-
     }
 }
