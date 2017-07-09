@@ -69,11 +69,7 @@ public abstract class JobComponent implements Job {
 
 //        JSONArray taskLinkageRule = JobExecutionContextUtil.getTaskLinkageRule(context);
 //        if (!runFailed && taskLinkageRule != null) {
-//
-//
 //            taskLogger.warning(taskLinkageRule.toJSONString());
-//
-//
 //            JobKey jobKey = new JobKey(name, group);
 //            Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
 //            JobDataMap jobDataMap = trigger.getJobDataMap();
@@ -85,8 +81,7 @@ public abstract class JobComponent implements Job {
 //            }
 //
 //            scheduler.scheduleJob(operableTrigger);
-
-
 //    }
+
     }
 }
