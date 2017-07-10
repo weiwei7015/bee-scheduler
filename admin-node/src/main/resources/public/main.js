@@ -12,7 +12,7 @@ require.config({
         moment: '/public/lib/moment.min',
         text: '/public/lib/text'
     },
-    urlArgs: 'v=2017071002'
+    urlArgs: 'v=2017071003'
 });
 
 require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog) {

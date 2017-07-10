@@ -418,3 +418,8 @@ div.spr {
 .text-silver {
     color: #8492A6;
 }
+
+/*********task-list**********/
+.box.task-list-item .task-title {
+    line-height: 36px;
+}

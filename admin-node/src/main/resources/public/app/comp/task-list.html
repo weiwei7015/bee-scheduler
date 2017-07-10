@@ -45,7 +45,6 @@
                 </el-dropdown>
             </el-form-item>
         </el-form>
-
         <div v-loading="queryLoading">
             <template v-if="!queryResult.result || queryResult.result.length == 0">
                 <div class="box no-border">
@@ -56,11 +55,11 @@
             </template>
             <div class="spr"></div>
             <template v-for="item in queryResult.result">
-                <div class="box box-hover">
+                <div class="box box-hover task-list-item">
                     <div class="box-body">
                         <el-row>
-                            <el-col :span="12">
-                                <h3 class="no-margin" style="line-height: 34px">{{item.group+"."+item.name}}<span class="text-gray">（{{item.jobComponent}}）</span></h3>
+                            <el-col :span="12" class="task-title">
+                                <h3 class="no-margin">{{item.group+"."+item.name}}<span class="text-gray">（{{item.jobComponent}}）</span></h3>
                             </el-col>
                             <el-col :span="12" class="text-right">
                                 <template v-if="item.group === 'Tmp'">
