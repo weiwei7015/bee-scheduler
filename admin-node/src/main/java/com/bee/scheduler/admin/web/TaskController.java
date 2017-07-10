@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.Calendar;
 
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -116,10 +117,8 @@ public class TaskController {
                 throw new BizzException(BizzException.error_code_invalid_params, "联动任务规则输入有误，必须是JSON格式");
             }
         }
-        if (!"true".equals(request.getParameter("quicktask"))) {
-            if (Constants.TASK_GROUP_Manual.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Tmp.equalsIgnoreCase(taskConfig.getGroup())) {
-                throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"");
-            }
+        if (Constants.TASK_GROUP_Manual.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Tmp.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Linkage.equalsIgnoreCase(taskConfig.getGroup())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"、\"linkage\"");
         }
 
 
@@ -456,5 +455,38 @@ public class TaskController {
         }
 
         scheduler.scheduleJob(operableTrigger);
+    }
+
+    @ResponseBody
+    @PostMapping("/task/tmp")
+    public void quickTask(@RequestBody TmpTaskConfig quickTaskConfig) throws Exception {
+
+        quickTaskConfig.setName(StringUtils.trimToEmpty(quickTaskConfig.getName()));
+
+        if (StringUtils.isEmpty(quickTaskConfig.getJobComponent())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "请选择任务组件");
+        }
+        if (StringUtils.isEmpty(quickTaskConfig.getName())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "请输入任务名称");
+        }
+
+        String name = quickTaskConfig.getName();
+        String group = Constants.TASK_GROUP_Tmp;
+
+        Class<? extends JobComponent> jobComponentClass = RamStore.jobs.get(quickTaskConfig.getJobComponent()).getClass();
+        JobDetail jobDetail = JobBuilder.newJob(jobComponentClass).withIdentity(name, group).build();
+
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put(Constants.JOB_DATA_KEY_TASK_PARAM, quickTaskConfig.getParams());
+//        jobDataMap.put(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE, quickTaskConfig.getLinkageRule());
+
+        OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(name, group).usingJobData(jobDataMap).build();
+
+        if (quickTaskConfig.getStartDelay() != null) {
+            Calendar startTime = Calendar.getInstance();
+            startTime.add(Calendar.MILLISECOND, quickTaskConfig.getStartDelay());
+            operableTrigger.setStartTime(startTime.getTime());
+        }
+        scheduler.scheduleJob(jobDetail, operableTrigger);
     }
 }

@@ -20,21 +20,10 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
                 initializing: false,
                 editTaskFormModel: {
                     name: '',
-                    group: 'Tmp',
-                    scheduleType: 1,
-                    scheduleTypeSimpleOptions: {
-                        interval: 0,
-                        repeatType: 2,
-                        repeatCount: 0,
-                        misfireHandlingType: 0
-                    },
-                    startAtType: 1,
-                    startAt: null,
-                    endAtType: 1,
-                    endAt: null,
                     jobComponent: '',
                     params: '',
-                    description: ''
+                    enableStartDelay: 0,
+                    startDelay: 1000
                 }
             };
 
@@ -66,7 +55,7 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
                     if (valid) {
                         var editTaskFormModel = vm.editTaskFormModel;
                         vm.postTaskInProcess = true;
-                        vm.$http.post("/task/new?quicktask=true", editTaskFormModel).then(function (re) {
+                        vm.$http.post("/task/tmp", editTaskFormModel).then(function (re) {
                             vm.$message({message: '任务已触发！', type: 'success'});
                             vm.postTaskInProcess = false;
                             vm.visible = false;
