@@ -482,7 +482,7 @@ public class TaskController {
 
         OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(name, group).usingJobData(jobDataMap).build();
 
-        if (quickTaskConfig.getStartDelay() != null) {
+        if (quickTaskConfig.getEnableStartDelay() && quickTaskConfig.getStartDelay() != null) {
             Calendar startTime = Calendar.getInstance();
             startTime.add(Calendar.MILLISECOND, quickTaskConfig.getStartDelay());
             operableTrigger.setStartTime(startTime.getTime());

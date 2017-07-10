@@ -15,11 +15,11 @@
             </el-form-item>
             <el-form-item label="延迟选项">
                 <el-radio-group v-model="editTaskFormModel.enableStartDelay">
-                    <el-radio :label="0">立即执行</el-radio>
-                    <el-radio :label="1">延迟执行</el-radio>
+                    <el-radio :label="false">立即执行</el-radio>
+                    <el-radio :label="true">延迟执行</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="editTaskFormModel.enableStartDelay == 1" label="延迟多久" style="width: 300px">
+            <el-form-item v-if="editTaskFormModel.enableStartDelay == true" label="延迟多久" style="width: 300px">
                 <el-input placeholder="请输入延迟时间（ms）" v-model="editTaskFormModel.startDelay">
                     <template slot="append">ms</template>
                 </el-input>

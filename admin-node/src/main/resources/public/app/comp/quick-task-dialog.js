@@ -22,7 +22,7 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
                     name: '',
                     jobComponent: '',
                     params: '',
-                    enableStartDelay: 0,
+                    enableStartDelay: false,
                     startDelay: 1000
                 }
             };
