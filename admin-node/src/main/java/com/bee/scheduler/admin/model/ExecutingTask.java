@@ -1,7 +1,7 @@
 package com.bee.scheduler.admin.model;
 
 /**
- * Created by wei-wei on 2017/7/5.
+ * Created by wei-wei
  */
 public class ExecutingTask extends FiredTask {
     private Boolean isNonConcurrent;

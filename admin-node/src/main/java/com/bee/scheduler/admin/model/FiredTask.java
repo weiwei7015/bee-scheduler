@@ -3,7 +3,7 @@ package com.bee.scheduler.admin.model;
 import com.bee.scheduler.core.Constants;
 
 /**
- * Created by wei-wei on 2017/7/5.
+ * Created by wei-wei
  */
 public class FiredTask extends Task {
     private String instanceId;

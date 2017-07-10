@@ -16,6 +16,9 @@ define(['text!comp/task-edit.html'], function (tpl) {
                 ],
                 taskGroup: [
                     {required: true, message: '请输入任务所属组', trigger: 'blur'}
+                ],
+                taskCron: [
+                    {required: true, message: '请输入Cron表达式', trigger: 'blur'}
                 ]
             };
 

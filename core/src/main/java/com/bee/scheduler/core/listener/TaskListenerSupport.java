@@ -9,7 +9,7 @@ import org.quartz.JobExecutionException;
 import org.quartz.listeners.JobListenerSupport;
 
 /**
- * Created by weiwei on 2017/7/9.
+ * Created by weiwei
  */
 public abstract class TaskListenerSupport extends JobListenerSupport {
     @Override
