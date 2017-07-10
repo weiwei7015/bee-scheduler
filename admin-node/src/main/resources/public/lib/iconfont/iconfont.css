@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1499443763594'); /* IE9*/
-  src: url('iconfont.eot?t=1499443763594#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1499443763594') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1499443763594') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1499443763594#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1499656191677'); /* IE9*/
+  src: url('iconfont.eot?t=1499656191677#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1499656191677') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1499656191677') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1499656191677#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -34,6 +34,8 @@
 .icon-tips:before { content: "\e920"; }
 
 .icon-Play:before { content: "\e611"; }
+
+.icon-recovery:before { content: "\e6e2"; }
 
 .icon-trash:before { content: "\e60d"; }
 

@@ -103,7 +103,7 @@ define(['text!comp/task-list.html'], function (tpl) {
             executeTask: function (name, group) {
                 var vm = this;
 
-                vm.$confirm("确认执行任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
+                vm.$confirm("立即执行任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
                     vm.$http.post("/task/execute", null, {params: {name: name, group: group}}).then(function (re) {
                         vm.newTaskDialogVisible = false;
                         vm.$message({message: '任务已触发！', type: 'success'});
