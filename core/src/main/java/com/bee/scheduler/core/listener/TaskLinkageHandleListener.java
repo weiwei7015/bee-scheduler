@@ -6,14 +6,13 @@ import com.bee.scheduler.core.Constants;
 import com.bee.scheduler.core.JobExecutionContextUtil;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLog;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
 import org.quartz.spi.OperableTrigger;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
+import java.util.Calendar;
 
 /**
  * Created by weiwei on 2017/7/9.
@@ -56,6 +55,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
 
                         String taskKey = itemObj.getString("task");
                         String nextLinkageRule = itemObj.getString("next");
+                        Integer delay = itemObj.getInteger("delay");
 
                         taskLogger.info("触发联动任务:" + taskKey);
 
@@ -80,6 +80,12 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
 
                         OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobExecutionContext.getFireInstanceId() + "_" + (i + 1), Constants.TASK_GROUP_Linkage).forJob(jobKey).build();
                         operableTrigger.setJobDataMap(jobDataMap);
+                        if (delay != null) {
+                            taskLogger.info("联动任务【" + taskKey + "】将在" + delay + "ms后开始执行");
+                            Calendar startTime = Calendar.getInstance();
+                            startTime.add(Calendar.MILLISECOND, delay);
+                            operableTrigger.setStartTime(startTime.getTime());
+                        }
 
                         scheduler.scheduleJob(operableTrigger);
                     }
