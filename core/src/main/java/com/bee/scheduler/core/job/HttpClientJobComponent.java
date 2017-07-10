@@ -49,12 +49,12 @@ public class HttpClientJobComponent extends JobComponent {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "	\"url\":\"\",\r" +
-                "	\"method\":\"get\",\r" +
-                "	\"timeout\":5000,\r" +
-                "	\"cookies\":[\r" +
-                "		{\"n\":\"\",\"v\":\"\"}\r" +
-                "	]\r" +
+                "    url:'',\r" +
+                "    method:'get',\r" +
+                "    timeout:5000,\r" +
+                "    cookies:[\r" +
+                "        {n:'',v:''}\r" +
+                "    ]\r" +
                 "}";
     }
 

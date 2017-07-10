@@ -40,7 +40,7 @@ public class BuildInJobComponent extends JobComponent {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "	\"task\":\"\"\r" +
+                "    task:''\r" +
                 "}";
     }
 

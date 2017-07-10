@@ -40,12 +40,12 @@ public class KafkaProducerJobComponent extends JobComponent {
     public String getParamTemplate() {
         StringBuilder t = new StringBuilder();
         t.append("{\r");
-        t.append("	\"brokerList\":\"\",\r");
-        t.append("	\"messages\":[\r");
-        t.append("		{\"topic\":\"\",\"content\":{}},\r");
-        t.append("		{\"topic\":\"\",\"content\":\"\"},\r");
-        t.append("		{\"topic\":\"\",\"content\":[{},{}]}\r");
-        t.append("	]\r");
+        t.append("    brokerList:'',\r");
+        t.append("    messages:[\r");
+        t.append("        {topic:'',content:{}},\r");
+        t.append("        {topic:'',content:''},\r");
+        t.append("        {topic:'',content:[{},{}]}\r");
+        t.append("    ]\r");
         t.append("}");
         return t.toString();
     }

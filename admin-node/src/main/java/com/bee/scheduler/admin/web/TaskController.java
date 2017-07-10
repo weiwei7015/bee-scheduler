@@ -469,6 +469,13 @@ public class TaskController {
         if (StringUtils.isEmpty(quickTaskConfig.getName())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请输入任务名称");
         }
+        if (StringUtils.isNotEmpty(quickTaskConfig.getParams())) {
+            try {
+                JSON.parseObject(quickTaskConfig.getParams());
+            } catch (Exception e) {
+                throw new BizzException(BizzException.error_code_invalid_params, "任务参数输入有误，必须是JSON格式");
+            }
+        }
 
         String name = quickTaskConfig.getName();
         String group = Constants.TASK_GROUP_Tmp;

@@ -139,16 +139,16 @@ public class DubboInvokerJobComponent extends JobComponent {
     public String getParamTemplate() {
         StringBuilder t = new StringBuilder();
         t.append("{\r");
-        t.append("	\"url\":\"\",\r");
-        t.append("	\"registry\":\"zookeeper://127.0.0.1:2181\",\r");
-        t.append("	\"service\":\"\",\r");
-        t.append("	\"version\":\"\",\r");
-        t.append("	\"group\":\"\",\r");
-        t.append("	\"method\":\"\",\r");
-        t.append("	\"timeout\":10000,\r");
-        t.append("	\"loadbalance\":\"random\",\r");
-        t.append("	\"params\":[],\r");
-        t.append("	\"paramsType\":[]\r");
+        t.append("    url:'',\r");
+        t.append("    registry:'zookeeper://127.0.0.1:2181',\r");
+        t.append("    service:'',\r");
+        t.append("    version:'',\r");
+        t.append("    group:'',\r");
+        t.append("    method:'',\r");
+        t.append("    timeout:10000,\r");
+        t.append("    loadbalance:'random',\r");
+        t.append("    params:[],\r");
+        t.append("    paramsType:[]\r");
         t.append("}");
         return t.toString();
     }

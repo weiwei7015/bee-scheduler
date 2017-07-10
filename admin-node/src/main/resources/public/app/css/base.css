@@ -379,6 +379,10 @@ div.spr {
     margin: 7px 0;
 }
 
+.font-code, .font-code textarea, .font-code input {
+    font-family: "InputMono", "Consolas", "Monaco", "Menlo", sans-serif !important;
+}
+
 .text-bold {
     font-weight: bold;
 }

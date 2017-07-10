@@ -36,7 +36,7 @@ public class ShellJobComponent extends JobComponent {
     public String getParamTemplate() {
         StringBuilder t = new StringBuilder();
         t.append("{\r");
-        t.append("  shell:\"\"\r");
+        t.append("    shell:''\r");
         t.append("}");
         return t.toString();
     }

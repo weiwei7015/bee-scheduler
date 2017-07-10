@@ -139,7 +139,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="任务参数" prop="params">
-                    <el-input type="textarea" v-model="editTaskFormModel.params" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入任务组件需要的参数（JSON格式）"></el-input>
+                    <el-input type="textarea" v-model="editTaskFormModel.params" class="font-code" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入任务组件需要的参数（JSON格式）"></el-input>
                 </el-form-item>
                 <el-form-item label="任务描述" prop="description">
                     <el-input type="textarea" v-model="editTaskFormModel.description" :autosize="{minRows: 2, maxRows: 5}" placeholder="请详细描述该任务"></el-input>
@@ -165,7 +165,7 @@
                     <el-date-picker v-model="editTaskFormModel.endAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="联动任务">
-                    <el-input type="textarea" v-model="editTaskFormModel.linkageRule" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入联动任务规则（JSON格式）"></el-input>
+                    <el-input type="textarea" v-model="editTaskFormModel.linkageRule" class="font-code" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入联动任务规则（JSON格式）"></el-input>
                 </el-form-item>
             </el-form>
         </div>

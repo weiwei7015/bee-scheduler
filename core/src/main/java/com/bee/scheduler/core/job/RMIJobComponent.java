@@ -34,8 +34,8 @@ public class RMIJobComponent extends JobComponent {
     public String getParamTemplate() {
         StringBuilder t = new StringBuilder();
         t.append("{\r");
-        t.append("	\"address\":\"\",\r");
-        t.append("	\"method\":\"\"\r");
+        t.append("    address:'',\r");
+        t.append("    method:''\r");
         t.append("}");
         return t.toString();
     }
