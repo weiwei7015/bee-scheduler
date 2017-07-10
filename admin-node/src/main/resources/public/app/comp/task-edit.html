@@ -17,7 +17,7 @@
                     <el-input v-model="editTaskFormModel.name" :disabled="editFor!=='New'"></el-input>
                 </el-form-item>
                 <el-form-item label="所属组" prop="group" :rules="validators.taskGroup">
-                    <el-input v-model="editTaskFormModel.group" placeholder="" :disabled="editFor!=='New'"></el-input>
+                    <el-autocomplete v-model="editTaskFormModel.group" :fetch-suggestions="queryTaskGroup" placeholder="" :trigger-on-focus="false" :disabled="editFor!=='New'" style="width: 100%"></el-autocomplete>
                 </el-form-item>
                 <h4 class="no-margin">调度规则</h4>
                 <div class="hr"></div>
@@ -172,7 +172,7 @@
         <div class="hr"></div>
         <div>
             <el-button @click="routerGoback">取 消</el-button>
-            <el-button type="primary" @click="postNewTask" :loading="postTaskInProcess">保 存</el-button>
+            <el-button type="primary" @click="postTask" :loading="postTaskInProcess">保 存</el-button>
         </div>
 
     </div>

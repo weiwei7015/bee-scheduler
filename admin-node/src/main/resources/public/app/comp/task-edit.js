@@ -12,10 +12,12 @@ define(['text!comp/task-edit.html'], function (tpl) {
                     {required: true, message: '请选择任务组件', trigger: 'change'}
                 ],
                 taskName: [
-                    {required: true, message: '请输入任务名称', trigger: 'blur'}
+                    {required: true, message: '请输入任务名称', trigger: 'blur'},
+                    {required: true, pattern: /^[A-Za-z0-9_]+$/, message: '任务名称只允许使用字母、数字和下划线，请检查', trigger: 'blur'}
                 ],
                 taskGroup: [
-                    {required: true, message: '请输入任务所属组', trigger: 'blur'}
+                    {required: true, message: '请输入任务所属组', trigger: 'blur'},
+                    {required: true, pattern: /^[A-Za-z0-9_]+$/, message: '任务所属组只允许使用字母、数字和下划线，请检查', trigger: 'blur'}
                 ],
                 taskCron: [
                     {required: true, message: '请输入Cron表达式', trigger: 'blur'}
@@ -23,15 +25,15 @@ define(['text!comp/task-edit.html'], function (tpl) {
             };
 
             var data = {
-                validators: validators,
                 editFor: editFor,
-                helpDialogVisible: false,
+                validators: validators,
+                taskGroupList: [],
                 jobComponentList: {},
                 postTaskInProcess: false,
                 initEditFormModelInProcess: false,
                 editTaskFormModel: {
                     name: '',
-                    group: '',
+                    group: 'Default',
                     scheduleType: 4,
                     scheduleTypeSimpleOptions: {
                         interval: 30000,
@@ -67,6 +69,15 @@ define(['text!comp/task-edit.html'], function (tpl) {
                 }
             };
 
+            vm.$http.get("/task/groups").then(function (re) {
+                var taskGroupList = [];
+                var reData = re.body.data;
+                for (var i = 0; i < reData.length; i++) {
+                    taskGroupList.push({value: reData[i]});
+                }
+                data.taskGroupList = taskGroupList;
+            });
+
 
             data.initEditFormModelInProcess = true;
             vm.$http.get("/job-component/list").then(function (re) {
@@ -94,10 +105,20 @@ define(['text!comp/task-edit.html'], function (tpl) {
             }
         },
         methods: {
+            queryTaskGroup: function (q, cb) {
+                var taskGroupList = this.taskGroupList;
+                var results = q ? taskGroupList.filter(this.createTaskGroupFilter(q)) : taskGroupList;
+                cb(results);
+            },
+            createTaskGroupFilter: function (q) {
+                return function (item) {
+                    return (item.value.toLocaleLowerCase().indexOf(q.toLowerCase()) === 0);
+                };
+            },
             routerGoback: function () {
                 this.$router.go(-1);
             },
-            postNewTask: function () {
+            postTask: function () {
                 var vm = this;
 
                 vm.$refs["editTaskForm"].validate(function (valid) {

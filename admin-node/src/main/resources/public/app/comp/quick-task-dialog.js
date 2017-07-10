@@ -10,7 +10,8 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
                     {required: true, message: '请选择任务组件', trigger: 'change'}
                 ],
                 taskName: [
-                    {required: true, message: '请输入任务名称', trigger: 'blur'}
+                    {required: true, message: '请输入任务名称', trigger: 'blur'},
+                    {required: true, pattern: /^[A-Za-z0-9_]+$/, message: '任务名称只允许使用字母、数字和下划线，请检查', trigger: 'blur'}
                 ]
             };
             var data = {

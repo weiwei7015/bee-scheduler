@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -94,14 +95,22 @@ public class TaskController {
         taskConfig.setName(StringUtils.trimToEmpty(taskConfig.getName()));
         taskConfig.setGroup(StringUtils.trimToEmpty(taskConfig.getGroup()));
 
-        if (StringUtils.isEmpty(taskConfig.getJobComponent())) {
-            throw new BizzException(BizzException.error_code_invalid_params, "请选择任务组件");
-        }
         if (StringUtils.isEmpty(taskConfig.getName())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请输入任务名称");
+        } else {
+            if (!Pattern.matches("^[A-Za-z0-9_]+$", taskConfig.getName())) {
+                throw new BizzException(BizzException.error_code_invalid_params, "任务名称只允许使用字母、数字和下划线，请检查");
+            }
         }
         if (StringUtils.isEmpty(taskConfig.getGroup())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请输入任务所属组");
+        } else {
+            if (!Pattern.matches("^[A-Za-z0-9_]+$", taskConfig.getGroup())) {
+                throw new BizzException(BizzException.error_code_invalid_params, "任务所属组只允许使用字母、数字和下划线，请检查");
+            }
+        }
+        if (StringUtils.isEmpty(taskConfig.getJobComponent())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "请选择任务组件");
         }
         if (StringUtils.isNotEmpty(taskConfig.getParams())) {
             try {
@@ -463,11 +472,16 @@ public class TaskController {
 
         quickTaskConfig.setName(StringUtils.trimToEmpty(quickTaskConfig.getName()));
 
-        if (StringUtils.isEmpty(quickTaskConfig.getJobComponent())) {
-            throw new BizzException(BizzException.error_code_invalid_params, "请选择任务组件");
-        }
         if (StringUtils.isEmpty(quickTaskConfig.getName())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请输入任务名称");
+        } else {
+            if (!Pattern.matches("^[A-Za-z0-9_]+$", quickTaskConfig.getName())) {
+                throw new BizzException(BizzException.error_code_invalid_params, "任务名称只允许使用字母、数字和下划线，请检查");
+            }
+        }
+
+        if (StringUtils.isEmpty(quickTaskConfig.getJobComponent())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "请选择任务组件");
         }
         if (StringUtils.isNotEmpty(quickTaskConfig.getParams())) {
             try {
