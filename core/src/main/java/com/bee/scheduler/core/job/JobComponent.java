@@ -60,7 +60,7 @@ public abstract class JobComponent implements Job {
             runFailed = !run(taskExecutionContext);
         } catch (Exception e) {
             runFailed = true;
-            taskLogger.error("执行任务异常 -> " + e.getCause(), e);
+            taskLogger.error("执行任务异常 -> " + e.getMessage(), e);
             throw new JobExecutionException(e);
         } finally {
             taskLogger.info("执行任务结束 -> " + (runFailed ? "失败" : "成功"));

@@ -56,6 +56,8 @@ public class SqlExecutorJobComponent extends JobComponent {
 
         if (url.startsWith("jdbc:mysql")) {
             Class.forName("com.mysql.jdbc.Driver");
+        } else {
+            throw new RuntimeException("暂不支持该数据库[" + url + "]");
         }
 
         Connection connection = null;

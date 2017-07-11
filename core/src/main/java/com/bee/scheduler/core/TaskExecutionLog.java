@@ -89,11 +89,30 @@ public class TaskExecutionLog {
         } else if (LogLevel_FATAL.equals(level)) {
             logger.fatal(msg, e);
         }
+        appendLogLine(level, msg);
+        if (e != null) {
+            appendLogLine(level, "StackTrace:");
+            StackTraceElement[] stackArray = e.getStackTrace();
+            for (StackTraceElement stackTraceElement : stackArray) {
+                appendLogLine(level, stackTraceElement.toString());
+            }
+            Throwable cause = e.getCause();
+            if (cause != null) {
+                appendLogLine(level, "Cause:" + cause.getMessage());
+                for (StackTraceElement stackTraceElement : cause.getStackTrace()) {
+                    appendLogLine(level, stackTraceElement.toString());
+                }
+            }
+        }
+    }
+
+    private void appendLogLine(String level, String msg) {
         logContent.append(level).append("[").append(sdf.format(new Date())).append("] : ").append(msg).append("\r");
     }
 
     public String getLogContent() {
         return logContent.toString();
     }
+
 
 }
