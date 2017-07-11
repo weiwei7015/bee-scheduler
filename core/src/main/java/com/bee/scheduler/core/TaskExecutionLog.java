@@ -107,7 +107,7 @@ public class TaskExecutionLog {
     }
 
     private void appendLogLine(String level, String msg) {
-        logContent.append(level).append("[").append(sdf.format(new Date())).append("] : ").append(msg).append("\r");
+        logContent.append(level).append(" [").append(sdf.format(new Date())).append("] : ").append(msg).append("\r");
     }
 
     public String getLogContent() {
