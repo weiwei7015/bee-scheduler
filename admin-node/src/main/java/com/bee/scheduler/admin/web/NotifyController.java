@@ -2,7 +2,6 @@ package com.bee.scheduler.admin.web;
 
 import com.bee.scheduler.admin.core.RamStore;
 import com.bee.scheduler.admin.model.Notification;
-import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +25,7 @@ public class NotifyController {
     public Object listener(HttpServletRequest request, HttpServletResponse response, long offset) throws Exception {
         Date date = new Date(offset);
         //拉取通知信息
-        List<Notification> notificationList = Lists.newArrayList();
+        List<Notification> notificationList = new ArrayList<>();
         long startTime = (new Date()).getTime();
         int timeout = 1000 * 60;
         while (((new Date()).getTime() - startTime) < timeout && CollectionUtils.isEmpty(notificationList = fetchNotices(new Date(offset), RamStore.notifications))) {
@@ -39,7 +39,7 @@ public class NotifyController {
     }
 
     private List<Notification> fetchNotices(Date date, List<Notification> notificationList) {
-        List<Notification> fetchResult = Lists.newArrayList();
+        List<Notification> fetchResult = new ArrayList<>();
         for (int i = 0; i < RamStore.notifications.size(); i++) {
             Notification notification = RamStore.notifications.get(i);
             if (date.compareTo(notification.getPublishTime()) == -1) {
