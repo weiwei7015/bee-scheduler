@@ -94,13 +94,13 @@ public class TaskExecutionLog {
             appendLogLine(level, "StackTrace:");
             StackTraceElement[] stackArray = e.getStackTrace();
             for (StackTraceElement stackTraceElement : stackArray) {
-                appendLogLine(level, stackTraceElement.toString());
+                appendLogLine(level, "at " + stackTraceElement.toString());
             }
             Throwable cause = e.getCause();
             if (cause != null) {
                 appendLogLine(level, "Cause:" + cause.getMessage());
                 for (StackTraceElement stackTraceElement : cause.getStackTrace()) {
-                    appendLogLine(level, stackTraceElement.toString());
+                    appendLogLine(level, "at " + stackTraceElement.toString());
                 }
             }
         }
