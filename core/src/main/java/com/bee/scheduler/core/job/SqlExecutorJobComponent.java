@@ -13,10 +13,10 @@ import java.sql.ResultSet;
 /**
  * @author weiwei 该组件提供链接Mysql数据库执行Sql的功能
  */
-public class MysqlSqlExecutorComponent extends JobComponent {
+public class SqlExecutorJobComponent extends JobComponent {
     @Override
     public String getName() {
-        return "MysqlSqlExecutorComponent";
+        return "SqlExecutor(目前仅支持Mysql)";
     }
 
     @Override
@@ -54,7 +54,9 @@ public class MysqlSqlExecutorComponent extends JobComponent {
         String type = taskParam.getString("type");
         String sql = taskParam.getString("sql");
 
-        Class.forName("com.mysql.jdbc.Driver");
+        if (url.startsWith("jdbc:mysql")) {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -67,10 +69,10 @@ public class MysqlSqlExecutorComponent extends JobComponent {
                 while (resultSet.next()) {
                     count = count + 1;
                 }
-                taskLogger.info("任务执行结果 -> 查询到" + count + "条记录");
+                taskLogger.info("任务执行成功 -> 查询到" + count + "条记录");
             } else if ("update".equalsIgnoreCase(type)) {
                 int result = preparedStatement.executeUpdate();
-                taskLogger.info("任务执行结果 -> 影响记录总数：" + result);
+                taskLogger.info("任务执行成功 -> 影响记录总数：" + result);
             }
         } finally {
             if (connection != null) {

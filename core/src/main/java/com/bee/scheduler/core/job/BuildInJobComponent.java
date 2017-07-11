@@ -66,7 +66,7 @@ public class BuildInJobComponent extends JobComponent {
                 preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setLong(1, date_point.getTimeInMillis());
                 int result = preparedStatement.executeUpdate();
-                taskLogger.info("任务执行结果：清除历史任务记录完毕，已成功清除 " + result + " 条记录");
+                taskLogger.info("任务执行结果 -> 清除历史任务记录完毕，已成功清除 " + result + " 条记录");
             } finally {
                 if (preparedStatement != null) {
                     preparedStatement.close();

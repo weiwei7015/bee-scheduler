@@ -99,7 +99,7 @@ public class HttpClientJobComponent extends JobComponent {
         try {
             // 发起请求
             CloseableHttpResponse response = client.execute(request);
-            taskLogger.info("任务执行结果:" + response.getStatusLine());
+            taskLogger.info("任务执行成功 -> " + response.getStatusLine());
         } finally {
             try {
                 client.close();

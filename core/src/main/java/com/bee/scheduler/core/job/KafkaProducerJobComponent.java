@@ -76,6 +76,7 @@ public class KafkaProducerJobComponent extends JobComponent {
         } finally {
             producer.close();
         }
+        taskLogger.info("任务执行成功");
         return true;
     }
 }

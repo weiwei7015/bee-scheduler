@@ -213,7 +213,7 @@ public class DubboInvokerJobComponent extends JobComponent {
 
         Object result = genericService.$invoke(method, paramTypeStrArray, params);
 
-        taskLogger.info("任务执行成功（return:" + result + ")");
+        taskLogger.info("任务执行成功 -> return:" + result + "");
         return true;
     }
 }
