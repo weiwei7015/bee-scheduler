@@ -1,5 +1,6 @@
 dependencies {
     compile('org.springframework:spring-context-support:4.3.9.RELEASE')
+    compile('mysql:mysql-connector-java:5.1.42')
     compile('org.quartz-scheduler:quartz:2.3.0')
     compile('org.quartz-scheduler:quartz-jobs:2.3.0')
     compile('com.alibaba:fastjson:1.2.33')
