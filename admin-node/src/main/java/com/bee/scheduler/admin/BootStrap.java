@@ -119,7 +119,9 @@ public class BootStrap {
     public BeeSchedulerFactoryBean beeSchedulerFactoryBean() {
         BeeSchedulerFactoryBean beeSchedulerFactoryBean = new BeeSchedulerFactoryBean("BeeScheduler", dataSource);
         beeSchedulerFactoryBean.setClusterMode(env.containsProperty("cluster"));
-        beeSchedulerFactoryBean.setThreadPoolSize(20);
+        if (env.containsProperty("thread-pool-size")) {
+            beeSchedulerFactoryBean.setThreadPoolSize(Integer.valueOf(env.getProperty("thread-pool-size")));
+        }
         return beeSchedulerFactoryBean;
     }
 
