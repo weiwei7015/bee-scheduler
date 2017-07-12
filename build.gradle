@@ -2,15 +2,15 @@ subprojects {
     apply plugin: 'java'
 
     group 'com.bee'
-    version '1.0-beta.5'
-
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+    version '1.0-beta.6'
 
     repositories {
         mavenLocal()
         mavenCentral()
     }
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
