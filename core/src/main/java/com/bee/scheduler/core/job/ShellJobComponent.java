@@ -24,7 +24,7 @@ public class ShellJobComponent extends JobComponent {
 
     @Override
     public String getAuthor() {
-        return "vivi";
+        return "weiwei";
     }
 
     @Override

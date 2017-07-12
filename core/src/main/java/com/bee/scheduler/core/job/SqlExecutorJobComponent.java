@@ -26,7 +26,7 @@ public class SqlExecutorJobComponent extends JobComponent {
 
     @Override
     public String getAuthor() {
-        return "vivi";
+        return "weiwei";
     }
 
     @Override

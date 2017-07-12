@@ -22,7 +22,7 @@ public class RMIJobComponent extends JobComponent {
 
     @Override
     public String getAuthor() {
-        return "vivi";
+        return "weiwei";
     }
 
     @Override
