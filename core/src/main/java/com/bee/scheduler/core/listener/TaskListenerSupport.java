@@ -4,14 +4,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.JobExecutionContextUtil;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLog;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.*;
 import org.quartz.listeners.JobListenerSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by weiwei
  */
-public abstract class TaskListenerSupport extends JobListenerSupport {
+public abstract class TaskListenerSupport implements JobListener {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+
     @Override
     public void jobToBeExecuted(JobExecutionContext context) {
         JSONObject taskParam = JobExecutionContextUtil.getTaskParam(context);

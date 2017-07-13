@@ -48,7 +48,7 @@
                         <template scope="scope">{{$moment(scope.row.firedTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
                     </el-table-column>
                     <el-table-column label="任务">
-                        <template scope="scope">{{scope.row.group}}.{{scope.row.name}}</template>
+                        <template scope="scope">{{scope.row.group}}.{{scope.row.name}}<el-button type="text" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)"><i class="iconfont icon-detail"></i></el-button></template>
                     </el-table-column>
                     <el-table-column label="执行节点" prop="instanceId"></el-table-column>
                     <el-table-column label="执行状态" width="120">

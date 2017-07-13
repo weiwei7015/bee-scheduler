@@ -15,7 +15,7 @@ require.config({
     urlArgs: 'v=2017071201'
 });
 
-require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog) {
+require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-dialog', 'comp/task-detail-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog, taskDetailDialog) {
 
     Vue.config.silent = true;
 
@@ -86,6 +86,7 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
 
     //帮助组件注册为全局服务
     Vue.prototype.$helperDialog = helperDialog;
+    Vue.prototype.$taskDetailDialog = taskDetailDialog;
 
     // //自适应高度指令
     // Vue.directive('auto-height', {

@@ -59,7 +59,7 @@
                     <div class="box-body">
                         <el-row>
                             <el-col :span="12" class="task-title">
-                                <h3 class="no-margin">{{item.group+"."+item.name}}<span class="text-gray">（{{item.jobComponent}}）</span></h3>
+                                <h3 class="no-margin">{{item.group+"."+item.name}} <el-button type="text" @click="$taskDetailDialog.open(item.name,item.group)"><i class="iconfont icon-detail"></i></el-button><span class="text-gray">（{{item.jobComponent}}）</span></h3>
                             </el-col>
                             <el-col :span="12" class="text-right">
                                 <template v-if="item.group === 'Tmp'">
@@ -69,11 +69,11 @@
                                     <div class="text-extra-light-silver">手动任务</div>
                                 </template>
                                 <template v-else>
-                                    <el-button type="text" class="text-extra-light-silver" v-if="item.state !== 'PAUSED' && item.state !== 'PAUSED_BLOCKED'" @click="pauseTask(item.name,item.group)"><i class="iconfont icon-pause"></i></el-button>
-                                    <el-button type="text" class="text-extra-light-silver" v-if="item.state === 'PAUSED' || item.state === 'PAUSED_BLOCKED'" @click="resumeTask(item.name,item.group)"><i class="iconfont icon-Play"></i></el-button>
-                                    <el-button type="text" class="text-extra-light-silver" @click="executeTask(item.name,item.group)"><i class="iconfont icon-flash"></i></el-button>
-                                    <el-button type="text" class="text-extra-light-silver" @click="goEditTask(item.group,item.name)"><i class="iconfont icon-edit"></i></el-button>
-                                    <el-button type="text" class="text-extra-light-silver" @click="deleteTask(item.name,item.group)"><i class="iconfont icon-trash"></i></el-button>
+                                    <el-button type="text" v-if="item.state !== 'PAUSED' && item.state !== 'PAUSED_BLOCKED'" @click="pauseTask(item.name,item.group)"><i class="iconfont icon-pause"></i></el-button>
+                                    <el-button type="text" v-if="item.state === 'PAUSED' || item.state === 'PAUSED_BLOCKED'" @click="resumeTask(item.name,item.group)"><i class="iconfont icon-play"></i></el-button>
+                                    <el-button type="text" @click="executeTask(item.name,item.group)"><i class="iconfont icon-rocket"></i></el-button>
+                                    <el-button type="text" @click="goEditTask(item.group,item.name)"><i class="iconfont icon-edit"></i></el-button>
+                                    <el-button type="text" @click="deleteTask(item.name,item.group)"><i class="iconfont icon-trash"></i></el-button>
                                 </template>
                             </el-col>
                         </el-row>

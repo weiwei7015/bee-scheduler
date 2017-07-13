@@ -31,10 +31,6 @@ h4 {
 }
 
 /**ScrollBar*/
-body ::-webkit-scrollbar {
-    width: 0;
-}
-
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -426,6 +422,18 @@ div.spr {
 
 .text-silver {
     color: #8492A6;
+}
+
+.bg-light-gray {
+    background-color: #E5E9F2;
+}
+
+.bg-dark-white {
+    background-color: #F9FAFC;
+}
+
+.bg-extra-light-gray {
+    background-color: #EFF2F7;
 }
 
 /*********task-list**********/

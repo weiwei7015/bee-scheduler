@@ -32,37 +32,37 @@ define(['text!comp/index.html'], function (tpl) {
                     });
                 }
             };
-/*
-            NoticeService.listenMsg(function (noticeList) {
-                for (var i in noticeList) {
-                    var notice = noticeList[i];
-                    var content = notice.content;
+            /*
+             NoticeService.listenMsg(function (noticeList) {
+             for (var i in noticeList) {
+             var notice = noticeList[i];
+             var content = notice.content;
 
-                    if (notice.type === "JOB_TO_BEEXECUTED") {
-                        var task_key = content.taskGroup + "." + content.taskName;
-                        window.setTimeout(function () {
-                            vm.$notify({type: 'info', title: "开始执行任务", message: task_key});
-                        }, 50);
-                    } else if (notice.type === "JOB_WAS_EXECUTED") {
-                        var task_key = content.taskGroup + "." + content.taskName;
-                        if (content.state === "success") {
-                            window.setTimeout(function () {
-                                vm.$notify({type: 'success', title: "执行成功", message: task_key});
-                            }, 50);
-                        } else if (content.state === "fail") {
-                            window.setTimeout(function () {
-                                vm.$notify({type: 'error', title: "执行失败", message: task_key});
-                            }, 50);
-                        }
-                    } else if (notice.type === "JOB_EXECUTION_VETOED") {
-                        var task_key = content.taskGroup + "." + content.taskName;
-                        window.setTimeout(function () {
-                            vm.$notify({type: 'warning', title: "取消执行", message: task_key});
-                        }, 50);
-                    }
-                }
-            });
-            */
+             if (notice.type === "JOB_TO_BEEXECUTED") {
+             var task_key = content.taskGroup + "." + content.taskName;
+             window.setTimeout(function () {
+             vm.$notify({type: 'info', title: "开始执行任务", message: task_key});
+             }, 50);
+             } else if (notice.type === "JOB_WAS_EXECUTED") {
+             var task_key = content.taskGroup + "." + content.taskName;
+             if (content.state === "success") {
+             window.setTimeout(function () {
+             vm.$notify({type: 'success', title: "执行成功", message: task_key});
+             }, 50);
+             } else if (content.state === "fail") {
+             window.setTimeout(function () {
+             vm.$notify({type: 'error', title: "执行失败", message: task_key});
+             }, 50);
+             }
+             } else if (notice.type === "JOB_EXECUTION_VETOED") {
+             var task_key = content.taskGroup + "." + content.taskName;
+             window.setTimeout(function () {
+             vm.$notify({type: 'warning', title: "取消执行", message: task_key});
+             }, 50);
+             }
+             }
+             });
+             */
         },
         methods: {}
     };

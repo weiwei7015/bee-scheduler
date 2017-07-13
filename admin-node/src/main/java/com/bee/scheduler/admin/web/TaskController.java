@@ -156,18 +156,18 @@ public class TaskController {
             scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
                     .withRepeatCount(scheduleOptions.getRepeatType() == 1 ? -1 : scheduleOptions.getRepeatCount());
 
-            if (scheduleOptions.getMisfireHandlingType() == 1) {
+            if (scheduleOptions.getMisfireHandlingType() == -1) {
+                scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
                 scheduleBuilder.withMisfireHandlingInstructionFireNow();
             } else if (scheduleOptions.getMisfireHandlingType() == 2) {
-                scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
+                scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
             } else if (scheduleOptions.getMisfireHandlingType() == 3) {
-                scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+                scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
             } else if (scheduleOptions.getMisfireHandlingType() == 4) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount();
             } else if (scheduleOptions.getMisfireHandlingType() == 5) {
-                scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == 6) {
-                scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
+                scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
             }
 
             SimpleTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
@@ -179,12 +179,12 @@ public class TaskController {
             CalendarIntervalScheduleBuilder scheduleBuilder = CalendarIntervalScheduleBuilder.calendarIntervalSchedule();
             scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
 
-            if (scheduleOptions.getMisfireHandlingType() == 1) {
-                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
-                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+            if (scheduleOptions.getMisfireHandlingType() == -1) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
 
@@ -207,12 +207,12 @@ public class TaskController {
                 scheduleBuilder.onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
             }
 
-            if (scheduleOptions.getMisfireHandlingType() == 1) {
-                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
-                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+            if (scheduleOptions.getMisfireHandlingType() == -1) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
             DailyTimeIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
@@ -227,12 +227,12 @@ public class TaskController {
 
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleOptions.getCron());
 
-            if (scheduleOptions.getMisfireHandlingType() == 1) {
-                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
-                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+            if (scheduleOptions.getMisfireHandlingType() == -1) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
             CronTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
@@ -245,6 +245,10 @@ public class TaskController {
     @GetMapping("/task/detail")
     public HttpResponseBodyWrapper detail(String name, String group) throws Exception {
         Trigger abstractTrigger = scheduler.getTrigger(new TriggerKey(name, group));
+        if (abstractTrigger == null) {
+            return new HttpResponseBodyWrapper(null);
+        }
+
         JobDetail jobDetail = scheduler.getJobDetail(abstractTrigger.getJobKey());
 
         TaskConfig taskConfig = new TaskConfig();
@@ -345,18 +349,18 @@ public class TaskController {
             scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
                     .withRepeatCount(scheduleOptions.getRepeatType() == 1 ? -1 : scheduleOptions.getRepeatCount());
 
-            if (scheduleOptions.getMisfireHandlingType() == 1) {
+            if (scheduleOptions.getMisfireHandlingType() == -1) {
+                scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
                 scheduleBuilder.withMisfireHandlingInstructionFireNow();
             } else if (scheduleOptions.getMisfireHandlingType() == 2) {
-                scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
+                scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
             } else if (scheduleOptions.getMisfireHandlingType() == 3) {
-                scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+                scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
             } else if (scheduleOptions.getMisfireHandlingType() == 4) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount();
             } else if (scheduleOptions.getMisfireHandlingType() == 5) {
-                scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == 6) {
-                scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
+                scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
             }
 
             SimpleTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
@@ -368,12 +372,12 @@ public class TaskController {
             CalendarIntervalScheduleBuilder scheduleBuilder = CalendarIntervalScheduleBuilder.calendarIntervalSchedule();
             scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
 
-            if (scheduleOptions.getMisfireHandlingType() == 1) {
-                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
-                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+            if (scheduleOptions.getMisfireHandlingType() == -1) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
 
@@ -396,12 +400,12 @@ public class TaskController {
                 scheduleBuilder.onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
             }
 
-            if (scheduleOptions.getMisfireHandlingType() == 1) {
-                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
-                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+            if (scheduleOptions.getMisfireHandlingType() == -1) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
             DailyTimeIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
@@ -416,12 +420,12 @@ public class TaskController {
 
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleOptions.getCron());
 
-            if (scheduleOptions.getMisfireHandlingType() == 1) {
-                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
-                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+            if (scheduleOptions.getMisfireHandlingType() == -1) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
+            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+                scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
+            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+                scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
             CronTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();

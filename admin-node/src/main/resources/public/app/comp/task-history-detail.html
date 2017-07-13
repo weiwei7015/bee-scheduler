@@ -11,7 +11,7 @@
     </div>
     <div class="content-body" v-show="!taskHistoryDetailLoading">
         <div>
-            <h3 class="text-bold no-margin">{{taskHistoryDetail.group}}.{{taskHistoryDetail.name}}
+            <h3 class="text-bold no-margin">{{taskHistoryDetail.group}}.{{taskHistoryDetail.name}}<el-button type="text" @click="$taskDetailDialog.open(taskHistoryDetail.name,taskHistoryDetail.group)"><i class="iconfont icon-detail"></i></el-button>
                 <el-tag close-transition :type="taskHistoryDetail.execState === 'SUCCESS'?'success':taskHistoryDetail.execState === 'FAIL'?'danger':taskHistoryDetail.execState === 'VETOED'?'warning':'gray'">{{taskHistoryDetail.execState}}</el-tag>
             </h3>
         </div>

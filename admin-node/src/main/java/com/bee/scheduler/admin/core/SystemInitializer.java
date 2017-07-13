@@ -85,6 +85,6 @@ public class SystemInitializer {
 //            }
 //        }
         // 启动Scheduler
-        scheduler.startDelayed(5);
+        scheduler.start();
     }
 }

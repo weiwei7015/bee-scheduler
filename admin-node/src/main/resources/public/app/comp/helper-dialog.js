@@ -22,12 +22,6 @@ define(['text!comp/helper-dialog.html', 'vue'], function (tpl, Vue) {
                 this.$el.removeEventListener('animationend', this.destroyElement);
                 // this.$destroy(true);
                 this.$el.parentNode.removeChild(this.$el);
-            },
-            open: function (title) {
-                this.helperDialogVisible = true;
-                if (title) {
-
-                }
             }
         }
     });
