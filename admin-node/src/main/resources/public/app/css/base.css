@@ -146,6 +146,13 @@ h4 {
     position: relative;
 }
 
+.content .content-pendant {
+    position: absolute;
+    top: 60px;
+    right: 50px;
+    z-index: 2;
+}
+
 .content .content-header {
     padding: 0 15px;
     border-bottom: 1px solid #D3DCE6;
