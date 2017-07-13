@@ -5,6 +5,8 @@
                 <a href="/" class="logo-img"><img src="/public/app/img/logo.png"/></a>
                 <span class="logo-text"><el-badge value="BETA">Bee Scheduler</el-badge></span>
             </div>
+            <div class="text-center text-extra-light-silver">ST : {{now?$moment(now).format("YYYY-MM-DD HH:mm:ss"):"- -"}}</div>
+            <div class="spr"></div>
             <el-menu unique-opened="true" theme="dark" router="true" ref="nav" :default-active="$route.path" v-once>
                 <el-menu-item index="/dashboard"><i class="iconfont icon-dashboard"></i> Dashboard</el-menu-item>
                 <el-menu-item index="/task/list"><i class="iconfont icon-yy-task"></i> 任务中心</el-menu-item>

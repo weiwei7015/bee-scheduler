@@ -3,7 +3,18 @@ define(['text!comp/index.html'], function (tpl) {
         template: tpl,
         components: {},
         data: function () {
-            return {};
+            var vm = this;
+            var data = {
+                now: null
+            };
+            var refreshServerTime = function () {
+                vm.$http.get("/server-time").then(function (re) {
+                    data.now = re.body.data;
+                });
+            };
+            refreshServerTime();
+            window.setInterval(refreshServerTime, 1000);
+            return data;
         },
         mounted: function () {
             var vm = this;
@@ -32,6 +43,7 @@ define(['text!comp/index.html'], function (tpl) {
                     });
                 }
             };
+
             /*
              NoticeService.listenMsg(function (noticeList) {
              for (var i in noticeList) {

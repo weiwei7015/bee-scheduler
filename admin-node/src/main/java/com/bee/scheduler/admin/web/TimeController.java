@@ -2,25 +2,23 @@ package com.bee.scheduler.admin.web;
 
 import com.bee.scheduler.admin.model.HttpResponseBodyWrapper;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
 import java.util.HashMap;
 
 @Controller
-public class ConfigController {
+public class TimeController {
     @Autowired
     private Scheduler scheduler;
 
     @ResponseBody
-    @RequestMapping("/server-time")
+    @RequestMapping("/configs")
     HttpResponseBodyWrapper configs() throws Exception {
-        return new HttpResponseBodyWrapper(new Date().getTime());
+        HashMap<Object, Object> model = new HashMap<>();
+        model.put("clusterMode", scheduler.getMetaData().isJobStoreClustered());
+        return new HttpResponseBodyWrapper(model);
     }
-
 }
