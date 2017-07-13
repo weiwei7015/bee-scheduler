@@ -1,28 +1,16 @@
 <div style="height: 100%;">
-    <div class="header">
-        <a class="logo" href="/"><img src="/public/app/img/logo.png"/></a>
-        <span class="logo-text"><el-badge value="BETA">Bee Scheduler</el-badge></span>
-
-        <!--<span class="pull-right" style="margin-right: 10px;">Admin <a href="javascript:void(0);">[退出]</a></span>-->
-        <span class="pull-right" style="margin-right: 10px;">V1.0 - Beta</span>
-    </div>
     <div class="main">
         <div class="side">
-            <el-menu unique-opened="true" router="true" ref="nav" :default-active="$route.path" v-once>
+            <div class="logo">
+                <a href="/" class="logo-img"><img src="/public/app/img/logo.png"/></a>
+                <span class="logo-text"><el-badge value="BETA">Bee Scheduler</el-badge></span>
+            </div>
+            <el-menu unique-opened="true" theme="dark" router="true" ref="nav" :default-active="$route.path" v-once>
                 <el-menu-item index="/dashboard"><i class="iconfont icon-dashboard"></i> Dashboard</el-menu-item>
                 <el-menu-item index="/task/list"><i class="iconfont icon-yy-task"></i> 任务中心</el-menu-item>
                 <el-menu-item index="/task/history/list"><i class="iconfont icon-history"></i> 历史任务</el-menu-item>
                 <el-menu-item index="/cluster" v-if="$AppConfig.clusterMode"><i class="iconfont icon-icons01"></i> 集群节点</el-menu-item>
                 <el-menu-item index="/settings"><i class="iconfont icon-settings"></i> 系统设置</el-menu-item>
-                <!--
-                <el-menu-item index="/task-log">任务日志</el-menu-item>
-                <el-submenu index="3">
-                    <template slot="title">帮助中心</template>
-                    <el-menu-item index="3-1">任务组件手册</el-menu-item>
-                    <el-menu-item index="3-2">Cron帮助</el-menu-item>
-                    <el-menu-item index="3-3">系统帮助</el-menu-item>
-                </el-submenu>
-                -->
             </el-menu>
         </div>
         <div class="content-wrapper">

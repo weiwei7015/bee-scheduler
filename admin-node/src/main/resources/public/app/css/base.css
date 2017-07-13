@@ -26,10 +26,6 @@ hr {
     box-sizing: content-box;
 }
 
-h4 {
-    /*font-size: 14px;*/
-}
-
 /**ScrollBar*/
 ::-webkit-scrollbar {
     width: 8px;
@@ -55,62 +51,6 @@ h4 {
     min-width: 1200px;
 }
 
-.app .el-loading-mask {
-    z-index: 999;
-}
-
-.header {
-    z-index: 3000;
-    position: fixed;
-    height: 60px;
-    width: 100%;
-    color: #d3dce6;
-    /*color: #475669;*/
-    background-color: #1f2d3d;
-    /*background-color: #ffffff;*/
-}
-
-.header a {
-    color: #d3dce6;
-    /*color: #475669;*/
-    text-decoration: none;
-}
-
-.header .logo {
-    height: 40px;
-    margin: 10px 5px;
-    float: left;
-}
-
-.header .logo-text {
-    line-height: 30px;
-    height: 30px;
-    float: left;
-    margin: 20px 0 10px 0;
-    font-size: 22px;
-    /*border-left: 2px solid rgb(115, 132, 152);*/
-    /*border-left: 2px solid #C0CCDA;*/
-    /*padding-left: 15px;*/
-}
-
-.header .logo-text-sub {
-    font-size: 12px;
-    float: left;
-    margin-top: 25px;
-    margin-left: 10px;
-    line-height: normal;
-}
-
-.header span {
-    line-height: 60px;
-}
-
-.header .logo img {
-    height: 40px;
-    width: 40px;
-    border: none;
-}
-
 .main {
     height: 100%;
 }
@@ -122,24 +62,46 @@ h4 {
     float: left;
     position: fixed;
     overflow: auto;
-    background-color: #eef1f6;
-    border-right: 1px solid #c0ccda;
+    background-color: #324157;
     top: 0;
     bottom: 0;
-    margin-top: 60px;
     margin-bottom: auto;
 }
 
 .main .content-wrapper {
     padding-left: 230px;
-    padding-top: 60px;
     box-sizing: border-box;
     height: 100%;
 }
 
+.side .logo {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.side .logo .logo-img {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+.side .logo .logo-img img {
+    width: 100%;
+    height: 100%;
+}
+
+.side .logo .logo-text {
+    display: inline-block;
+    font-size: 19px;
+    color: #fff;
+    position: absolute;
+    top: 27px;
+    margin-left: 5px;
+}
+
 .content-wrapper .content {
     background-color: #ffffff;
-    /*min-height: 500px;*/
     height: 100%;
     box-shadow: 0 0 10px #eee;
     width: 100%;
@@ -174,7 +136,7 @@ h4 {
 }
 
 .content .content-header .title {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: normal;
     color: #48576a;
 }
