@@ -53,7 +53,7 @@ java -jar runnable-node-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&
 ![BeeScheduler](readme/5.png "BeeScheduler")
 ![BeeScheduler](readme/6.png "BeeScheduler")
   
-##todo list
+##Todo List
 - 添加报警机制，任务执行失败时邮件报警
 - 完善Dashboard，完善各种统计、监控信息
 - 支持Oracle数据库
