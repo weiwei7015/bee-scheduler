@@ -1,6 +1,5 @@
 ![BeeScheduler](admin-node/src/main/resources/public/app/img/logo.png "BeeScheduler")
 #Bee-Scheduler
->这次，造了一个不太一样的轮子。。。
   
 ##特性
 - 基于Quartz-2.3.0开发，支持集群和单机两种运行模式（集群模式基于Quartz内置特性实现，原理是db锁做任务状态同步）
