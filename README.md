@@ -62,4 +62,5 @@ java -jar runnable-node-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&
 - 实时日志
 - 更多....
   
-  
+##开源协议
+[MIT](http://opensource.org/licenses/MIT)
