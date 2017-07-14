@@ -1,5 +1,17 @@
 ![BeeScheduler](admin-node/src/main/resources/public/app/img/logo.png "BeeScheduler")
 #Bee-Scheduler
+>这次，造了一个不太一样的轮子。。。
+##特性
+- 基于Quartz-2.3.0开发，支持集群和单机两种运行模式（集群模式基于Quartz内置特性实现，原理是db锁做任务状态同步）
+- 通过任务组件的方式，将调度逻辑与任务逻辑完全隔离，代码零侵入，灵活性极高
+- 支持多种调度触发器（simple、calendar、daily、cron）
+- 任务管理（暂停、恢复调度、删除等等）
+- 支持联动任务，直接页面操作来配置出任何你想要的联动规则
+- 详细的任务历史记录（执行时间、执行节点、耗时、日志、状态、执行方式等等。。。）
+- 支持临时任务
+  
+> 该项目目前处于初期，核心功能已经完成，其他更多特性正在码代码。。。请看todo list
+  
 ##运行前准备
 - JAVA 1.7+
 - Mysql
@@ -31,8 +43,11 @@ java -jar runnable-node-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&
 ```
 可以使用 ```--thread-pool-size=30``` 来设置调度线程池大小  
 启动完成后，会自动加入集群（基于db做注册），访问管理节点能看到集群信息
+
+##管理界面截图
+
   
-#todo list
+##todo list
 - 添加报警机制，任务执行失败时邮件报警
 - 完善Dashboard，完善各种统计、监控信息
 - 支持Oracle数据库
