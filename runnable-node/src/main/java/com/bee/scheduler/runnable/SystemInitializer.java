@@ -52,6 +52,6 @@ public class SystemInitializer {
         logger.info("init Scheduler ...");
         Scheduler scheduler = applicationContext.getBean(Scheduler.class);
         // 启动Scheduler
-        scheduler.startDelayed(5);
+        scheduler.start();
     }
 }

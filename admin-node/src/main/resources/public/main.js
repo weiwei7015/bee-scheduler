@@ -8,11 +8,10 @@ require.config({
         vue_router: '/public/lib/vue-router.min',
         vue_resource: '/public/lib/vue-resource.min',
         ELEMENT: '/public/lib/element-ui-1.3.7/index',
-        ace: '/public/lib/ace-1.2.7/lib/ace',
         moment: '/public/lib/moment.min',
         text: '/public/lib/text'
     },
-    urlArgs: 'v=2017071403'
+    urlArgs: 'v=2017071404'
 });
 
 require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-dialog', 'comp/task-detail-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog, taskDetailDialog) {
