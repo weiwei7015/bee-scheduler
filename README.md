@@ -1,4 +1,3 @@
-![BeeScheduler](admin-node/src/main/resources/public/app/img/logo.png "BeeScheduler")
 #Bee-Scheduler
   
 ##特性
