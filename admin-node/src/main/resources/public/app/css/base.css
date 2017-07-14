@@ -96,7 +96,7 @@ hr {
     font-size: 19px;
     color: #fff;
     position: absolute;
-    top: 27px;
+    top: 25px;
     margin-left: 5px;
 }
 
@@ -216,6 +216,11 @@ hr {
 
 .el-form.no-item-margin .el-form-item {
     margin-bottom: 0;
+}
+
+/******* el-message *******/
+.el-message {
+    top: 2px;
 }
 
 /******* Table *******/
