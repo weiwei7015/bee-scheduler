@@ -258,7 +258,7 @@ public class TaskController {
         taskConfig.setStartAt(abstractTrigger.getStartTime());
         taskConfig.setEndAtType(abstractTrigger.getEndTime() == null ? 1 : 2);
         taskConfig.setEndAt(abstractTrigger.getEndTime());
-        taskConfig.setJobComponent(jobDetail.getJobClass().getName());
+        taskConfig.setJobComponent(jobDetail.getJobClass().getSimpleName());
         taskConfig.setParams(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_PARAM));
         taskConfig.setDescription(abstractTrigger.getDescription());
         taskConfig.setLinkageRule(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE));
