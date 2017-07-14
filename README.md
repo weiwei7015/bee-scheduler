@@ -46,7 +46,11 @@ java -jar runnable-node-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&
 启动完成后，会自动加入集群（基于db做注册），访问管理节点能看到集群信息
 
 ##管理界面截图
-
+![BeeScheduler](readme/1.png "BeeScheduler")
+![BeeScheduler](readme/2.png "BeeScheduler")
+![BeeScheduler](readme/3.png "BeeScheduler")
+![BeeScheduler](readme/4.png "BeeScheduler")
+![BeeScheduler](readme/5.png "BeeScheduler")
   
 ##todo list
 - 添加报警机制，任务执行失败时邮件报警
