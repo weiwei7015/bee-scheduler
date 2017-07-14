@@ -29,7 +29,7 @@
 java -jar admin-node-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false"
 ```
 可以使用 ```--thread-pool-size=30``` 来设置调度线程池大小  
-启动完成后浏览器访问：http://ip:port  ，请使用IE9+、Chrome、Safari、Firefox等现代浏览器
+启动完成后浏览器访问：http://ip:port  ，请使用IE9+、Chrome、Safari、Firefox等现代浏览器  
   
 ##集群运行模式：
 ###1、运行一个管理节点（使用--cluster开启集群）：
