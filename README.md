@@ -24,6 +24,9 @@
 >“不用建表吗（黑人问号脸.jpg）？？？”  
 >“不用！数据表会在系统首次启动的时候自动生成”
   
+##下载最新的可运行包
+[https://git.oschina.net/hellovivi/bee-scheduler/releases](https://git.oschina.net/hellovivi/bee-scheduler/releases)
+  
 ##单机运行模式:
 ```shell
 java -jar admin-node-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false"
