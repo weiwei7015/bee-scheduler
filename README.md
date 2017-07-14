@@ -33,10 +33,12 @@ java -jar runnable-node-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&
 启动完成后，会自动加入集群（基于db做注册），访问管理节点能看到集群信息
   
 #todo list
-- 完善Dashboard，完善各种统计、监控信息
 - 添加报警机制，任务执行失败时邮件报警
+- 完善Dashboard，完善各种统计、监控信息
 - 支持Oracle数据库
-- 添加权限管理
+- 增加更多任务组件
+- 增加权限管理
+- 实时日志
 - 更多....
   
   
