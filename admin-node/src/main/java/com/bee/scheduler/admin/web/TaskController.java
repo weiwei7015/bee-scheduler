@@ -14,6 +14,7 @@ import com.bee.scheduler.admin.service.TaskService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.quartz.*;
 import org.quartz.spi.OperableTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -461,8 +462,8 @@ public class TaskController {
         Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
         JobDataMap jobDataMap = trigger.getJobDataMap();
 
-        String randomTriggerName = "MT_" + Long.toString(RandomUtils.nextLong(), 30 + (int) (System.currentTimeMillis() % 7));
-        OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_Manual).forJob(jobKey).build();
+        String randomTriggerName = DateFormatUtils.format(new Date(), "YYYYMMddHHmmssSSS");
+        OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_Manual).forJob(jobKey).withDescription("手动执行【" + group + "." + name + "】").build();
         if (jobDataMap != null) {
             operableTrigger.setJobDataMap(jobDataMap);
         }
@@ -505,7 +506,7 @@ public class TaskController {
         jobDataMap.put(Constants.JOB_DATA_KEY_TASK_PARAM, quickTaskConfig.getParams());
 //        jobDataMap.put(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE, quickTaskConfig.getLinkageRule());
 
-        OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(name, group).usingJobData(jobDataMap).build();
+        OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(name, group).usingJobData(jobDataMap).withDescription("临时任务").build();
 
         if (quickTaskConfig.getEnableStartDelay() && quickTaskConfig.getStartDelay() != null) {
             Calendar startTime = Calendar.getInstance();
