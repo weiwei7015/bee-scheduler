@@ -410,7 +410,7 @@ div.spr {
     background-color: #EFF2F7;
 }
 
-/*********task-list**********/
-.box.task-list-item .task-title {
+/********* task-box **********/
+.box.task-box .task-title {
     line-height: 36px;
 }
