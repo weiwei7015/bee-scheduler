@@ -5,9 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
