@@ -1,6 +1,5 @@
 admin-node/target/
 runnable-node/target/
 core/target/
-.gradle/
 .idea/
 *.iml

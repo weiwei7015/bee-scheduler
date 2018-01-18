@@ -1,18 +1,17 @@
 package com.bee.scheduler.admin.web;
 
 import com.alibaba.fastjson.JSON;
-import com.bee.scheduler.admin.model.*;
-import com.bee.scheduler.core.Constants;
 import com.bee.scheduler.admin.core.RamStore;
-import com.bee.scheduler.core.job.JobComponent;
 import com.bee.scheduler.admin.exception.BizzException;
+import com.bee.scheduler.admin.model.*;
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeCalendarIntervalOptions;
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeCronOptions;
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeDailyTimeIntervalOptions;
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeSimpleOptions;
 import com.bee.scheduler.admin.service.TaskService;
+import com.bee.scheduler.core.Constants;
+import com.bee.scheduler.core.job.JobComponent;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.quartz.*;
@@ -462,7 +461,7 @@ public class TaskController {
         Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
         JobDataMap jobDataMap = trigger.getJobDataMap();
 
-        String randomTriggerName = DateFormatUtils.format(new Date(), "YYYYMMddHHmmssSSS");
+        String randomTriggerName = DateFormatUtils.format(new Date(), "yyyyMMddHHmmssSSS");
         OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_Manual).forJob(jobKey).withDescription("手动执行【" + group + "." + name + "】").build();
         if (jobDataMap != null) {
             operableTrigger.setJobDataMap(jobDataMap);
