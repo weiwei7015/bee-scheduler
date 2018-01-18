@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="stylesheet" href="/public/lib/element-ui-2.0.11/theme-default/index.css">
+    <link rel="stylesheet" href="/public/lib/element-ui-2.0.11/theme-chalk/index.css">
     <link rel="stylesheet" href="/public/app/css/rewrite.css">
     <link rel="stylesheet" href="/public/app/css/base.css">
 </head>
