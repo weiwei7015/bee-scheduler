@@ -209,39 +209,9 @@ hr {
     border-top: 1px solid #D3DCE6;
 }
 
-/******* form *******/
-.form-label-muted .el-form-item__label {
-    color: #99A9BF;
-}
-
-.el-form.no-item-margin .el-form-item {
-    margin-bottom: 0;
-}
-
-/******* el-message *******/
-.el-message {
-    top: 2px;
-}
-
-/******* Table *******/
-.el-table.hide-expand-hanle td.el-table__expand-column .cell {
-    display: none;
-}
-
-.el-table__row.row-danger {
-    background-color: #1f2d3d;
-}
-
-.el-table__row.row-success {
-    background-color: #e2f0e4;
-}
-
-.el-table__row.row-warning {
-    background-color: #00AEEF;
-}
-
-.el-table.no-border td, .el-table th.is-leaf {
-    border-bottom: 0;
+/******* el-menu *******/
+.el-menu {
+    border-right: none;
 }
 
 /******* CheckBox *******/
