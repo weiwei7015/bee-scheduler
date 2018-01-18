@@ -214,6 +214,14 @@ hr {
     border-right: none;
 }
 
+.el-menu .iconfont {
+    margin-right: 5px;
+    width: 24px;
+    text-align: center;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
 /******* CheckBox *******/
 .el-checkbox-group.small .el-checkbox__label {
     font-size: 12px;

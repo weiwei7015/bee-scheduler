@@ -10,8 +10,8 @@
 <body>
 <div class="app" style="position: relative;">
     <div class="content">
-        <div class="header">
-            <a href="/" class="logo"><img src="/public/app/img/logo.png"></a>
+        <div class="logo">
+            <a href="/" class="logo-img"><img src="/public/app/img/logo.png"/></a>
             <span class="logo-text"><div class="el-badge">Bee Scheduler<sup class="el-badge__content is-fixed">BETA</sup></div></span>
             <span class="pull-right" style="margin-right: 10px;">V1.0 - Beta</span>
         </div>
