@@ -60,7 +60,7 @@
                         <el-row>
                             <el-col :span="12" class="task-title">
                                 <h3 class="no-margin">
-                                    <el-tag size="medium" :type="item.state == 'WAITING'?'primary':item.state == 'ACQUIRED'?'success':item.state == 'PAUSED'?'warning':'gray'" disable-transitions>{{item.state}}</el-tag>
+                                    <el-tag size="small" :type="item.state == 'WAITING'?'primary':item.state == 'ACQUIRED'?'success':item.state == 'PAUSED'?'warning':'gray'" disable-transitions>{{item.state}}</el-tag>
                                     {{item.group+"."+item.name}}
                                     <el-button type="text" @click="$taskDetailDialog.open(item.name,item.group)"><i class="iconfont icon-detail"></i></el-button>
                                 </h3>

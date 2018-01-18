@@ -53,9 +53,9 @@
                     <el-table-column label="执行节点" prop="instanceId"></el-table-column>
                     <el-table-column label="执行状态" width="120">
                         <template scope="scope">
-                            <el-tag size="medium" v-if="scope.row.execState === 'SUCCESS'" type="success" disable-transitions>SUCCESS</el-tag>
-                            <el-tag size="medium" v-if="scope.row.execState === 'FAIL'" type="danger" disable-transitions>FAIL</el-tag>
-                            <el-tag size="medium" v-if="scope.row.execState === 'VETOED'" type="warning" disable-transitions>VETOED</el-tag>
+                            <el-tag size="small" v-if="scope.row.execState === 'SUCCESS'" type="success" disable-transitions>SUCCESS</el-tag>
+                            <el-tag size="small" v-if="scope.row.execState === 'FAIL'" type="danger" disable-transitions>FAIL</el-tag>
+                            <el-tag size="small" v-if="scope.row.execState === 'VETOED'" type="warning" disable-transitions>VETOED</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column label="执行方式" width="100">
