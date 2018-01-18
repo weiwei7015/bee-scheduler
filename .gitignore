@@ -2,4 +2,4 @@ admin-node/target/
 runnable-node/target/
 core/target/
 .idea/
-*.iml
+**/*.iml
