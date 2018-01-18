@@ -33,7 +33,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <template v-if="editTaskFormModel.scheduleType == 1"><!--Simple-->
-                    <el-form-item label="执行频率" prop="scheduleTypeSimpleOptions.interval" style="width: 300px">
+                    <el-form-item label="执行频率" prop="scheduleTypeSimpleOptions.interval" style="width: 350px">
                         <el-input placeholder="请输入时间间隔" v-model="editTaskFormModel.scheduleTypeSimpleOptions.interval">
                             <template slot="prepend">每隔</template>
                             <template slot="append">毫秒</template>
