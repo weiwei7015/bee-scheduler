@@ -9,42 +9,27 @@
         <div class="title"><i class="iconfont icon-yy-task"></i> 任务中心</div>
     </div>
     <div class="content-body">
-        <el-form :inline="true" :model="queryFormModel">
-            <el-form-item label="任务名">
-                <el-input v-model="queryFormModel.name" placeholder=""></el-input>
-            </el-form-item>
-            <el-form-item label="任务组">
-                <el-select v-model="queryFormModel.group" placeholder="" style="width: 150px">
-                    <el-option label="全部" value=""></el-option>
-                    <el-option v-for="item in taskGroups" :label="item" :value="item"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="状态">
-                <el-select v-model="queryFormModel.status" placeholder="" style="width: 150px">
-                    <el-option label="全部" value=""></el-option>
-                    <el-option label="WAITING" value="WAITING"></el-option>
-                    <el-option label="ACQUIRED" value="ACQUIRED"></el-option>
-                    <el-option label="PAUSED" value="PAUSED"></el-option>
-                    <el-option label="EXECUTING" value="EXECUTING"></el-option>
-                    <el-option label="COMPLETE" value="COMPLETE"></el-option>
-                    <el-option label="BLOCKED" value="BLOCKED"></el-option>
-                    <el-option label="PAUSED_BLOCKED" value="PAUSED_BLOCKED"></el-option>
-                    <el-option label="ERROR" value="ERROR"></el-option>
-                    <el-option label="DELETED" value="DELETED"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="query">查询</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-dropdown split-button trigger="click" @click="goCreateTask" @command="handleTaskCommand">
-                    <i class="el-icon-plus"></i> 创建任务
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="execTmpTask"><i class="iconfont icon-flash"></i> 执行临时任务</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-            </el-form-item>
-        </el-form>
+        <el-row>
+            <el-col :span="14">
+                <el-button-group>
+                    <el-button><i class="iconfont icon-play"></i></el-button>
+                    <el-button><i class="iconfont icon-pause"></i></el-button>
+                    <el-button><i class="iconfont icon-rocket"></i></el-button>
+                    <el-button><i class="iconfont icon-edit"></i></el-button>
+                    <el-button><i class="iconfont icon-trash"></i></el-button>
+                </el-button-group>
+                <el-button-group>
+                    <el-button icon="el-icon-plus" @click="goCreateTask"></el-button>
+                    <el-button @click="createQuickTask"><i class="iconfont icon-flash"></i></el-button>
+                </el-button-group>
+            </el-col>
+            <el-col :span="10" class="text-right">
+                <el-input v-model="queryParams.keyword">
+                    <el-button slot="append" icon="el-icon-search" @click="query"></el-button>
+                </el-input>
+            </el-col>
+        </el-row>
+        <div class="hr"></div>
         <div v-loading="queryLoading">
             <template v-if="!queryResult.result || queryResult.result.length == 0">
                 <div class="box no-border">
@@ -53,58 +38,25 @@
                     </div>
                 </div>
             </template>
-            <div class="spr"></div>
-            <template v-for="item in queryResult.result">
-                <div class="box box-hover task-box">
-                    <div class="box-body">
-                        <el-row>
-                            <el-col :span="12" class="task-title">
-                                <h3 class="no-margin">
-                                    <el-tag size="small" :type="item.state == 'WAITING'?'primary':item.state == 'ACQUIRED'?'success':item.state == 'PAUSED'?'warning':'gray'" disable-transitions>{{item.state}}</el-tag>
-                                    {{item.group+"."+item.name}}
-                                    <el-button type="text" @click="$taskDetailDialog.open(item.name,item.group)"><i class="iconfont icon-detail"></i></el-button>
-                                </h3>
-                                <span style="font-size: 14px;" class="text-extra-light-silver">{{item.description||"无描述"}}</span>
-                            </el-col>
-                            <el-col :span="12" class="text-right">
-                                <span class="text-gray"><i class="iconfont icon-cog"></i> {{item.jobComponent}}</span>
-                            </el-col>
-                        </el-row>
-                    </div>
-                    <div class="box-footer">
-                        <el-row>
-                            <el-col :span="12">
-                                下次执行：{{item.state !== 'COMPLETE'?$moment(item.nextFireTime).format("YYYY-MM-DD HH:mm:ss"):" - - "}}
-                            </el-col>
-                            <el-col :span="12" class="text-right">
-                                <template v-if="item.group === 'Tmp'">
-                                    <div class="text-silver">临时任务</div>
-                                </template>
-                                <template v-else-if="item.group === 'Manual'">
-                                    <div class="text-silver">手动任务</div>
-                                </template>
-                                <template v-else>
-                                    <el-button class="no-padding" type="text" v-if="item.state !== 'PAUSED' && item.state !== 'PAUSED_BLOCKED'" @click="pauseTask(item.name,item.group)"><i class="iconfont icon-pause"></i></el-button>
-                                    <el-button class="no-padding" type="text" v-if="item.state === 'PAUSED' || item.state === 'PAUSED_BLOCKED'" @click="resumeTask(item.name,item.group)"><i class="iconfont icon-play"></i></el-button>
-                                    <el-button class="no-padding" type="text" @click="executeTask(item.name,item.group)"><i class="iconfont icon-rocket"></i></el-button>
-                                    <el-button class="no-padding" type="text" @click="goEditTask(item.group,item.name)"><i class="iconfont icon-edit"></i></el-button>
-                                    <el-button class="no-padding" type="text" @click="deleteTask(item.name,item.group)"><i class="iconfont icon-trash"></i></el-button>
-                                </template>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </div>
-                <div class="spr"></div>
+            <template v-else>
+                <el-table :data="queryResult.result" :show-header="false">
+                    <el-table-column type="selection" width="40"></el-table-column>
+                    <el-table-column label="状态" width="150">
+                        <template scope="scope">{{scope.row.state}}</template>
+                    </el-table-column>
+                    <el-table-column label="任务">
+                        <template scope="scope"><span class="text-bold">{{scope.row.group + "." + scope.row.name}}</span><span class="text-silver"> - {{scope.row.description||"无描述"}}</span></template>
+                    </el-table-column>
+                </el-table>
             </template>
-            <templat v-if="queryResult.result && queryResult.result.length > 0">
+            <div class="spr"></div>
+            <template v-if="queryResult.result && queryResult.result.length > 0">
                 <div class="text-right">
                     <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
                 </div>
-            </templat>
+            </template>
         </div>
-
-        <!--Dialog-->
-        <quick-task-dialog :visible.sync="quickTaskDialogVisible"></quick-task-dialog>
-
     </div>
+    <!--Dialog-->
+    <quick-task-dialog :visible.sync="quickTaskDialogVisible"></quick-task-dialog>
 </div>

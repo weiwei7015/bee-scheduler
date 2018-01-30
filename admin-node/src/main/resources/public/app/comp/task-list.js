@@ -19,13 +19,11 @@ define(['text!comp/task-list.html'], function (tpl) {
             var data = {
                 quickTaskDialogVisible: false,
                 queryLoading: false,
-                queryFormModel: {
-                    name: '',
-                    group: '',
-                    status: '',
+                queryParams: {
+                    keyword: '',
                     page: 1
                 },
-                currentQueryModel: null,
+                curQueryParams: null,
                 queryResult: {},
                 taskGroups: [],
                 jobComponentList: {}
@@ -43,23 +41,17 @@ define(['text!comp/task-list.html'], function (tpl) {
         methods: {
             query: function () {
                 var vm = this;
-                var queryFormModel = vm.queryFormModel;
-                var queryModel = {
-                    taskName: queryFormModel.name,
-                    taskGroup: queryFormModel.group,
-                    state: queryFormModel.status,
-                    page: 1
-                };
-                vm.load(queryModel);
+                var queryParams = vm.queryParams;
+                vm.load(queryParams);
             },
-            load: function (queryModel) {
+            load: function (queryParams) {
                 var vm = this;
 
-                vm.currentQueryModel = queryModel;
-
+                vm.curQueryParams = queryParams;
                 vm.queryLoading = true;
                 vm.queryResult = {};
-                vm.$http.get("/task/list", {params: queryModel}).then(function (re) {
+
+                vm.$http.get("/task/list", {params: queryParams}).then(function (re) {
                     vm.queryLoading = false;
                     vm.queryResult = re.body.data;
                 }, function () {
@@ -68,11 +60,11 @@ define(['text!comp/task-list.html'], function (tpl) {
                 });
             },
             reload: function () {
-                this.load(this.currentQueryModel);
+                this.load(this.curQueryParams);
             },
             changePage: function (val) {
-                this.currentQueryModel.page = val;
-                this.load(this.currentQueryModel);
+                this.curQueryParams.page = val;
+                this.load(this.curQueryParams);
             },
             pauseTask: function (name, group) {
                 var vm = this;
@@ -129,6 +121,9 @@ define(['text!comp/task-list.html'], function (tpl) {
                 if (command === "execTmpTask") {
                     this.quickTaskDialogVisible = true;
                 }
+            },
+            createQuickTask: function () {
+                this.quickTaskDialogVisible = true
             },
             goCreateTask: function () {
                 this.$router.push("/task/new");

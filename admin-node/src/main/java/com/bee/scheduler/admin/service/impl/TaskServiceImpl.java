@@ -2,10 +2,10 @@ package com.bee.scheduler.admin.service.impl;
 
 import com.bee.scheduler.admin.dao.TaskDao;
 import com.bee.scheduler.admin.dao.TaskHistoryDao;
+import com.bee.scheduler.admin.model.ExecutedTask;
 import com.bee.scheduler.admin.model.ExecutingTask;
 import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
-import com.bee.scheduler.admin.model.ExecutedTask;
 import com.bee.scheduler.admin.service.TaskService;
 import com.bee.scheduler.core.Constants;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -30,7 +31,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Pageable<Task> queryTask(String schedulerName, String name, String group, String state, int page) {
+    public Pageable<Task> queryTask(String schedulerName, String keyword, int page) {
+        String name = null, group = null, state = null;
+        for (String kwItem : StringUtils.split(keyword, " ")) {
+            if (Pattern.matches("g:.+", kwItem)) {
+                group = StringUtils.split(kwItem, ":")[1];
+            } else if (Pattern.matches("s:.+", kwItem)) {
+                state = StringUtils.split(kwItem, ":")[1];
+            } else {
+                name = kwItem;
+            }
+        }
         return taskDao.query(schedulerName, name, group, state, page);
     }
 

@@ -50,13 +50,11 @@ public class TaskController {
 
     @ResponseBody
     @GetMapping("/task/list")
-    public HttpResponseBodyWrapper task(String state, String taskName, String taskGroup, Integer page) throws Exception {
-        state = StringUtils.trimToNull(state);
-        taskName = StringUtils.trimToNull(taskName);
-        taskGroup = StringUtils.trimToNull(taskGroup);
+    public HttpResponseBodyWrapper task(String keyword, Integer page) throws Exception {
+        keyword = StringUtils.trimToEmpty(keyword);
         page = page == null ? 1 : page;
 
-        Pageable<Task> queryResult = taskService.queryTask(scheduler.getSchedulerName(), taskName, taskGroup, state, page);
+        Pageable<Task> queryResult = taskService.queryTask(scheduler.getSchedulerName(), keyword, page);
         return new HttpResponseBodyWrapper(queryResult);
     }
 
