@@ -12,8 +12,8 @@ define(['text!comp/index.html'], function (tpl) {
                     data.now = re.body.data;
                 });
             };
-            refreshServerTime();
-            window.setInterval(refreshServerTime, 1000);
+            // refreshServerTime();
+            // window.setInterval(refreshServerTime, 1000);
             return data;
         },
         mounted: function () {
