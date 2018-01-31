@@ -10,12 +10,12 @@
     </div>
     <div class="content-body">
         <el-row>
-            <el-col :span="10">
+            <el-col :span="8">
                 <el-input v-model="queryParams.keyword">
                     <el-button slot="append" icon="el-icon-search" @click="query"></el-button>
                 </el-input>
             </el-col>
-            <el-col :span="14" class="text-right">
+            <el-col :span="16" class="text-right">
                 <el-button-group v-show="showCommandBtnGroup">
                     <el-button v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-play"></i></el-button>
                     <el-button v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
