@@ -7,7 +7,6 @@ import com.bee.scheduler.admin.model.ExecutingTask;
 import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
 import com.bee.scheduler.admin.service.TaskService;
-import com.bee.scheduler.core.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,15 +60,29 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Pageable<ExecutedTask> queryTaskHistory(String schedulerName, String fireId, String taskName, String taskGroup, Constants.TaskExecState execState, Constants.TaskFiredWay firedWay, Long starTimeFrom, Long starTimeTo, Integer page, Integer pageSize) {
-        // 默认值处理
-        if (page == null) {
-            page = 1;
+    public Pageable<ExecutedTask> queryTaskHistory(String schedulerName, String keyword, int page) {
+        String fireId = null, taskName = null, taskGroup = null, execState = null, firedWay = null;
+        Long starTimeFrom = null, starTimeTo = null;
+        for (String kwItem : StringUtils.split(keyword, " ")) {
+            if (Pattern.matches("id:.+", kwItem)) {
+                fireId = StringUtils.split(kwItem, ":")[1];
+            } else if (Pattern.matches("g:.+", kwItem)) {
+                taskGroup = StringUtils.split(kwItem, ":")[1];
+            } else if (Pattern.matches("s:.+", kwItem)) {
+                execState = StringUtils.split(kwItem, ":")[1];
+            } else if (Pattern.matches("f:.+", kwItem)) {
+                firedWay = StringUtils.split(kwItem, ":")[1];
+//            } else if (Pattern.matches("ts:.+", kwItem)) {
+//                starTimeFrom = StringUtils.split(kwItem, ":")[1];
+//            } else if (Pattern.matches("te:.+", kwItem)) {
+//                starTimeTo = StringUtils.split(kwItem, ":")[1];
+            } else {
+                taskName = kwItem;
+            }
         }
-        fireId = StringUtils.trimToNull(fireId);
-        taskName = StringUtils.trimToNull(taskName);
-        taskGroup = StringUtils.trimToNull(taskGroup);
-        return taskHistoryDao.query(schedulerName, fireId, taskName, taskGroup, execState, firedWay, starTimeFrom, starTimeTo, page, pageSize);
+
+
+        return taskHistoryDao.query(schedulerName, fireId, taskName, taskGroup, execState, firedWay, starTimeFrom, starTimeTo, page);
     }
 
     @Override

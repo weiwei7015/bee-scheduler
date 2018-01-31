@@ -19,6 +19,37 @@
             </el-col>
         </el-row>
         <div class="hr"></div>
+        <el-form :inline="true" :model="queryFormModel">
+            <el-form-item label="任务名">
+                <el-input v-model="queryFormModel.name" placeholder=""></el-input>
+            </el-form-item>
+            <el-form-item label="任务组">
+                <el-select v-model="queryFormModel.group" placeholder="" style="width: 150px">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option v-for="item in taskGroups" :label="item" :value="item"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="状态">
+                <el-select v-model="queryFormModel.execState" placeholder="" style="width: 100px">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="SUCCESS" value="SUCCESS"></el-option>
+                    <el-option label="FAIL" value="FAIL"></el-option>
+                    <el-option label="VETOED" value="VETOED"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="执行方式">
+                <el-select v-model="queryFormModel.firedWay" placeholder="" style="width: 100px">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="调度" value="SCHEDULE"></el-option>
+                    <el-option label="手动" value="MANUAL"></el-option>
+                    <el-option label="临时" value="TMP"></el-option>
+                    <el-option label="联动" value="LINKAGE"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="query">查询</el-button>
+            </el-form-item>
+        </el-form>
 
         <el-row v-loading="queryLoading">
             <el-col :span="24">
@@ -28,12 +59,16 @@
                     </el-table-column>
                     <el-table-column label="任务">
                         <template scope="scope">{{scope.row.group}}.{{scope.row.name}}
-                            <!--<el-button type="text" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)"><i class="iconfont icon-detail"></i></el-button>-->
+                            <el-button type="text" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)"><i class="iconfont icon-detail"></i></el-button>
                         </template>
                     </el-table-column>
                     <el-table-column label="执行节点" prop="instanceId"></el-table-column>
                     <el-table-column label="执行状态" width="120">
-                        <template scope="scope">{{scope.row.execState}}</template>
+                        <template scope="scope">
+                            <el-tag size="small" v-if="scope.row.execState === 'SUCCESS'" type="success" disable-transitions>SUCCESS</el-tag>
+                            <el-tag size="small" v-if="scope.row.execState === 'FAIL'" type="danger" disable-transitions>FAIL</el-tag>
+                            <el-tag size="small" v-if="scope.row.execState === 'VETOED'" type="warning" disable-transitions>VETOED</el-tag>
+                        </template>
                     </el-table-column>
                     <el-table-column label="执行方式" width="100">
                         <template scope="scope">{{scope.row.firedWay === "SCHEDULE"?"调度":scope.row.firedWay === "MANUAL"?"手动":scope.row.firedWay === "TMP"?"临时":scope.row.firedWay === "LINKAGE"?"联动":"未知"}}</template>
@@ -45,7 +80,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="100">
                         <template scope="scope">
-                            <!--<el-button type="text" @click="showTaskHistoryDetail(scope.row.fireId)">查看日志</el-button>-->
+                            <el-button type="text" @click="showTaskHistoryDetail(scope.row.fireId)">查看日志</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

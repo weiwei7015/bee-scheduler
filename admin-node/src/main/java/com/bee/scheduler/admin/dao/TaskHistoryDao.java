@@ -1,7 +1,7 @@
 package com.bee.scheduler.admin.dao;
 
-import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.ExecutedTask;
+import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.core.Constants;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -25,7 +25,7 @@ public class TaskHistoryDao extends DaoBase {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExecutedTask.class), fireId);
     }
 
-    public Pageable<ExecutedTask> query(String schedulerName, String fireId, String taskName, String taskGroup, Constants.TaskExecState execState, Constants.TaskFiredWay firedWay, Long starTimeFrom, Long startTimeTo, Integer page, Integer pageSize) {
+    public Pageable<ExecutedTask> query(String schedulerName, String fireId, String taskName, String taskGroup, String execState, String firedWay, Long starTimeFrom, Long startTimeTo, int page) {
         List<Object> args = new ArrayList<>();
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TASK_HISTORY");
 //        StringBuilder sqlQueryResult = new StringBuilder("SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.FIRED_TIME 'firedTime',t.FIRED_WAY 'firedWay',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t");
@@ -47,11 +47,11 @@ public class TaskHistoryDao extends DaoBase {
         }
         if (execState != null) {
             sqlWhere.append(" AND EXEC_STATE = ?");
-            args.add(execState.toString());
+            args.add(execState);
         }
         if (firedWay != null) {
             sqlWhere.append(" AND FIRED_WAY = ?");
-            args.add(firedWay.toString());
+            args.add(firedWay);
         }
         if (starTimeFrom != null) {
             sqlWhere.append(" AND FIRED_TIME >= ?");
@@ -66,12 +66,11 @@ public class TaskHistoryDao extends DaoBase {
         // 查询记录
         sqlQueryResult.append(sqlWhere).append(" ORDER BY FIRED_TIME DESC LIMIT ?,?");
 
-        int finalPageSize = pageSize == null ? this.pageSize : pageSize;
-        args.add((page - 1) * finalPageSize);
-        args.add(finalPageSize);
+        args.add((page - 1) * pageSize);
+        args.add(pageSize);
         List<ExecutedTask> result = jdbcTemplate.query(sqlQueryResult.toString(), new BeanPropertyRowMapper<>(ExecutedTask.class), args.toArray());
 
-        return new Pageable<>(page, finalPageSize, resultTotal, result);
+        return new Pageable<>(page, pageSize, resultTotal, result);
     }
 
     public List<String> getTaskHistoryGroups(String schedulerName) {

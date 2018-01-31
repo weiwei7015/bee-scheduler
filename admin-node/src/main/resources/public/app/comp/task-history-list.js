@@ -6,14 +6,11 @@ define(['text!comp/task-history-list.html'], function (tpl) {
             var vm = this;
             var data = {
                 queryLoading: false,
-                queryFormModel: {
-                    name: '',
-                    group: '',
-                    execState: '',
-                    firedWay: '',
+                queryParams: {
+                    keyword: '',
                     page: 1
                 },
-                currentQueryModel: null,
+                curQueryParams: null,
                 queryResult: {},
                 taskGroups: []
             };
@@ -30,23 +27,16 @@ define(['text!comp/task-history-list.html'], function (tpl) {
         methods: {
             query: function () {
                 var vm = this;
-                var queryFormModel = vm.queryFormModel;
-                var queryModel = {
-                    taskName: queryFormModel.name,
-                    taskGroup: queryFormModel.group,
-                    execState: queryFormModel.execState,
-                    firedWay: queryFormModel.firedWay,
-                    page: 1
-                };
-                vm.load(queryModel);
+                var queryParams = vm.queryParams;
+                vm.load(queryParams);
             },
-            load: function (queryModel) {
+            load: function (queryParams) {
                 var vm = this;
 
-                vm.currentQueryModel = queryModel;
+                vm.curQueryParams = queryParams;
 
                 vm.queryLoading = true;
-                vm.$http.get("/task/history/list", {params: queryModel}).then(function (re) {
+                vm.$http.get("/task/history/list", {params: queryParams}).then(function (re) {
                     vm.queryLoading = false;
                     vm.queryResult = re.body.data;
                 }, function () {
@@ -55,14 +45,14 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 });
             },
             reload: function () {
-                this.load(this.currentQueryModel);
+                this.load(this.curQueryParams);
             },
             showTaskHistoryDetail: function (fireId) {
                 this.$router.push("/task/history/detail/" + fireId);
             },
             changePage: function (val) {
-                this.currentQueryModel.page = val;
-                this.load(this.currentQueryModel);
+                this.curQueryParams.page = val;
+                this.load(this.curQueryParams);
             },
             resolveRowClass: function (row, index) {
                 return row.state === 'SUCCESS' ? "row-success" : row.state === 'FAIL' ? "row-fail" : row.state === 'VETOED' ? "row-warning" : "";

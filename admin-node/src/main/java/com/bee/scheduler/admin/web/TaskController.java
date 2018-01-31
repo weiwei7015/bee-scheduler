@@ -67,7 +67,7 @@ public class TaskController {
         int taskTotalCount = taskService.queryTaskCount(schedulerName, null, null, null);
         List<ExecutingTask> executingTaskList = taskService.queryExcutingTask(schedulerName);
 
-        Pageable<ExecutedTask> taskHistoryList = taskService.queryTaskHistory(schedulerName, null, null, null, null, null, null, null, 1, 5);
+        Pageable<ExecutedTask> taskHistoryList = taskService.queryTaskHistory(schedulerName, "", 1);
 
         List<FiredTask> taskTrends = new ArrayList<>();
 
