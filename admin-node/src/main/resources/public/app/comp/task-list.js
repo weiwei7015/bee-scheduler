@@ -26,6 +26,8 @@ define(['text!comp/task-list.html'], function (tpl) {
                 curQueryParams: null,
                 queryResult: {},
                 taskGroups: [],
+                selectedItems: [],
+                enabledCommandBtn: [],
                 jobComponentList: {}
             };
 
@@ -34,6 +36,29 @@ define(['text!comp/task-list.html'], function (tpl) {
             });
 
             return data;
+        },
+        computed: {
+            showResumeBtn: function () {
+                for (var i = 0; i < this.selectedItems.length; i++) {
+                    var item = this.selectedItems[i];
+                    if (item.state === "PAUSED" || item.state === "PAUSED_BLOCKED") {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            showPauseBtn: function () {
+                for (var i = 0; i < this.selectedItems.length; i++) {
+                    var item = this.selectedItems[i];
+                    if (item.state !== "PAUSED" && item.state !== "PAUSED_BLOCKED") {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            showCommandBtnGroup: function () {
+                return this.selectedItems.length > 0;
+            }
         },
         mounted: function () {
             this.query();
@@ -50,6 +75,7 @@ define(['text!comp/task-list.html'], function (tpl) {
                 vm.curQueryParams = queryParams;
                 vm.queryLoading = true;
                 vm.queryResult = {};
+                vm.selectedItems = [];
 
                 vm.$http.get("/task/list", {params: queryParams}).then(function (re) {
                     vm.queryLoading = false;
@@ -68,11 +94,15 @@ define(['text!comp/task-list.html'], function (tpl) {
             },
             pauseTask: function (name, group) {
                 var vm = this;
+                var taskIds = [];
+                for (var i = 0; i < vm.selectedItems.length; i++) {
+                    var item = vm.selectedItems[i];
+                    taskIds.push(item.group + "-" + item.name);
+                }
 
-                vm.$confirm("确认暂停任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
-                    vm.$http.post("/task/pause", null, {params: {name: name, group: group}}).then(function (re) {
-                        vm.newTaskDialogVisible = false;
-                        vm.$message({message: '任务已暂停！', type: 'success'});
+                vm.$confirm("确认暂停选中的任务?", '提示', {type: 'warning'}).then(function () {
+                    vm.$http.post("/task/pause", null, {params: {taskIds: taskIds.join(",")}}).then(function (re) {
+                        vm.$message({message: '任务已暂停', type: 'success'});
                         vm.reload();
                     });
                 }).catch(function () {
@@ -81,11 +111,15 @@ define(['text!comp/task-list.html'], function (tpl) {
             },
             resumeTask: function (name, group) {
                 var vm = this;
+                var taskIds = [];
+                for (var i = 0; i < vm.selectedItems.length; i++) {
+                    var item = vm.selectedItems[i];
+                    taskIds.push(item.group + "-" + item.name);
+                }
 
-                vm.$confirm("确认恢复任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
-                    vm.$http.post("/task/resume", null, {params: {name: name, group: group}}).then(function (re) {
-                        vm.newTaskDialogVisible = false;
-                        vm.$message({message: '任务已恢复！', type: 'success'});
+                vm.$confirm("确认恢复选中的任务?", '提示', {type: 'warning'}).then(function () {
+                    vm.$http.post("/task/resume", null, {params: {taskIds: taskIds.join(",")}}).then(function (re) {
+                        vm.$message({message: '任务已恢复', type: 'success'});
                         vm.reload();
                     });
                 }).catch(function () {
@@ -94,11 +128,15 @@ define(['text!comp/task-list.html'], function (tpl) {
             },
             executeTask: function (name, group) {
                 var vm = this;
+                var taskIds = [];
+                for (var i = 0; i < vm.selectedItems.length; i++) {
+                    var item = vm.selectedItems[i];
+                    taskIds.push(item.group + "-" + item.name);
+                }
 
-                vm.$confirm("立即执行任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
-                    vm.$http.post("/task/execute", null, {params: {name: name, group: group}}).then(function (re) {
-                        vm.newTaskDialogVisible = false;
-                        vm.$message({message: '任务已触发！', type: 'success'});
+                vm.$confirm("立即执行选中的任务?", '提示', {type: 'warning'}).then(function () {
+                    vm.$http.post("/task/execute", null, {params: {taskIds: taskIds.join(",")}}).then(function (re) {
+                        vm.$message({message: '任务已触发', type: 'success'});
                     });
                 }).catch(function () {
                     //...
@@ -106,21 +144,23 @@ define(['text!comp/task-list.html'], function (tpl) {
             },
             deleteTask: function (name, group) {
                 var vm = this;
+                var taskIds = [];
+                for (var i = 0; i < vm.selectedItems.length; i++) {
+                    var item = vm.selectedItems[i];
+                    taskIds.push(item.group + "-" + item.name);
+                }
 
-                vm.$confirm("确认删除任务【" + group + "." + name + "】?", '提示', {type: 'warning'}).then(function () {
-                    vm.$http.post("/task/delete", null, {params: {name: name, group: group}}).then(function (re) {
-                        vm.newTaskDialogVisible = false;
-                        vm.$message({message: '任务已删除！', type: 'success'});
+                vm.$confirm("确认删除选中的任务?", '提示', {type: 'warning'}).then(function () {
+                    vm.$http.post("/task/delete", null, {params: {taskIds: taskIds.join(",")}}).then(function (re) {
+                        vm.$message({message: '任务已删除', type: 'success'});
                         vm.reload();
                     });
                 }).catch(function () {
                     //...
                 });
             },
-            handleTaskCommand: function (command) {
-                if (command === "execTmpTask") {
-                    this.quickTaskDialogVisible = true;
-                }
+            handleSelectionChange: function (val) {
+                this.selectedItems = val;
             },
             createQuickTask: function () {
                 this.quickTaskDialogVisible = true
@@ -128,11 +168,13 @@ define(['text!comp/task-list.html'], function (tpl) {
             goCreateTask: function () {
                 this.$router.push("/task/new");
             },
-            goCopyTask: function (group, name) {
-                this.$router.push("/task/copy/" + group + "-" + name);
+            goCopyTask: function () {
+                var target = this.selectedItems[0];
+                this.$router.push("/task/copy/" + target.group + "-" + target.name);
             },
-            goEditTask: function (group, name) {
-                this.$router.push("/task/edit/" + group + "-" + name);
+            goEditTask: function () {
+                var target = this.selectedItems[0];
+                this.$router.push("/task/edit/" + target.group + "-" + target.name);
             }
         }
     };

@@ -436,36 +436,51 @@ public class TaskController {
 
     @ResponseBody
     @PostMapping("/task/delete")
-    public void delete(String name, String group) throws Exception {
-        scheduler.unscheduleJob(new TriggerKey(name, group));
+    public void delete(String[] taskIds) throws Exception {
+        for (String taskId : taskIds) {
+            String[] group$name = StringUtils.split(taskId, "-");
+            scheduler.unscheduleJob(new TriggerKey(group$name[1], group$name[0]));
+        }
     }
 
     @ResponseBody
     @PostMapping("/task/pause")
-    public void pause(String name, String group) throws Exception {
-        scheduler.pauseTrigger(new TriggerKey(name, group));
+    public void pause(String[] taskIds) throws Exception {
+        for (String taskId : taskIds) {
+            String[] group$name = StringUtils.split(taskId, "-");
+            scheduler.pauseTrigger(new TriggerKey(group$name[1], group$name[0]));
+        }
     }
 
     @ResponseBody
     @PostMapping("/task/resume")
-    public void resume(String name, String group) throws Exception {
-        scheduler.resumeTrigger(new TriggerKey(name, group));
+    public void resume(String[] taskIds) throws Exception {
+        for (String taskId : taskIds) {
+            String[] group$name = StringUtils.split(taskId, "-");
+            scheduler.resumeTrigger(new TriggerKey(group$name[1], group$name[0]));
+        }
     }
 
     @ResponseBody
     @PostMapping("/task/execute")
-    public void execute(String name, String group) throws Exception {
-        JobKey jobKey = new JobKey(name, group);
-        Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
-        JobDataMap jobDataMap = trigger.getJobDataMap();
+    public void execute(String[] taskIds) throws Exception {
+        for (String taskId : taskIds) {
+            String[] group$name = StringUtils.split(taskId, "-");
+            String name = group$name[1];
+            String group = group$name[0];
 
-        String randomTriggerName = DateFormatUtils.format(new Date(), "yyyyMMddHHmmssSSS");
-        OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_Manual).forJob(jobKey).withDescription("手动执行【" + group + "." + name + "】").build();
-        if (jobDataMap != null) {
-            operableTrigger.setJobDataMap(jobDataMap);
+            JobKey jobKey = new JobKey(name, group);
+            Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
+            JobDataMap jobDataMap = trigger.getJobDataMap();
+
+            String randomTriggerName = DateFormatUtils.format(new Date(), "yyyyMMddHHmmssSSS");
+            OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_Manual).forJob(jobKey).withDescription("手动执行【" + group + "." + name + "】").build();
+            if (jobDataMap != null) {
+                operableTrigger.setJobDataMap(jobDataMap);
+            }
+
+            scheduler.scheduleJob(operableTrigger);
         }
-
-        scheduler.scheduleJob(operableTrigger);
     }
 
     @ResponseBody

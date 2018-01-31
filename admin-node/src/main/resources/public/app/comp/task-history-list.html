@@ -9,6 +9,27 @@
         <div class="title"><i class="iconfont icon-history"></i> 历史任务</div>
     </div>
     <div class="content-body">
+        <el-row>
+            <el-col :span="10">
+                <el-input v-model="queryParams.keyword">
+                    <el-button slot="append" icon="el-icon-search" @click="query"></el-button>
+                </el-input>
+            </el-col>
+            <el-col :span="14" class="text-right">
+                <el-button-group v-show="showCommandBtnGroup">
+                    <el-button v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-play"></i></el-button>
+                    <el-button v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
+                    <el-button @click="executeTask"><i class="iconfont icon-rocket"></i></el-button>
+                    <el-button @click="goCopyTask"><i class="iconfont icon-edit"></i></el-button>
+                    <el-button @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
+                </el-button-group>
+                <el-button-group>
+                    <el-button icon="el-icon-plus" @click="goCreateTask"></el-button>
+                    <el-button @click="createQuickTask"><i class="iconfont icon-flash"></i></el-button>
+                </el-button-group>
+            </el-col>
+        </el-row>
+        <div class="hr"></div>
         <el-form :inline="true" :model="queryFormModel">
             <el-form-item label="任务名">
                 <el-input v-model="queryFormModel.name" placeholder=""></el-input>
