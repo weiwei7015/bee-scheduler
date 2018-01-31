@@ -11,9 +11,9 @@
     <div class="content-body">
         <el-row>
             <el-col :span="8">
-                <el-input v-model="queryParams.keyword">
+                <el-autocomplete :fetch-suggestions="querySuggestion" v-model="queryParams.keyword" style="width:100%" :debounce="100">
                     <el-button slot="append" icon="el-icon-search" @click="query"></el-button>
-                </el-input>
+                </el-autocomplete>
             </el-col>
             <el-col :span="16" class="text-right">
                 <el-button-group v-show="showCommandBtnGroup">

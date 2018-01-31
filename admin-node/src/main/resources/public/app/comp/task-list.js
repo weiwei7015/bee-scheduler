@@ -26,6 +26,7 @@ define(['text!comp/task-list.html'], function (tpl) {
                 curQueryParams: null,
                 queryResult: {},
                 taskGroups: [],
+                taskStatus: ["WAITING", "ACQUIRED", "PAUSED", "BLOCKED", "PAUSED_BLOCKED", "ERROR", "DELETED"],
                 selectedItems: [],
                 enabledCommandBtn: [],
                 jobComponentList: {}
@@ -91,6 +92,28 @@ define(['text!comp/task-list.html'], function (tpl) {
             changePage: function (val) {
                 this.curQueryParams.page = val;
                 this.load(this.curQueryParams);
+            },
+            querySuggestion: function (queryString, cb) {
+                var suggestions = [];
+                queryString = queryString.trim();
+                if (queryString) {
+                    if (queryString.startsWith("g:")) {
+                        this.taskGroups.forEach(function (value) {
+                            suggestions.push({"value": "g:" + value});
+                        });
+                    } else if (queryString.startsWith("s:")) {
+                        this.taskStatus.forEach(function (value) {
+                            suggestions.push({"value": "s:" + value});
+                        });
+                    }
+
+                    this.taskGroups.forEach(function (value) {
+                        if (value.toLowerCase().indexOf(queryString.toLowerCase()) === 0) {
+                            suggestions.push({"value": "g:" + value});
+                        }
+                    });
+                }
+                cb(suggestions)
             },
             pauseTask: function (name, group) {
                 var vm = this;
