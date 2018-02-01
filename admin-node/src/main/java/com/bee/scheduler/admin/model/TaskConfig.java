@@ -10,16 +10,43 @@ import java.util.Date;
  * @author weiwei
  */
 public class TaskConfig {
+    //调度器类型
+    public static final int SCHEDULE_TYPE_SIMPLE_TRIGGER = 1;
+    public static final int SCHEDULE_TYPE_CALENDAR_INTERVAL_TRIGGER = 2;
+    public static final int SCHEDULE_TYPE_DAILY_TIME_INTERVAL_TRIGGER = 3;
+    public static final int SCHEDULE_TYPE_CRON_TRIGGER = 4;
+
+    //任务重复方式
+    public static final int REPEAT_TYPE_INFINITE = 1;
+    public static final int REPEAT_TYPE_GIVEN_COUNT = 2;
+
+    //任务激活方式
+    public static final int START_AT_TYPE_NOW = 1;
+    public static final int START_AT_TYPE_GIVEN_TIME = 2;
+
+    //任务销毁方式
+    public static final int END_AT_TYPE_NEVER = 1;
+    public static final int END_AT_TYPE_GIVEN_TIME = 2;
+
+    //任务Misfire策略
+    public static final int MISFIRE_TYPE_SMART_POLICY = 0;
+    public static final int MISFIRE_TYPE_IGNORE_MISFIRES = -1;
+    public static final int MISFIRE_TYPE_FIRE_NOW = 1;
+    public static final int MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT = 2;
+    public static final int MISFIRE_TYPE_NOW_WITH_REMAINING_COUNT = 3;
+    public static final int MISFIRE_TYPE_NEXT_WITH_REMAINING_COUNT = 4;
+    public static final int MISFIRE_TYPE_NEXT_WITH_EXISTING_COUNT = 5;
+
     private String name = "";
     private String group = "";
-    private Integer scheduleType = 4;
+    private Integer scheduleType = SCHEDULE_TYPE_CRON_TRIGGER;
     private ScheduleTypeSimpleOptions scheduleTypeSimpleOptions = new ScheduleTypeSimpleOptions();
     private ScheduleTypeCalendarIntervalOptions scheduleTypeCalendarIntervalOptions = new ScheduleTypeCalendarIntervalOptions();
     private ScheduleTypeDailyTimeIntervalOptions scheduleTypeDailyTimeIntervalOptions = new ScheduleTypeDailyTimeIntervalOptions();
     private ScheduleTypeCronOptions scheduleTypeCronOptions = new ScheduleTypeCronOptions();
-    private Integer startAtType = 1;
+    private Integer startAtType = START_AT_TYPE_NOW;
     private Date startAt;
-    private Integer endAtType = 1;
+    private Integer endAtType = END_AT_TYPE_NEVER;
     private Date endAt;
     private String jobComponent = "";
     private String params = "";

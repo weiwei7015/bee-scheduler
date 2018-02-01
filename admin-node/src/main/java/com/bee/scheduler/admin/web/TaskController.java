@@ -137,51 +137,51 @@ public class TaskController {
 
         TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskConfig.getName(), taskConfig.getGroup()).usingJobData(dataMap).withDescription(taskConfig.getDescription());
 
-        if (taskConfig.getStartAtType() == 1) {
+        if (taskConfig.getStartAtType() == TaskConfig.START_AT_TYPE_NOW) {
             triggerBuilder.startNow();
         } else {
             triggerBuilder.startAt(taskConfig.getStartAt());
         }
-        if (taskConfig.getEndAtType() != 1) {
+        if (taskConfig.getEndAtType() != TaskConfig.END_AT_TYPE_NEVER) {
             triggerBuilder.endAt(taskConfig.getEndAt());
         }
 
 
-        if (taskConfig.getScheduleType() == 1) {
+        if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_SIMPLE_TRIGGER) {
             ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
 
             SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
             scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
-                    .withRepeatCount(scheduleOptions.getRepeatType() == 1 ? -1 : scheduleOptions.getRepeatCount());
+                    .withRepeatCount(scheduleOptions.getRepeatType() == TaskConfig.REPEAT_TYPE_INFINITE ? -1 : scheduleOptions.getRepeatCount());
 
-            if (scheduleOptions.getMisfireHandlingType() == -1) {
+            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireNow();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_REMAINING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == 4) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NEXT_WITH_REMAINING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == 5) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NEXT_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
             }
 
             SimpleTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.scheduleJob(jobDetail, trigger);
-        } else if (taskConfig.getScheduleType() == 2) {
+        } else if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_CALENDAR_INTERVAL_TRIGGER) {
             ScheduleTypeCalendarIntervalOptions scheduleOptions = taskConfig.getScheduleTypeCalendarIntervalOptions();
 
             CalendarIntervalScheduleBuilder scheduleBuilder = CalendarIntervalScheduleBuilder.calendarIntervalSchedule();
             scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
 
-            if (scheduleOptions.getMisfireHandlingType() == -1) {
+            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
@@ -189,7 +189,7 @@ public class TaskController {
             CalendarIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.scheduleJob(jobDetail, trigger);
-        } else if (taskConfig.getScheduleType() == 3) {
+        } else if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_DAILY_TIME_INTERVAL_TRIGGER) {
             ScheduleTypeDailyTimeIntervalOptions scheduleOptions = taskConfig.getScheduleTypeDailyTimeIntervalOptions();
 
             DailyTimeIntervalScheduleBuilder scheduleBuilder = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule();
@@ -205,18 +205,18 @@ public class TaskController {
                 scheduleBuilder.onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
             }
 
-            if (scheduleOptions.getMisfireHandlingType() == -1) {
+            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
             DailyTimeIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.scheduleJob(jobDetail, trigger);
-        } else if (taskConfig.getScheduleType() == 4) {
+        } else if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_CRON_TRIGGER) {
             ScheduleTypeCronOptions scheduleOptions = taskConfig.getScheduleTypeCronOptions();
 
             if (!CronExpression.isValidExpression(scheduleOptions.getCron())) {
@@ -225,11 +225,11 @@ public class TaskController {
 
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleOptions.getCron());
 
-            if (scheduleOptions.getMisfireHandlingType() == -1) {
+            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
@@ -252,9 +252,9 @@ public class TaskController {
         TaskConfig taskConfig = new TaskConfig();
         taskConfig.setName(abstractTrigger.getKey().getName());
         taskConfig.setGroup(abstractTrigger.getKey().getGroup());
-        taskConfig.setStartAtType(abstractTrigger.getStartTime() == null ? 1 : 2);
+        taskConfig.setStartAtType(abstractTrigger.getStartTime() == null ? TaskConfig.START_AT_TYPE_NOW : TaskConfig.START_AT_TYPE_GIVEN_TIME);
         taskConfig.setStartAt(abstractTrigger.getStartTime());
-        taskConfig.setEndAtType(abstractTrigger.getEndTime() == null ? 1 : 2);
+        taskConfig.setEndAtType(abstractTrigger.getEndTime() == null ? TaskConfig.END_AT_TYPE_NEVER : TaskConfig.END_AT_TYPE_GIVEN_TIME);
         taskConfig.setEndAt(abstractTrigger.getEndTime());
         taskConfig.setJobComponent(jobDetail.getJobClass().getSimpleName());
         taskConfig.setParams(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_PARAM));
@@ -265,17 +265,17 @@ public class TaskController {
         if (abstractTrigger instanceof SimpleTrigger) {
             SimpleTrigger trigger = (SimpleTrigger) abstractTrigger;
 
-            taskConfig.setScheduleType(1);
+            taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_SIMPLE_TRIGGER);
 
             ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
             scheduleOptions.setInterval(trigger.getRepeatInterval());
-            scheduleOptions.setRepeatType(trigger.getRepeatCount() == -1 ? 1 : 2);
+            scheduleOptions.setRepeatType(trigger.getRepeatCount() == -1 ? TaskConfig.REPEAT_TYPE_INFINITE : TaskConfig.REPEAT_TYPE_GIVEN_COUNT);
             scheduleOptions.setRepeatCount(trigger.getRepeatCount());
             scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
         } else if (abstractTrigger instanceof CalendarIntervalTrigger) {
             CalendarIntervalTrigger trigger = (CalendarIntervalTrigger) abstractTrigger;
 
-            taskConfig.setScheduleType(2);
+            taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_CALENDAR_INTERVAL_TRIGGER);
 
             ScheduleTypeCalendarIntervalOptions scheduleOptions = taskConfig.getScheduleTypeCalendarIntervalOptions();
             scheduleOptions.setInterval(trigger.getRepeatInterval());
@@ -284,7 +284,7 @@ public class TaskController {
         } else if (abstractTrigger instanceof DailyTimeIntervalTrigger) {
             DailyTimeIntervalTrigger trigger = (DailyTimeIntervalTrigger) abstractTrigger;
 
-            taskConfig.setScheduleType(3);
+            taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_DAILY_TIME_INTERVAL_TRIGGER);
 
             ScheduleTypeDailyTimeIntervalOptions scheduleOptions = taskConfig.getScheduleTypeDailyTimeIntervalOptions();
             scheduleOptions.setStartTimeOfDay(trigger.getStartTimeOfDay());
@@ -296,7 +296,7 @@ public class TaskController {
         } else if (abstractTrigger instanceof CronTrigger) {
             CronTrigger trigger = (CronTrigger) abstractTrigger;
 
-            taskConfig.setScheduleType(4);
+            taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_CRON_TRIGGER);
 
             ScheduleTypeCronOptions scheduleOptions = taskConfig.getScheduleTypeCronOptions();
             scheduleOptions.setCron(trigger.getCronExpression());
@@ -330,51 +330,51 @@ public class TaskController {
 
         TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskConfig.getName(), taskConfig.getGroup()).usingJobData(dataMap).withDescription(taskConfig.getDescription());
 
-        if (taskConfig.getStartAtType() == 1) {
+        if (taskConfig.getStartAtType() == TaskConfig.START_AT_TYPE_NOW) {
             triggerBuilder.startNow();
         } else {
             triggerBuilder.startAt(taskConfig.getStartAt());
         }
-        if (taskConfig.getEndAtType() != 1) {
+        if (taskConfig.getEndAtType() != TaskConfig.END_AT_TYPE_NEVER) {
             triggerBuilder.endAt(taskConfig.getEndAt());
         }
 
 
-        if (taskConfig.getScheduleType() == 1) {
+        if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_SIMPLE_TRIGGER) {
             ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
 
             SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
             scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
-                    .withRepeatCount(scheduleOptions.getRepeatType() == 1 ? -1 : scheduleOptions.getRepeatCount());
+                    .withRepeatCount(scheduleOptions.getRepeatType() == TaskConfig.REPEAT_TYPE_INFINITE ? -1 : scheduleOptions.getRepeatCount());
 
-            if (scheduleOptions.getMisfireHandlingType() == -1) {
+            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireNow();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == 3) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_REMAINING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == 4) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NEXT_WITH_REMAINING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == 5) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NEXT_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
             }
 
             SimpleTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.rescheduleJob(trigger.getKey(), trigger);
-        } else if (taskConfig.getScheduleType() == 2) {
+        } else if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_CALENDAR_INTERVAL_TRIGGER) {
             ScheduleTypeCalendarIntervalOptions scheduleOptions = taskConfig.getScheduleTypeCalendarIntervalOptions();
 
             CalendarIntervalScheduleBuilder scheduleBuilder = CalendarIntervalScheduleBuilder.calendarIntervalSchedule();
             scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
 
-            if (scheduleOptions.getMisfireHandlingType() == -1) {
+            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
@@ -382,7 +382,7 @@ public class TaskController {
             CalendarIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.rescheduleJob(trigger.getKey(), trigger);
-        } else if (taskConfig.getScheduleType() == 3) {
+        } else if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_DAILY_TIME_INTERVAL_TRIGGER) {
             ScheduleTypeDailyTimeIntervalOptions scheduleOptions = taskConfig.getScheduleTypeDailyTimeIntervalOptions();
 
             DailyTimeIntervalScheduleBuilder scheduleBuilder = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule();
@@ -398,18 +398,18 @@ public class TaskController {
                 scheduleBuilder.onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
             }
 
-            if (scheduleOptions.getMisfireHandlingType() == -1) {
+            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
             DailyTimeIntervalTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
 
             scheduler.rescheduleJob(trigger.getKey(), trigger);
-        } else if (taskConfig.getScheduleType() == 4) {
+        } else if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_CRON_TRIGGER) {
             ScheduleTypeCronOptions scheduleOptions = taskConfig.getScheduleTypeCronOptions();
 
             if (!CronExpression.isValidExpression(scheduleOptions.getCron())) {
@@ -418,11 +418,11 @@ public class TaskController {
 
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleOptions.getCron());
 
-            if (scheduleOptions.getMisfireHandlingType() == -1) {
+            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == 1) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == 2) {
+            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
