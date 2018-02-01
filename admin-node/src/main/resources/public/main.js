@@ -54,6 +54,9 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
         clusterHome: function (resolver) {
             require(['comp/cluster-home'], resolver);
         },
+        help: function (resolver) {
+            require(['comp/help'], resolver);
+        },
         error_404: function (resolver) {
             require(['comp/error_404'], resolver);
         }
@@ -76,6 +79,7 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
                     {path: '/task/history/detail/:fireId', component: views.taskHistoryDetail},
                     {path: '/cluster', component: views.clusterHome},
                     {path: '/settings', component: views.settings},
+                    {path: '/help', component: views.help},
                     // {path: '', redirect: '/home'},
                     {path: '*', component: views.error_404}
                 ]
