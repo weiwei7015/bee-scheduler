@@ -222,6 +222,15 @@ hr {
     vertical-align: middle;
 }
 
+/******* el-form *****/
+.el-form.form-label-muted .el-form-item__label {
+    color: #99A9BF;
+}
+
+.el-form.no-item-margin .el-form-item {
+    margin-bottom: 0;
+}
+
 /******* CheckBox *******/
 .el-checkbox-group.small .el-checkbox__label {
     font-size: 12px;

@@ -1,6 +1,6 @@
 <el-dialog title="Help" :visible.sync="dialogVisible">
     <span slot="title"><i class="iconfont icon-detail"></i> 任务详情</span>
-    <div v-loading="loading" style="height: 500px;overflow: auto">
+    <div v-loading="loading" style="height: 400px;overflow: auto">
         <div v-show="!loading">
             <template v-if="taskDetail">
                 <el-form label-width="100px" class="no-item-margin form-label-muted">
@@ -38,11 +38,11 @@
                     <el-form-item label="任务描述">{{taskDetail.description||"- -"}}</el-form-item>
                     <h4 class="no-margin">高级选项</h4>
                     <div class="hr"></div>
-                    <el-form-item label="激活选项">{{taskDetail.startAtType === 1?"立即激活":taskDetail.startAtType === 2?"指定时间激活":"unknown"}}</el-form-item>
+                    <!--<el-form-item label="激活选项">{{taskDetail.startAtType === 1?"立即激活":taskDetail.startAtType === 2?"指定时间激活":"unknown"}}</el-form-item>-->
                     <el-form-item v-if="taskDetail.startAtType == 2" label="激活时间">{{$moment(taskDetail.startAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
                     <el-form-item label="销毁选项">{{taskDetail.endAtType === 1?"永不销毁":taskDetail.endAtType === 2?"指定时间销毁":"unknown"}}</el-form-item>
                     <el-form-item v-if="taskDetail.endAtType == 2" label="销毁时间">{{$moment(taskDetail.endAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
-                    <el-form-item label="联动任务">{{taskDetail.linkageRule||"- -"}}</el-form-item>
+                    <el-form-item label="联动任务">{{taskDetail.linkageRule||"--"}}</el-form-item>
                 </el-form>
             </template>
             <template v-else>
