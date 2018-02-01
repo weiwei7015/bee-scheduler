@@ -13,7 +13,9 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 curQueryParams: null,
                 queryResult: {},
                 taskGroups: [],
-                execStatus: ["SUCCESS", "FAIL", "VETOED"]
+                execStatus: ["SUCCESS", "FAIL", "VETOED"],
+                firedWays: ["SCHEDULE", "MANUAL", "TMP", "LINKAGE"]
+
             };
 
             vm.$http.get("/task/history/groups").then(function (re) {
@@ -65,6 +67,10 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                         });
                     } else if (matchResult[2] === "s:") {
                         this.execStatus.forEach(function (value) {
+                            suggestions.push({"value": matchResult[0] + value + " "});
+                        });
+                    } else if (matchResult[2] === "f:") {
+                        this.firedWays.forEach(function (value) {
                             suggestions.push({"value": matchResult[0] + value + " "});
                         });
                     }
