@@ -74,8 +74,8 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 }
                 cb(suggestions)
             },
-            onRowClick: function (row, event, column) {
-                this.$router.push("/task/history/detail/" + row.fireId);
+            showTaskHistoryDetail: function (fireId) {
+                this.$router.push("/task/history/detail/" + fireId);
             },
             resolveRowClass: function (row, index) {
                 return row.state === 'SUCCESS' ? "row-success" : row.state === 'FAIL' ? "row-fail" : row.state === 'VETOED' ? "row-warning" : "";
