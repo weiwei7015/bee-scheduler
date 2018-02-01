@@ -17,11 +17,11 @@
             </el-col>
             <el-col :span="16" class="text-right">
                 <el-button-group v-show="showCommandBtnGroup">
-                    <el-button v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-play"></i></el-button>
-                    <el-button v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
-                    <el-button @click="executeTask"><i class="iconfont icon-rocket"></i></el-button>
-                    <el-button @click="goEditTask"><i class="iconfont icon-edit"></i></el-button>
-                    <el-button @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
+                    <el-button type="primary" v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-play"></i></el-button>
+                    <el-button type="primary" v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
+                    <el-button type="primary" @click="executeTask"><i class="iconfont icon-rocket"></i></el-button>
+                    <el-button type="primary" @click="goEditTask"><i class="iconfont icon-edit"></i></el-button>
+                    <el-button type="primary" @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
                 </el-button-group>
                 <el-button-group>
                     <el-button icon="el-icon-plus" @click="goCreateTask"></el-button>
@@ -39,13 +39,15 @@
                 </div>
             </template>
             <template v-else>
-                <el-table :data="queryResult.result" :show-header="false" @selection-change="handleSelectionChange" :row-style="{cursor:'pointer'}" @row-click="onRowClick">
+                <el-table :data="queryResult.result" :show-header="false" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="40"></el-table-column>
                     <el-table-column label="状态" width="150">
                         <template scope="scope">{{scope.row.state}}</template>
                     </el-table-column>
                     <el-table-column label="任务" show-overflow-tooltip>
-                        <template scope="scope"><span class="text-bold">{{scope.row.group + "." + scope.row.name}}</span><span class="text-silver"> - {{scope.row.description||"无描述"}}</span></template>
+                        <template scope="scope">
+                            <el-button type="text" class="no-padding" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)"><span class="text-bold">{{scope.row.group + "." + scope.row.name}}</span></el-button>
+                            <span class="text-silver"> - {{scope.row.description||"无描述"}}</span></template>
                     </el-table-column>
                 </el-table>
             </template>
