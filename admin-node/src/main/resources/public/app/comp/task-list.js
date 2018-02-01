@@ -109,6 +109,9 @@ define(['text!comp/task-list.html'], function (tpl) {
                 }
                 cb(suggestions)
             },
+            onRowClick: function (row, event, column) {
+                this.$taskDetailDialog.open(row.name, row.group);
+            },
             pauseTask: function (name, group) {
                 var vm = this;
                 var taskIds = [];

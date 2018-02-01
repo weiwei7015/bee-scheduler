@@ -39,7 +39,7 @@
                 </div>
             </template>
             <template v-else>
-                <el-table :data="queryResult.result" :show-header="false" @selection-change="handleSelectionChange">
+                <el-table :data="queryResult.result" :show-header="false" @selection-change="handleSelectionChange" :row-style="{cursor:'pointer'}" @row-click="onRowClick">
                     <el-table-column type="selection" width="40"></el-table-column>
                     <el-table-column label="状态" width="150">
                         <template scope="scope">{{scope.row.state}}</template>

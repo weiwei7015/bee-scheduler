@@ -50,9 +50,6 @@ define(['text!comp/task-history-list.html'], function (tpl) {
             reload: function () {
                 this.load(this.curQueryParams);
             },
-            showTaskHistoryDetail: function (fireId) {
-                this.$router.push("/task/history/detail/" + fireId);
-            },
             changePage: function (val) {
                 this.curQueryParams.page = val;
                 this.load(this.curQueryParams);
@@ -76,6 +73,9 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                     }
                 }
                 cb(suggestions)
+            },
+            onRowClick: function (row, event, column) {
+                this.$router.push("/task/history/detail/" + row.fireId);
             },
             resolveRowClass: function (row, index) {
                 return row.state === 'SUCCESS' ? "row-success" : row.state === 'FAIL' ? "row-fail" : row.state === 'VETOED' ? "row-warning" : "";
