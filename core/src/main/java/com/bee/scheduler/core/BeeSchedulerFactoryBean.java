@@ -1,8 +1,8 @@
 package com.bee.scheduler.core;
 
+import com.bee.scheduler.core.listener.TaskEventRecorder;
 import com.bee.scheduler.core.listener.TaskLinkageHandleListener;
 import com.bee.scheduler.core.listener.TaskListenerSupport;
-import com.bee.scheduler.core.listener.TaskEventRecorder;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by weiwei.
+ * @author weiwei.
  */
 public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
     private String instanceId;

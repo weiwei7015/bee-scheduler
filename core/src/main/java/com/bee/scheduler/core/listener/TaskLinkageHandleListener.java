@@ -11,11 +11,10 @@ import org.quartz.*;
 import org.quartz.spi.OperableTrigger;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Calendar;
 
 /**
- * Created by weiwei
+ * @author weiwei
  */
 public class TaskLinkageHandleListener extends TaskListenerSupport {
     @Override

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.quartz.JobExecutionContext;
 
 /**
- * Created by weiwei
+ * @author weiwei
  */
 public class TaskExecutionContext {
     private JobExecutionContext jobExecutionContext;

@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Created by weiwei
+ * @author weiwei
  */
 public class TaskExecutionLog {
     private static Log logger = LogFactory.getLog("TaskExecutionLog");
