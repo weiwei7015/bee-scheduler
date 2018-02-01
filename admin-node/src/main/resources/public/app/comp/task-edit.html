@@ -1,6 +1,6 @@
 <div class="content" v-loading="initEditFormModelInProcess">
     <!--<div class="content-pendant">-->
-        <!--<el-button type="text" @click="$helperDialog.open('CreateTask')"><i class="iconfont icon-tips"></i> 使用帮助</el-button>-->
+    <!--<el-button type="text" @click="$helperDialog.open('CreateTask')"><i class="iconfont icon-tips"></i> 使用帮助</el-button>-->
     <!--</div>-->
     <div class="content-header">
         <div class="breadcrumb">
@@ -138,7 +138,9 @@
                 <div class="hr"></div>
                 <el-form-item label="任务组件" prop="jobComponent" :rules="validators.jobComponent">
                     <el-select v-model="editTaskFormModel.jobComponent" :disabled="editFor!=='New'" placeholder="请选择任务组件" style="width: 100%">
-                        <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key"></el-option>
+                        <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key">
+                            <div>{{item.name}}<span class="text-silver"> - {{item.description||"无描述"}}</span></div>
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="任务参数" prop="params">

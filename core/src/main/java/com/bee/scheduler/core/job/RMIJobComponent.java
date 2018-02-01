@@ -12,7 +12,7 @@ import org.quartz.JobExecutionException;
 public class RMIJobComponent extends JobComponent {
     @Override
     public String getName() {
-        return "RMIJob(暂不可用)";
+        return "RMIJob";
     }
 
     @Override
@@ -27,7 +27,7 @@ public class RMIJobComponent extends JobComponent {
 
     @Override
     public String getDescription() {
-        return "该组件提供远程调用方法的功能";
+        return "该组件提供远程调用方法的功能(暂不可用)";
     }
 
     @Override

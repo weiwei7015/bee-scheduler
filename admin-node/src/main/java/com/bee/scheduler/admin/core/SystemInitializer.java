@@ -64,7 +64,7 @@ public class SystemInitializer {
             Class<? extends JobComponent> clazz = (Class<? extends JobComponent>) Class.forName(simpleMetadataReaderFactory.getMetadataReader(resource).getClassMetadata().getClassName());
             if (clazz != JobComponent.class && JobComponent.class.isAssignableFrom(clazz)) {
                 JobComponent jobComponent = clazz.newInstance();
-                RamStore.jobs.put(clazz.getName(), jobComponent);
+                RamStore.jobs.put(jobComponent.getName(), jobComponent);
             }
         }
     }

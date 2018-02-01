@@ -3,13 +3,16 @@ package com.bee.scheduler.admin.web;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.admin.core.RamStore;
 import com.bee.scheduler.admin.model.HttpResponseBodyWrapper;
-import org.quartz.*;
+import com.bee.scheduler.core.job.BuildInJobComponent;
+import com.bee.scheduler.core.job.JobComponent;
+import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author weiwei
@@ -27,7 +30,11 @@ public class JobComponentController {
         JSONObject jobComponents = new JSONObject();
 
         for (String jobComponentId : RamStore.jobs.keySet()) {
-            jobComponents.put(jobComponentId, RamStore.jobs.get(jobComponentId));
+            JobComponent jobComponent = RamStore.jobs.get(jobComponentId);
+            if (jobComponent instanceof BuildInJobComponent) {
+                continue;
+            }
+            jobComponents.put(jobComponentId, jobComponent);
         }
 
         return new HttpResponseBodyWrapper(jobComponents);

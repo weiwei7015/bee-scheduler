@@ -3,7 +3,6 @@ package com.bee.scheduler.core.job;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLog;
-import org.quartz.JobExecutionException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,7 +15,7 @@ import java.sql.ResultSet;
 public class SqlExecutorJobComponent extends JobComponent {
     @Override
     public String getName() {
-        return "SqlExecutor(目前仅支持Mysql)";
+        return "SqlExecutor";
     }
 
     @Override
@@ -31,7 +30,7 @@ public class SqlExecutorJobComponent extends JobComponent {
 
     @Override
     public String getDescription() {
-        return "该组件提供远程调用方法的功能";
+        return "该组件提供远程调用方法的功能(目前仅支持Mysql)";
     }
 
     @Override
