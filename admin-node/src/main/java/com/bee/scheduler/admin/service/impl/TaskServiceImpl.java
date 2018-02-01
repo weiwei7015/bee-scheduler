@@ -61,7 +61,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Pageable<ExecutedTask> queryTaskHistory(String schedulerName, String keyword, int page) {
-        String fireId = null, taskName = null, taskGroup = null, execState = null, firedWay = null;
+        String fireId = null, taskName = null, taskGroup = null, execState = null, firedWay = null, instanceId = null;
         Long starTimeFrom = null, starTimeTo = null;
         for (String kwItem : StringUtils.split(keyword, " ")) {
             if (Pattern.matches("id:.+", kwItem)) {
@@ -72,6 +72,8 @@ public class TaskServiceImpl implements TaskService {
                 execState = StringUtils.split(kwItem, ":")[1];
             } else if (Pattern.matches("f:.+", kwItem)) {
                 firedWay = StringUtils.split(kwItem, ":")[1];
+            } else if (Pattern.matches("nd:.+", kwItem)) {
+                instanceId = StringUtils.split(kwItem, ":")[1];
 //            } else if (Pattern.matches("ts:.+", kwItem)) {
 //                starTimeFrom = StringUtils.split(kwItem, ":")[1];
 //            } else if (Pattern.matches("te:.+", kwItem)) {
@@ -82,7 +84,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
 
-        return taskHistoryDao.query(schedulerName, fireId, taskName, taskGroup, execState, firedWay, starTimeFrom, starTimeTo, page);
+        return taskHistoryDao.query(schedulerName, fireId, taskName, taskGroup, execState, firedWay, instanceId, starTimeFrom, starTimeTo, page);
     }
 
     @Override

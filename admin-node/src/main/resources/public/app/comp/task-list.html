@@ -17,15 +17,15 @@
             </el-col>
             <el-col :span="16" class="text-right">
                 <el-button-group v-show="showCommandBtnGroup">
-                    <el-button type="primary" v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-play"></i></el-button>
-                    <el-button type="primary" v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
-                    <el-button type="primary" @click="executeTask"><i class="iconfont icon-rocket"></i></el-button>
-                    <el-button type="primary" @click="goEditTask"><i class="iconfont icon-edit"></i></el-button>
-                    <el-button type="primary" @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
+                    <el-button v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-play"></i></el-button>
+                    <el-button v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
+                    <el-button @click="executeTask"><i class="iconfont icon-rocket"></i></el-button>
+                    <el-button @click="goEditTask"><i class="iconfont icon-edit"></i></el-button>
+                    <el-button @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
                 </el-button-group>
                 <el-button-group>
-                    <el-button icon="el-icon-plus" @click="goCreateTask"></el-button>
-                    <el-button @click="createQuickTask"><i class="iconfont icon-flash"></i></el-button>
+                    <el-button type="primary" icon="el-icon-plus" @click="goCreateTask"></el-button>
+                    <el-button type="primary" @click="createQuickTask"><i class="iconfont icon-flash"></i></el-button>
                 </el-button-group>
             </el-col>
         </el-row>

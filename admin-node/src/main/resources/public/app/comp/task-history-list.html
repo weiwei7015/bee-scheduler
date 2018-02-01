@@ -10,12 +10,12 @@
     </div>
     <div class="content-body">
         <el-row>
-            <el-col :span="10">
-                <el-autocomplete :fetch-suggestions="querySuggestion" style="width:100%" :debounce="0" v-model="queryParams.keyword" placeholder="任务名 id:FireId g:任务组 s:执行状态 f:触发方式">
+            <el-col :span="12">
+                <el-autocomplete :fetch-suggestions="querySuggestion" style="width:100%" :debounce="0" v-model="queryParams.keyword" placeholder="任务名 id:FireId g:任务组 s:执行状态 f:触发方式 nd:执行节点">
                     <el-button slot="append" icon="el-icon-search" @click="query"></el-button>
                 </el-autocomplete>
             </el-col>
-            <el-col :span="14" class="text-right">
+            <el-col :span="12" class="text-right">
             </el-col>
         </el-row>
         <div class="hr"></div>

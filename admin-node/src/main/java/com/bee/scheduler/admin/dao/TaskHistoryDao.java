@@ -2,7 +2,6 @@ package com.bee.scheduler.admin.dao;
 
 import com.bee.scheduler.admin.model.ExecutedTask;
 import com.bee.scheduler.admin.model.Pageable;
-import com.bee.scheduler.core.Constants;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -25,7 +24,7 @@ public class TaskHistoryDao extends DaoBase {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExecutedTask.class), fireId);
     }
 
-    public Pageable<ExecutedTask> query(String schedulerName, String fireId, String taskName, String taskGroup, String execState, String firedWay, Long starTimeFrom, Long startTimeTo, int page) {
+    public Pageable<ExecutedTask> query(String schedulerName, String fireId, String taskName, String taskGroup, String execState, String firedWay, String instanceId, Long starTimeFrom, Long startTimeTo, int page) {
         List<Object> args = new ArrayList<>();
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TASK_HISTORY");
 //        StringBuilder sqlQueryResult = new StringBuilder("SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.FIRED_TIME 'firedTime',t.FIRED_WAY 'firedWay',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t");
@@ -52,6 +51,10 @@ public class TaskHistoryDao extends DaoBase {
         if (firedWay != null) {
             sqlWhere.append(" AND FIRED_WAY = ?");
             args.add(firedWay);
+        }
+        if (instanceId != null) {
+            sqlWhere.append(" AND INSTANCE_ID = ?");
+            args.add(instanceId);
         }
         if (starTimeFrom != null) {
             sqlWhere.append(" AND FIRED_TIME >= ?");
