@@ -12,7 +12,8 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 },
                 curQueryParams: null,
                 queryResult: {},
-                taskGroups: []
+                taskGroups: [],
+                execStatus: ["SUCCESS", "FAIL", "VETOED"]
             };
 
             vm.$http.get("/task/history/groups").then(function (re) {
@@ -53,6 +54,22 @@ define(['text!comp/task-history-list.html'], function (tpl) {
             changePage: function (val) {
                 this.curQueryParams.page = val;
                 this.load(this.curQueryParams);
+            },
+            querySuggestion: function (queryString, cb) {
+                var suggestions = [];
+                var matchResult = /^(.+\s+)?(\S+)$/.exec(queryString);
+                if (matchResult) {
+                    if (matchResult[2] === "g:") {
+                        this.taskGroups.forEach(function (value) {
+                            suggestions.push({"value": matchResult[0] + value + " "});
+                        });
+                    } else if (matchResult[2] === "s:") {
+                        this.execStatus.forEach(function (value) {
+                            suggestions.push({"value": matchResult[0] + value + " "});
+                        });
+                    }
+                }
+                cb(suggestions)
             },
             resolveRowClass: function (row, index) {
                 return row.state === 'SUCCESS' ? "row-success" : row.state === 'FAIL' ? "row-fail" : row.state === 'VETOED' ? "row-warning" : "";

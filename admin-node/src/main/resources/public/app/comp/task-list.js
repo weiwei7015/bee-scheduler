@@ -95,23 +95,17 @@ define(['text!comp/task-list.html'], function (tpl) {
             },
             querySuggestion: function (queryString, cb) {
                 var suggestions = [];
-                queryString = queryString.trim();
-                if (queryString) {
-                    if (queryString.startsWith("g:")) {
+                var matchResult = /^(.+\s+)?(\S+)$/.exec(queryString);
+                if (matchResult) {
+                    if (matchResult[2] === "g:") {
                         this.taskGroups.forEach(function (value) {
-                            suggestions.push({"value": "g:" + value});
+                            suggestions.push({"value": matchResult[0] + value + " "});
                         });
-                    } else if (queryString.startsWith("s:")) {
+                    } else if (matchResult[2] === "s:") {
                         this.taskStatus.forEach(function (value) {
-                            suggestions.push({"value": "s:" + value});
+                            suggestions.push({"value": matchResult[0] + value + " "});
                         });
                     }
-
-                    this.taskGroups.forEach(function (value) {
-                        if (value.toLowerCase().indexOf(queryString.toLowerCase()) === 0) {
-                            suggestions.push({"value": "g:" + value});
-                        }
-                    });
                 }
                 cb(suggestions)
             },
