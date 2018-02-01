@@ -37,7 +37,7 @@
                     <el-option label="VETOED" value="VETOED"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="执行方式">
+            <el-form-item label="触发方式">
                 <el-select v-model="queryFormModel.firedWay" placeholder="" style="width: 100px">
                     <el-option label="全部" value=""></el-option>
                     <el-option label="调度" value="SCHEDULE"></el-option>
@@ -70,7 +70,7 @@
                             <el-tag size="small" v-if="scope.row.execState === 'VETOED'" type="warning" disable-transitions>VETOED</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="执行方式" width="100">
+                    <el-table-column label="触发方式" width="100">
                         <template scope="scope">{{scope.row.firedWay === "SCHEDULE"?"调度":scope.row.firedWay === "MANUAL"?"手动":scope.row.firedWay === "TMP"?"临时":scope.row.firedWay === "LINKAGE"?"联动":"未知"}}</template>
                     </el-table-column>
                     <el-table-column label="耗时" min-width="80">

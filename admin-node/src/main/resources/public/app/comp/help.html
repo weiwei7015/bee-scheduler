@@ -9,7 +9,27 @@
         <div class="title"><i class="iconfont icon-tips"></i> 系统帮助</div>
     </div>
     <div class="content-body">
-        <h3 class="no-margin">1、调度方式</h3>
+        <div class="spr"></div>
+        <h3 class="no-margin">1、任务执行状态</h3>
+        <div class="hr"></div>
+        <ul>
+            <li><b>SUCCESS：</b>任务执行成功。</li>
+            <li><b>FAIL：</b>任务执行失败。</li>
+            <li><b>VETOED：</b>任务被取消执行（如：任务被触发后，检测到该任务当前正在被执行，这种情况下会取消本次执行）。</li>
+        </ul>
+
+        <div class="spr"></div>
+        <h3 class="no-margin">2、任务触发方式</h3>
+        <div class="hr"></div>
+        <ul>
+            <li><b>SCHEDULE：</b>由该任务配置的调度器触发。</li>
+            <li><b>MANUAL：</b>用户手动触发。</li>
+            <li><b>TMP：</b>用户通过新建临时任务触发。</li>
+            <li><b>LINKAGE：</b>由其他任务联动触发。</li>
+        </ul>
+
+        <div class="spr"></div>
+        <h3 class="no-margin">3、调度方式</h3>
         <div class="hr"></div>
         <ul>
             <li><b>SimpleTrigger：</b>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行任务。</li>
@@ -19,12 +39,12 @@
         </ul>
 
         <div class="spr"></div>
-        <h3 class="no-margin">2、Cron表达式</h3>
+        <h3 class="no-margin">4、Cron表达式</h3>
         <div class="hr"></div>
         <p>格式：秒 分 时 日 月 周 年（年可以省略）</p>
 
         <div class="spr"></div>
-        <h3 class="no-margin">3、联动任务配置</h3>
+        <h3 class="no-margin">5、联动任务配置</h3>
         <div class="hr"></div>
         <div>联动任务表示主任务执行完成后，自动触发其他任务的机制，配置采用JSON格式，示例如下：</div>
         <pre class="bg-dark-white font-code">
