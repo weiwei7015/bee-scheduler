@@ -4,11 +4,14 @@ import com.bee.scheduler.admin.model.ExecutingTask;
 import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
 import com.bee.scheduler.core.Constants;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 /**

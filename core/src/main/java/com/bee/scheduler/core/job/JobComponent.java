@@ -1,6 +1,5 @@
 package com.bee.scheduler.core.job;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.JobExecutionContextUtil;
 import com.bee.scheduler.core.TaskExecutionContext;

@@ -9,29 +9,28 @@ import java.util.HashMap;
 
 /**
  * @author weiwei
- * 
  */
 @Controller
 public class HelpController {
 
-	@RequestMapping("/help/job")
-	public ModelAndView job(HttpServletRequest request) {
-		HashMap<String, Object> model = new HashMap<String, Object>();
-		if (request.getParameter("nolayout") != null) {
-			model.put("nolayout", true);
-		}
-		return new ModelAndView("help-job").addAllObjects(model);
-	}
+    @RequestMapping("/help/job")
+    public ModelAndView job(HttpServletRequest request) {
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        if (request.getParameter("nolayout") != null) {
+            model.put("nolayout", true);
+        }
+        return new ModelAndView("help-job").addAllObjects(model);
+    }
 
-	@RequestMapping("/help/sys")
-	public ModelAndView sys() {
-		HashMap<String, Object> model = new HashMap<String, Object>();
-		return new ModelAndView("help-sys").addAllObjects(model);
-	}
+    @RequestMapping("/help/sys")
+    public ModelAndView sys() {
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        return new ModelAndView("help-sys").addAllObjects(model);
+    }
 
-	@RequestMapping("/help/cron")
-	public ModelAndView cron() {
-		HashMap<String, Object> model = new HashMap<String, Object>();
-		return new ModelAndView("help-cron").addAllObjects(model);
-	}
+    @RequestMapping("/help/cron")
+    public ModelAndView cron() {
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        return new ModelAndView("help-cron").addAllObjects(model);
+    }
 }

@@ -8,35 +8,34 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author weiwei1
- * 
  */
 @Component
 public class SpringApplicationContext implements ApplicationContextAware {
 
-	private static ApplicationContext applicationContext;
+    private static ApplicationContext applicationContext;
 
-	private SpringApplicationContext() {
-	}
+    private SpringApplicationContext() {
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		SpringApplicationContext.applicationContext = applicationContext;
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        SpringApplicationContext.applicationContext = applicationContext;
+    }
 
-	public static <T> T getBean(String name, Class<T> requiredType) {
-		return applicationContext.getBean(name, requiredType);
-	}
+    public static <T> T getBean(String name, Class<T> requiredType) {
+        return applicationContext.getBean(name, requiredType);
+    }
 
-	public static <T> T getBean(Class<T> requiredType) {
-		return applicationContext.getBean(requiredType);
-	}
+    public static <T> T getBean(Class<T> requiredType) {
+        return applicationContext.getBean(requiredType);
+    }
 
-	public static ApplicationContext getContext() {
-		return applicationContext;
-	}
+    public static ApplicationContext getContext() {
+        return applicationContext;
+    }
 
-	public static Environment getEnvironment() {
-		return applicationContext.getEnvironment();
-	}
+    public static Environment getEnvironment() {
+        return applicationContext.getEnvironment();
+    }
 
 }
