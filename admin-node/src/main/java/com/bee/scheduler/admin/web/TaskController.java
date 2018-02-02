@@ -448,7 +448,12 @@ public class TaskController {
     public void pause(String[] taskIds) throws Exception {
         for (String taskId : taskIds) {
             String[] group$name = StringUtils.split(taskId, "-");
-            scheduler.pauseTrigger(new TriggerKey(group$name[1], group$name[0]));
+            String group = group$name[0], name = group$name[1];
+
+            Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(name, group));
+            if (!Trigger.TriggerState.PAUSED.equals(triggerState)) {
+                scheduler.pauseTrigger(new TriggerKey(name, group));
+            }
         }
     }
 
@@ -457,7 +462,12 @@ public class TaskController {
     public void resume(String[] taskIds) throws Exception {
         for (String taskId : taskIds) {
             String[] group$name = StringUtils.split(taskId, "-");
-            scheduler.resumeTrigger(new TriggerKey(group$name[1], group$name[0]));
+            String group = group$name[0], name = group$name[1];
+
+            Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(name, group));
+            if (Trigger.TriggerState.PAUSED.equals(triggerState)) {
+                scheduler.resumeTrigger(new TriggerKey(name, group));
+            }
         }
     }
 
