@@ -124,7 +124,7 @@ public class TaskController {
                 throw new BizzException(BizzException.error_code_invalid_params, "联动任务规则输入有误，必须是JSON格式");
             }
         }
-        if (Constants.TASK_GROUP_Manual.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Tmp.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_Linkage.equalsIgnoreCase(taskConfig.getGroup())) {
+        if (Constants.TASK_GROUP_MANUAL.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_TMP.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_LINKAGE.equalsIgnoreCase(taskConfig.getGroup())) {
             throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"、\"linkage\"");
         }
 
@@ -484,7 +484,7 @@ public class TaskController {
             JobDataMap jobDataMap = trigger.getJobDataMap();
 
             String randomTriggerName = DateFormatUtils.format(new Date(), "yyyyMMddHHmmssSSS");
-            OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_Manual).forJob(jobKey).withDescription("手动执行【" + group + "." + name + "】").build();
+            OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_MANUAL).forJob(jobKey).withDescription("手动执行【" + group + "." + name + "】").build();
             if (jobDataMap != null) {
                 operableTrigger.setJobDataMap(jobDataMap);
             }
@@ -519,7 +519,7 @@ public class TaskController {
         }
 
         String name = quickTaskConfig.getName();
-        String group = Constants.TASK_GROUP_Tmp;
+        String group = Constants.TASK_GROUP_TMP;
 
         Class<? extends JobComponent> jobComponentClass = RamStore.jobs.get(quickTaskConfig.getJobComponent()).getClass();
         JobDetail jobDetail = JobBuilder.newJob(jobComponentClass).withIdentity(name, group).build();

@@ -147,7 +147,7 @@ public class TaskDao extends DaoBase {
                 executingTask.setState(rs.getString("state"));
                 executingTask.setDescription(rs.getString("description"));
 
-                executingTask.setFiredWay(Constants.TASK_GROUP_Manual.equals(group) ? Constants.TaskFiredWay.MANUAL : Constants.TASK_GROUP_Tmp.equals(group) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE);
+                executingTask.setFiredWay(Constants.TASK_GROUP_MANUAL.equals(group) ? Constants.TaskFiredWay.MANUAL : Constants.TASK_GROUP_TMP.equals(group) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE);
                 executingTask.setFiredTime(rs.getLong("fireTime"));
 
                 try {

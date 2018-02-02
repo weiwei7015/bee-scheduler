@@ -45,7 +45,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                         Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
                         JobDataMap jobDataMap = trigger.getJobDataMap();
 
-                        OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobExecutionContext.getFireInstanceId() + "_" + (i + 1), Constants.TASK_GROUP_Linkage).forJob(jobKey).build();
+                        OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobExecutionContext.getFireInstanceId() + "_" + (i + 1), Constants.TASK_GROUP_LINKAGE).forJob(jobKey).build();
                         operableTrigger.setJobDataMap(jobDataMap);
 
                         scheduler.scheduleJob(operableTrigger);
@@ -77,7 +77,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                             }
                         }
 
-                        OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobExecutionContext.getFireInstanceId() + "_" + (i + 1), Constants.TASK_GROUP_Linkage).forJob(jobKey).build();
+                        OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobExecutionContext.getFireInstanceId() + "_" + (i + 1), Constants.TASK_GROUP_LINKAGE).forJob(jobKey).build();
                         operableTrigger.setJobDataMap(jobDataMap);
                         if (delay != null) {
                             taskLogger.info("联动任务【" + taskKey + "】将在" + delay + "ms后开始执行");
