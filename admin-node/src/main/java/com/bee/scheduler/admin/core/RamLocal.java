@@ -9,9 +9,9 @@ import java.util.*;
 /**
  * @author weiwei 内存存储容器
  */
-public class RamStore {
-    // Job Map<jobClass，JobDefinition>
-    public static Map<String, JobComponent> jobs = new HashMap<String, JobComponent>();
+public class RamLocal {
+    // Job Map<Name，JobComponent>
+    public static Map<String, JobComponent> JobComponentMap = new HashMap<>();
     // 通知
     public static List<Notification> notifications = Collections.synchronizedList(new ArrayList<Notification>());
 

@@ -1,7 +1,7 @@
 package com.bee.scheduler.admin.web;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.admin.core.RamStore;
+import com.bee.scheduler.admin.core.RamLocal;
 import com.bee.scheduler.admin.model.HttpResponseBodyWrapper;
 import com.bee.scheduler.core.job.BuildInJobComponent;
 import com.bee.scheduler.core.job.JobComponent;
@@ -29,8 +29,8 @@ public class JobComponentController {
 
         JSONObject jobComponents = new JSONObject();
 
-        for (String jobComponentId : RamStore.jobs.keySet()) {
-            JobComponent jobComponent = RamStore.jobs.get(jobComponentId);
+        for (String jobComponentId : RamLocal.JobComponentMap.keySet()) {
+            JobComponent jobComponent = RamLocal.JobComponentMap.get(jobComponentId);
             if (jobComponent instanceof BuildInJobComponent) {
                 continue;
             }

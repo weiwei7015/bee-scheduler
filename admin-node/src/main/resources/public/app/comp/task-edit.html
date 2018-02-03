@@ -7,10 +7,14 @@
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
                 <el-breadcrumb-item :to="{path:'/task/list'}">任务管理</el-breadcrumb-item>
-                <el-breadcrumb-item>创建任务</el-breadcrumb-item>
+                <el-breadcrumb-item>{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title">{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}}</div>
+        <div class="title">
+            <template v-if="editFor==='New'"><i class="iconfont icon-plus"></i> 创建任务</template>
+            <template v-else-if="editFor==='Edit'"><i class="iconfont icon-edit"></i> 编辑任务</template>
+            <template v-else-if="editFor==='Copy'"><i class="iconfont icon-copy"></i> 复制任务</template>
+        </div>
     </div>
     <div class="content-body" v-show="!initEditFormModelInProcess">
         <div style="width: 800px">
@@ -18,10 +22,10 @@
                 <h4 class="no-margin">基本信息</h4>
                 <div class="hr"></div>
                 <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
-                    <el-input v-model="editTaskFormModel.name" :disabled="editFor!=='New'"></el-input>
+                    <el-input v-model="editTaskFormModel.name" :disabled="editFor==='Edit'"></el-input>
                 </el-form-item>
                 <el-form-item label="所属组" prop="group" :rules="validators.taskGroup">
-                    <el-autocomplete v-model="editTaskFormModel.group" :fetch-suggestions="queryTaskGroup" placeholder="" :trigger-on-focus="false" :disabled="editFor!=='New'" style="width: 100%"></el-autocomplete>
+                    <el-autocomplete v-model="editTaskFormModel.group" :fetch-suggestions="queryTaskGroup" placeholder="" :trigger-on-focus="false" :disabled="editFor==='Edit'" style="width: 100%"></el-autocomplete>
                 </el-form-item>
                 <h4 class="no-margin">调度规则</h4>
                 <div class="hr"></div>
@@ -138,7 +142,7 @@
                 <h4 class="no-margin">任务内容</h4>
                 <div class="hr"></div>
                 <el-form-item label="任务组件" prop="jobComponent" :rules="validators.jobComponent">
-                    <el-select v-model="editTaskFormModel.jobComponent" :disabled="editFor!=='New'" placeholder="请选择任务组件" style="width: 100%">
+                    <el-select v-model="editTaskFormModel.jobComponent" :disabled="editFor==='Edit'" placeholder="请选择任务组件" style="width: 100%">
                         <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key">
                             <div>{{item.name}}<span class="text-silver"> - {{item.description||"无描述"}}</span></div>
                         </el-option>

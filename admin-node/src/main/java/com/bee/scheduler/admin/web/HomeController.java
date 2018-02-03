@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
     @RequestMapping({"/", ""})
     String home() {
-        return "redirect:/public/main.html";
+        return "forward:/public/main.html";
     }
 }

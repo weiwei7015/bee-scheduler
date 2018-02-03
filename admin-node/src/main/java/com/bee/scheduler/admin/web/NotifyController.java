@@ -1,6 +1,6 @@
 package com.bee.scheduler.admin.web;
 
-import com.bee.scheduler.admin.core.RamStore;
+import com.bee.scheduler.admin.core.RamLocal;
 import com.bee.scheduler.admin.model.Notification;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -28,7 +28,7 @@ public class NotifyController {
         List<Notification> notificationList = new ArrayList<>();
         long startTime = (new Date()).getTime();
         int timeout = 1000 * 60;
-        while (((new Date()).getTime() - startTime) < timeout && CollectionUtils.isEmpty(notificationList = fetchNotices(new Date(offset), RamStore.notifications))) {
+        while (((new Date()).getTime() - startTime) < timeout && CollectionUtils.isEmpty(notificationList = fetchNotices(new Date(offset), RamLocal.notifications))) {
             Thread.sleep(100);
         }
 
@@ -40,10 +40,10 @@ public class NotifyController {
 
     private List<Notification> fetchNotices(Date date, List<Notification> notificationList) {
         List<Notification> fetchResult = new ArrayList<>();
-        for (int i = 0; i < RamStore.notifications.size(); i++) {
-            Notification notification = RamStore.notifications.get(i);
+        for (int i = 0; i < RamLocal.notifications.size(); i++) {
+            Notification notification = RamLocal.notifications.get(i);
             if (date.compareTo(notification.getPublishTime()) == -1) {
-                fetchResult = RamStore.notifications.subList(i, RamStore.notifications.size());
+                fetchResult = RamLocal.notifications.subList(i, RamLocal.notifications.size());
                 break;
             }
         }

@@ -87,6 +87,9 @@ define(['text!comp/task-edit.html'], function (tpl) {
                     var group = vm.$route.params.group;
                     vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
                         data.editTaskFormModel = re.body.data;
+                        if (editFor === "Copy") {
+                            data.editTaskFormModel.name = data.editTaskFormModel.name + "-Copy";
+                        }
                         data.initEditFormModelInProcess = false;
                     });
                 } else {

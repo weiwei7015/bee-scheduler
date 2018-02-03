@@ -1,7 +1,7 @@
 package com.bee.scheduler.admin.web;
 
 import com.alibaba.fastjson.JSON;
-import com.bee.scheduler.admin.core.RamStore;
+import com.bee.scheduler.admin.core.RamLocal;
 import com.bee.scheduler.admin.exception.BizzException;
 import com.bee.scheduler.admin.model.*;
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeCalendarIntervalOptions;
@@ -129,7 +129,7 @@ public class TaskController {
         }
 
 
-        Class<? extends JobComponent> jobComponentClass = RamStore.jobs.get(taskConfig.getJobComponent()).getClass();
+        Class<? extends JobComponent> jobComponentClass = RamLocal.JobComponentMap.get(taskConfig.getJobComponent()).getClass();
         JobDataMap dataMap = new JobDataMap();
         dataMap.put(Constants.JOB_DATA_KEY_TASK_PARAM, taskConfig.getParams());
         dataMap.put(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE, taskConfig.getLinkageRule());
@@ -521,7 +521,7 @@ public class TaskController {
         String name = quickTaskConfig.getName();
         String group = Constants.TASK_GROUP_TMP;
 
-        Class<? extends JobComponent> jobComponentClass = RamStore.jobs.get(quickTaskConfig.getJobComponent()).getClass();
+        Class<? extends JobComponent> jobComponentClass = RamLocal.JobComponentMap.get(quickTaskConfig.getJobComponent()).getClass();
         JobDetail jobDetail = JobBuilder.newJob(jobComponentClass).withIdentity(name, group).build();
 
         JobDataMap jobDataMap = new JobDataMap();
