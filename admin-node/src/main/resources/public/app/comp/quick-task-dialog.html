@@ -1,5 +1,5 @@
 <el-dialog :visible.sync="visible">
-    <span slot="title"><i class="iconfont icon-flash"></i>  执行临时任务</span>
+    <span slot="title" class="el-dialog__title"><i class="iconfont icon-flash"></i>  执行临时任务</span>
     <div v-loading="initializing">
         <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="100px">
             <el-form-item label="任务名称" prop="name" :rules="validators.taskName">

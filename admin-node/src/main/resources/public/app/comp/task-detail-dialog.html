@@ -1,5 +1,5 @@
-<el-dialog title="Help" :visible.sync="dialogVisible">
-    <span slot="title"><i class="iconfont icon-detail"></i> 任务详情</span>
+<el-dialog :visible.sync="dialogVisible">
+    <span slot="title" class="el-dialog__title"><i class="iconfont icon-detail"></i> 任务详情</span>
     <div v-loading="loading" style="height: 400px;overflow: auto">
         <div v-show="!loading">
             <template v-if="taskDetail">
