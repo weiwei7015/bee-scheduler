@@ -30,7 +30,7 @@ public class SqlExecutorJobComponent extends JobComponent {
 
     @Override
     public String getDescription() {
-        return "该组件提供远程调用方法的功能(目前仅支持Mysql)";
+        return "该组件用于运行SQL脚本(目前仅支持Mysql)";
     }
 
     @Override

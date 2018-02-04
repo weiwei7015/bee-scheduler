@@ -15,7 +15,7 @@ public class HttpClientJobComponent extends JobComponent {
 
     @Override
     public String getName() {
-        return "HttpClientJob";
+        return "HttpJob";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class HttpClientJobComponent extends JobComponent {
 
     @Override
     public String getDescription() {
-        return "用于发起HTTP请求";
+        return "用于执行HTTP请求";
     }
 
     @Override
