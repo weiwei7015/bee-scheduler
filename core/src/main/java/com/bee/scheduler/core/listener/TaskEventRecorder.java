@@ -3,6 +3,7 @@ package com.bee.scheduler.core.listener;
 import com.bee.scheduler.core.Constants;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLog;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
@@ -44,7 +45,7 @@ public class TaskEventRecorder extends TaskListenerSupport {
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        taskLogger.warning("任务[" + jobDetail.getKey() + "]正在运行，已被取消执行！");
+        taskLogger.warning("任务[" + jobDetail.getKey() + "]已被取消执行！");
 
         // 记录执行历史
         Constants.TaskFiredWay firedWay = trigger.getKey().getGroup().equals(Constants.TASK_GROUP_MANUAL) ? Constants.TaskFiredWay.MANUAL : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_TMP) ? Constants.TaskFiredWay.TMP : trigger.getKey().getGroup().equals(Constants.TASK_GROUP_LINKAGE) ? Constants.TaskFiredWay.LINKAGE : Constants.TaskFiredWay.SCHEDULE;
@@ -53,7 +54,7 @@ public class TaskEventRecorder extends TaskListenerSupport {
             String schedulerName = scheduler.getSchedulerName();
             String schedulerInstanceId = scheduler.getSchedulerInstanceId();
 
-            String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_NAME,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPENDTIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
             Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
             PreparedStatement preparedStatement = null;
@@ -73,7 +74,6 @@ public class TaskEventRecorder extends TaskListenerSupport {
                 preparedStatement.setString(12, taskLogger.getLogContent());
                 preparedStatement.execute();
             } catch (Exception e) {
-                connection.rollback();
                 logger.error(e);
             } finally {
                 if (preparedStatement != null) {
@@ -129,7 +129,6 @@ public class TaskEventRecorder extends TaskListenerSupport {
 
                 preparedStatement.execute();
             } catch (Exception e) {
-                connection.rollback();
                 logger.error(e);
             } finally {
                 if (preparedStatement != null) {
@@ -142,6 +141,25 @@ public class TaskEventRecorder extends TaskListenerSupport {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+
+    @Override
+    public boolean vetoTaskExecution(TaskExecutionContext context) {
+        TaskExecutionLog taskLogger = context.getLogger();
+        JobExecutionContext jobExecutionContext = context.getJobExecutionContext();
+        JobDetail jobDetail = jobExecutionContext.getJobDetail();
+        Trigger trigger = jobExecutionContext.getTrigger();
+        Scheduler scheduler = jobExecutionContext.getScheduler();
+        Date currentTime = Calendar.getInstance().getTime();
+
+        int minExecInterval = 3000;
+
+        if (jobExecutionContext.getPreviousFireTime() != null && jobExecutionContext.getFireTime().getTime() - jobExecutionContext.getPreviousFireTime().getTime() <= minExecInterval) {
+            taskLogger.warning("任务最近执行时间：" + DateFormatUtils.format(jobExecutionContext.getPreviousFireTime(), "yyyy-MM-dd HH:mm:ss") + "，执行频率不允许低于" + minExecInterval + "ms，将取消本次执行");
+            return true;
+        }
+        return false;
     }
 
 }

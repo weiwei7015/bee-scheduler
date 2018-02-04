@@ -124,8 +124,8 @@ public class TaskController {
                 throw new BizzException(BizzException.error_code_invalid_params, "联动任务规则输入有误，必须是JSON格式");
             }
         }
-        if (Constants.TASK_GROUP_MANUAL.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_TMP.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_LINKAGE.equalsIgnoreCase(taskConfig.getGroup())) {
-            throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"、\"linkage\"");
+        if (Constants.TASK_GROUP_MANUAL.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_TMP.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_LINKAGE.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_SYSTEM.equalsIgnoreCase(taskConfig.getGroup())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"、\"linkage\"、\"system\"");
         }
 
 
@@ -154,17 +154,17 @@ public class TaskController {
             scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
                     .withRepeatCount(scheduleOptions.getRepeatType() == TaskConfig.REPEAT_TYPE_INFINITE ? -1 : scheduleOptions.getRepeatCount());
 
-            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
+            if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireNow();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_REMAINING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NEXT_WITH_REMAINING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NEXT_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
             }
 
@@ -177,11 +177,11 @@ public class TaskController {
             CalendarIntervalScheduleBuilder scheduleBuilder = CalendarIntervalScheduleBuilder.calendarIntervalSchedule();
             scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
 
-            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
+            if (scheduleOptions.getMisfireHandlingType() == CalendarIntervalTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
+            } else if (scheduleOptions.getMisfireHandlingType() == CalendarIntervalTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == CalendarIntervalTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
@@ -205,11 +205,11 @@ public class TaskController {
                 scheduleBuilder.onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
             }
 
-            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
+            if (scheduleOptions.getMisfireHandlingType() == DailyTimeIntervalTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
+            } else if (scheduleOptions.getMisfireHandlingType() == DailyTimeIntervalTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == DailyTimeIntervalTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
@@ -225,11 +225,11 @@ public class TaskController {
 
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleOptions.getCron());
 
-            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
+            if (scheduleOptions.getMisfireHandlingType() == CronTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
+            } else if (scheduleOptions.getMisfireHandlingType() == CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
@@ -347,17 +347,17 @@ public class TaskController {
             scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
                     .withRepeatCount(scheduleOptions.getRepeatType() == TaskConfig.REPEAT_TYPE_INFINITE ? -1 : scheduleOptions.getRepeatCount());
 
-            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
+            if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireNow();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithExistingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_REMAINING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNowWithRemainingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NEXT_WITH_REMAINING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NEXT_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT) {
                 scheduleBuilder.withMisfireHandlingInstructionNextWithExistingCount();
             }
 
@@ -370,11 +370,11 @@ public class TaskController {
             CalendarIntervalScheduleBuilder scheduleBuilder = CalendarIntervalScheduleBuilder.calendarIntervalSchedule();
             scheduleBuilder.withInterval(scheduleOptions.getInterval(), scheduleOptions.getIntervalUnit());
 
-            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
+            if (scheduleOptions.getMisfireHandlingType() == CalendarIntervalTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
+            } else if (scheduleOptions.getMisfireHandlingType() == CalendarIntervalTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == CalendarIntervalTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
@@ -398,11 +398,11 @@ public class TaskController {
                 scheduleBuilder.onDaysOfTheWeek(scheduleOptions.getDaysOfWeek());
             }
 
-            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
+            if (scheduleOptions.getMisfireHandlingType() == DailyTimeIntervalTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
+            } else if (scheduleOptions.getMisfireHandlingType() == DailyTimeIntervalTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == DailyTimeIntervalTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 
@@ -418,11 +418,11 @@ public class TaskController {
 
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleOptions.getCron());
 
-            if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_IGNORE_MISFIRES) {
+            if (scheduleOptions.getMisfireHandlingType() == CronTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                 scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_FIRE_NOW) {
+            } else if (scheduleOptions.getMisfireHandlingType() == CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
                 scheduleBuilder.withMisfireHandlingInstructionFireAndProceed();
-            } else if (scheduleOptions.getMisfireHandlingType() == TaskConfig.MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT) {
+            } else if (scheduleOptions.getMisfireHandlingType() == CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
                 scheduleBuilder.withMisfireHandlingInstructionDoNothing();
             }
 

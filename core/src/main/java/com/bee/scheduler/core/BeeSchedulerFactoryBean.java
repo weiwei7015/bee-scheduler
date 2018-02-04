@@ -3,6 +3,7 @@ package com.bee.scheduler.core;
 import com.bee.scheduler.core.listener.TaskEventRecorder;
 import com.bee.scheduler.core.listener.TaskLinkageHandleListener;
 import com.bee.scheduler.core.listener.TaskListenerSupport;
+import org.quartz.ListenerManager;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
@@ -22,6 +23,7 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
     private int threadPoolSize = 10;
     private boolean clusterMode = false;
     private long clusterCheckinInterval = 5000;
+    private long misfireThreshold = 5000L; // 5 second
     private DataSource dataSource;
     private List<TaskListenerSupport> taskListenerList = new ArrayList<>();
 
@@ -43,6 +45,7 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
         Properties quartzProperties = new Properties();
         quartzProperties.setProperty("org.quartz.jobStore.tablePrefix", "BS_");
         quartzProperties.setProperty("org.quartz.jobStore.useProperties", "true");
+        quartzProperties.setProperty("org.quartz.jobStore.misfireThreshold", String.valueOf(misfireThreshold));
         quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
         if (autoGenerateInstanceId || instanceId == null) {
             quartzProperties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
@@ -70,8 +73,11 @@ public class BeeSchedulerFactoryBean extends SchedulerFactoryBean {
         taskListenerList.add(new TaskLinkageHandleListener());
         taskListenerList.add(new TaskEventRecorder(dataSource));
 
+        ListenerManager listenerManager = scheduler.getListenerManager();
+
         for (TaskListenerSupport listener : taskListenerList) {
-            scheduler.getListenerManager().addJobListener(listener);
+            listenerManager.addJobListener(listener);
+            listenerManager.addTriggerListener(listener);
         }
 
         return scheduler;

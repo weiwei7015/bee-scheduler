@@ -1,8 +1,7 @@
 package com.bee.scheduler.admin.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import org.quartz.DateBuilder;
-import org.quartz.TimeOfDay;
+import org.quartz.*;
 
 import java.util.Date;
 
@@ -27,15 +26,6 @@ public class TaskConfig {
     //任务销毁方式
     public static final int END_AT_TYPE_NEVER = 1;
     public static final int END_AT_TYPE_GIVEN_TIME = 2;
-
-    //任务Misfire策略
-    public static final int MISFIRE_TYPE_SMART_POLICY = 0;
-    public static final int MISFIRE_TYPE_IGNORE_MISFIRES = -1;
-    public static final int MISFIRE_TYPE_FIRE_NOW = 1;
-    public static final int MISFIRE_TYPE_NOW_WITH_EXISTING_COUNT = 2;
-    public static final int MISFIRE_TYPE_NOW_WITH_REMAINING_COUNT = 3;
-    public static final int MISFIRE_TYPE_NEXT_WITH_REMAINING_COUNT = 4;
-    public static final int MISFIRE_TYPE_NEXT_WITH_EXISTING_COUNT = 5;
 
     private String name = "";
     private String group = "";
@@ -177,7 +167,7 @@ public class TaskConfig {
         private Long interval = 30000l;
         private Integer repeatType = 1;
         private Integer repeatCount = 10;
-        private Integer misfireHandlingType = 0;
+        private Integer misfireHandlingType = SimpleTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
         public Long getInterval() {
             return interval;
@@ -215,7 +205,7 @@ public class TaskConfig {
     public static class ScheduleTypeCalendarIntervalOptions {
         private Integer interval = 2;
         private DateBuilder.IntervalUnit intervalUnit = DateBuilder.IntervalUnit.HOUR;
-        private Integer misfireHandlingType = 0;
+        private Integer misfireHandlingType = CalendarIntervalTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
         public Integer getInterval() {
             return interval;
@@ -249,7 +239,7 @@ public class TaskConfig {
         private Integer[] daysOfWeek = new Integer[0];
         private Integer interval = 2;
         private DateBuilder.IntervalUnit intervalUnit = DateBuilder.IntervalUnit.HOUR;
-        private Integer misfireHandlingType = 0;
+        private Integer misfireHandlingType = DailyTimeIntervalTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
         public TimeOfDay getStartTimeOfDay() {
             return startTimeOfDay;
@@ -302,7 +292,7 @@ public class TaskConfig {
 
     public static class ScheduleTypeCronOptions {
         private String cron = "";
-        private Integer misfireHandlingType = 0;
+        private Integer misfireHandlingType = CronTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
         public String getCron() {
             return cron;
