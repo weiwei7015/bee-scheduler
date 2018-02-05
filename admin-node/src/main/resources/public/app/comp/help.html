@@ -41,6 +41,7 @@
             <li><b>DailyTimeIntervalTrigger：</b>指定每天的某个时间段内，以一定的时间间隔执行任务。并且它可以支持指定星期。它适合的任务类似于：指定每天9:00 至 18:00 ，每隔70秒执行一次，并且只要周一至周五执行。</li>
             <li><b>CronTrigger：</b>适合于更复杂的任务，它支持通过<b>Cron</b>语法来制定执行计划。</li>
         </ul>
+        <el-alert :closable="false" type="warning" show-icon title="注意：系统限制任务执行频率不能高于3000ms/次，任务到达触发时间点时，系统会检测该任务上次执行时间，如果距上次执行间隔不到3000ms，该任务本次执行将被取消，并记录相应日志"></el-alert>
 
         <div class="spr"></div>
         <h3 class="no-margin">4、Cron表达式</h3>
