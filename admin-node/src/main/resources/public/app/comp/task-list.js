@@ -67,8 +67,8 @@ define(['text!comp/task-list.html'], function (tpl) {
         methods: {
             query: function () {
                 var vm = this;
-                var queryParams = vm.queryParams;
-                vm.load(queryParams);
+                vm.queryParams.page = 1;
+                vm.load(vm.queryParams);
             },
             load: function (queryParams) {
                 var vm = this;
