@@ -156,7 +156,7 @@ public class TaskEventRecorder extends TaskListenerSupport {
         int minExecInterval = 3000;
 
         if (jobExecutionContext.getPreviousFireTime() != null && jobExecutionContext.getFireTime().getTime() - jobExecutionContext.getPreviousFireTime().getTime() <= minExecInterval) {
-            taskLogger.warning("任务最近执行时间：" + DateFormatUtils.format(jobExecutionContext.getPreviousFireTime(), "yyyy-MM-dd HH:mm:ss") + "，执行频率不能高于" + minExecInterval + "ms/次，请调整任务配置");
+            taskLogger.warning("任务最近执行时间：" + DateFormatUtils.format(jobExecutionContext.getPreviousFireTime(), "yyyy-MM-dd HH:mm:ss") + "，任务执行间隔不能低于" + minExecInterval + "ms，请调整任务配置");
             return true;
         }
         return false;
