@@ -30,7 +30,7 @@ public class SystemInitializer {
         Scheduler scheduler = applicationContext.getBean(Scheduler.class);
 
         String name = "ClearTaskHistoryJob";
-        String group = "BuildIn";
+        String group = Constants.TASK_GROUP_SYSTEM;
         String cron = "0 0 0 * * ?";
         String description = "内置任务，用于清除历史任务记录";
         if (!scheduler.checkExists(new JobKey(name, group))) {
