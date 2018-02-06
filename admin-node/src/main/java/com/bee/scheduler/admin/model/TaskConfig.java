@@ -164,7 +164,7 @@ public class TaskConfig {
     }
 
     public static class ScheduleTypeSimpleOptions {
-        private Long interval = 30000l;
+        private Long interval = 30000L;
         private Integer repeatType = 1;
         private Integer repeatCount = 10;
         private Integer misfireHandlingType = SimpleTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
