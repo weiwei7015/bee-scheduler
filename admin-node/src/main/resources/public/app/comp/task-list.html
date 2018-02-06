@@ -31,27 +31,19 @@
             </el-col>
         </el-row>
         <div class="hr"></div>
+
         <div v-loading="queryLoading">
-            <template v-if="!queryResult.result || queryResult.result.length == 0">
-                <div class="box no-border">
-                    <div class="box-body">
-                        <div class="text-center text-silver">暂无记录</div>
-                    </div>
-                </div>
-            </template>
-            <template v-else>
-                <el-table :data="queryResult.result" :show-header="true" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="40"></el-table-column>
-                    <el-table-column label="状态" width="150">
-                        <template scope="scope">{{scope.row.state}}</template>
-                    </el-table-column>
-                    <el-table-column label="任务" show-overflow-tooltip>
-                        <template scope="scope">
-                            <el-button type="text" class="no-padding" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)"><span class="text-bold">{{scope.row.group + "." + scope.row.name}}</span></el-button>
-                            <span class="text-silver"> - {{scope.row.description||"无描述"}}</span></template>
-                    </el-table-column>
-                </el-table>
-            </template>
+            <el-table :data="queryResult.result" :show-header="true" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="40"></el-table-column>
+                <el-table-column label="状态" width="150">
+                    <template scope="scope">{{scope.row.state}}</template>
+                </el-table-column>
+                <el-table-column label="任务" show-overflow-tooltip>
+                    <template scope="scope">
+                        <el-button type="text" class="no-padding" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)"><span class="text-bold">{{scope.row.group + "." + scope.row.name}}</span></el-button>
+                        <span class="text-silver"> - {{scope.row.description||"无描述"}}</span></template>
+                </el-table-column>
+            </el-table>
             <div class="spr"></div>
             <template v-if="queryResult.result && queryResult.result.length > 0">
                 <div class="text-right">
@@ -59,6 +51,7 @@
                 </div>
             </template>
         </div>
+
     </div>
     <!--Dialog-->
     <quick-task-dialog :visible.sync="quickTaskDialogVisible"></quick-task-dialog>

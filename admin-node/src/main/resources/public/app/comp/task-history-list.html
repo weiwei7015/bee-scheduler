@@ -20,45 +20,44 @@
         </el-row>
         <div class="hr"></div>
 
-        <el-row v-loading="queryLoading">
-            <el-col :span="24">
-                <el-table :data="queryResult.result">
-                    <el-table-column label="时间" width="170">
-                        <template scope="scope">{{$moment(scope.row.firedTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
-                    </el-table-column>
-                    <el-table-column label="任务" show-overflow-tooltip>
-                        <template scope="scope">
-                            <el-button type="text" class="no-padding" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)">{{scope.row.group}}.{{scope.row.name}}</el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="执行节点" prop="instanceId" show-overflow-tooltip></el-table-column>
-                    <el-table-column label="执行状态" width="120">
-                        <template scope="scope">{{scope.row.execState}}</template>
-                    </el-table-column>
-                    <el-table-column label="触发方式" width="100">
-                        <!--<template scope="scope">{{scope.row.firedWay === "SCHEDULE"?"调度":scope.row.firedWay === "MANUAL"?"手动":scope.row.firedWay === "TMP"?"临时":scope.row.firedWay === "LINKAGE"?"联动":"未知"}}</template>-->
-                        <template scope="scope">{{scope.row.firedWay}}</template>
-                    </el-table-column>
-                    <el-table-column label="耗时" width="100">
-                        <template scope="scope">
-                            <span :class="{'text-danger text-bold':scope.row.expendTime > 500}">{{scope.row.expendTime}} ms</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" width="100">
-                        <template scope="scope">
-                            <el-button type="text" class="no-padding" @click="showTaskHistoryDetail(scope.row.fireId)"><i class="iconfont icon-detail"></i> 详细</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <template v-if="queryResult.result && queryResult.result.length > 0">
-                    <div class="spr"></div>
-                    <el-row>
-                        <el-col :span="24" class="text-right">
-                            <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
-                        </el-col>
-                    </el-row>
-                </template>
-            </el-col>
-        </el-row>
+        <div v-loading="queryLoading">
+            <el-table :data="queryResult.result">
+                <el-table-column label="时间" width="170">
+                    <template scope="scope">{{$moment(scope.row.firedTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
+                </el-table-column>
+                <el-table-column label="任务" show-overflow-tooltip>
+                    <template scope="scope">
+                        <el-button type="text" class="no-padding" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)">{{scope.row.group}}.{{scope.row.name}}</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="执行节点" prop="instanceId" show-overflow-tooltip></el-table-column>
+                <el-table-column label="执行状态" width="120">
+                    <template scope="scope">{{scope.row.execState}}</template>
+                </el-table-column>
+                <el-table-column label="触发方式" width="100">
+                    <!--<template scope="scope">{{scope.row.firedWay === "SCHEDULE"?"调度":scope.row.firedWay === "MANUAL"?"手动":scope.row.firedWay === "TMP"?"临时":scope.row.firedWay === "LINKAGE"?"联动":"未知"}}</template>-->
+                    <template scope="scope">{{scope.row.firedWay}}</template>
+                </el-table-column>
+                <el-table-column label="耗时" width="100">
+                    <template scope="scope">
+                        <span :class="{'text-danger text-bold':scope.row.expendTime > 500}">{{scope.row.expendTime}} ms</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100">
+                    <template scope="scope">
+                        <el-button type="text" class="no-padding" @click="showTaskHistoryDetail(scope.row.fireId)"><i class="iconfont icon-detail"></i> 详细</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <template v-if="queryResult.result && queryResult.result.length > 0">
+                <div class="spr"></div>
+                <el-row>
+                    <el-col :span="24" class="text-right">
+                        <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
+                    </el-col>
+                </el-row>
+            </template>
+        </div>
+        
     </div>
 </div>
