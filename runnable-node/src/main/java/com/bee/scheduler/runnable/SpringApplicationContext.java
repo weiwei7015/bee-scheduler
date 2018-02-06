@@ -7,7 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
- * @author weiwei1
+ * @author weiwei
  */
 @Component
 public class SpringApplicationContext implements ApplicationContextAware {
