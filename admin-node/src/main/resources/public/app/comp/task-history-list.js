@@ -24,7 +24,17 @@ define(['text!comp/task-history-list.html'], function (tpl) {
 
             return data;
         },
+        watch: {
+            '$route': function (to, from) {
+                // this.queryParams.keyword = this.$route.params.kw || "";
+                // this.queryParams.page = 1;
+                // this.load(this.queryParams);
+            }
+        },
         mounted: function () {
+            // this.queryParams.keyword = this.$route.params.kw || "";
+            // this.queryParams.page = 1;
+            // this.load(this.queryParams);
             this.query();
         },
         methods: {
@@ -32,6 +42,7 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 var vm = this;
                 vm.queryParams.page = 1;
                 vm.load(vm.queryParams);
+                // this.$router.push("/task/history/list/" + encodeURI(this.queryParams.keyword));
             },
             load: function (queryParams) {
                 var vm = this;

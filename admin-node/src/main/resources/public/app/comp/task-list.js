@@ -188,6 +188,9 @@ define(['text!comp/task-list.html'], function (tpl) {
             createQuickTask: function () {
                 this.quickTaskDialogVisible = true
             },
+            goTaskExecHistoryList: function (group, name) {
+                this.$router.push("/task/history/list/" + encodeURI("g:" + group + " " + name));
+            },
             goCreateTask: function () {
                 this.$router.push("/task/new");
             },
