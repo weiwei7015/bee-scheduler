@@ -23,6 +23,7 @@ define(['text!comp/cluster-home.html'], function (tpl, ace) {
             refreshClusterInfo: function () {
                 var vm = this;
                 vm.clusterInfoLoading = true;
+                vm.nodes = [];
                 vm.$http.get("/cluster/nodes").then(function (re) {
                     vm.nodes = re.body.data;
                     vm.clusterInfoLoading = false;

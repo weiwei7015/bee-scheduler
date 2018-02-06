@@ -48,8 +48,9 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 var vm = this;
 
                 vm.curQueryParams = queryParams;
-
                 vm.queryLoading = true;
+                vm.queryResult = {};
+
                 vm.$http.get("/task/history/list", {params: queryParams}).then(function (re) {
                     vm.queryLoading = false;
                     vm.queryResult = re.body.data;
