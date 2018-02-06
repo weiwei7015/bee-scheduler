@@ -66,7 +66,8 @@ define(['text!comp/task-edit.html'], function (tpl) {
                     params: '',
                     description: '',
                     linkageRule: ''
-                }
+                },
+                editTaskFormModelInitBackup: null
             };
 
             vm.$http.get("/task/groups").then(function (re) {
@@ -87,6 +88,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
                     var group = vm.$route.params.group;
                     vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
                         data.editTaskFormModel = re.body.data;
+                        data.editTaskFormModelInitBackup = JSON.parse(JSON.stringify(re.body.data));
                         if (editFor === "Copy") {
                             data.editTaskFormModel.name = data.editTaskFormModel.name + "_Copy";
                         }
@@ -101,9 +103,15 @@ define(['text!comp/task-edit.html'], function (tpl) {
         },
         watch: {
             'editTaskFormModel.jobComponent': function (newVal, oldVal) {
+                var selectedJobComponent = this.jobComponentList[newVal];
                 if (this.editFor === "New") {
-                    var selectedJobComponent = this.jobComponentList[newVal];
                     this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
+                } else if (this.editFor === "Copy") {
+                    if (newVal === this.editTaskFormModelInitBackup.jobComponent && this.editTaskFormModelInitBackup !== null) {
+                        this.editTaskFormModel.params = this.editTaskFormModelInitBackup.params;
+                    } else {
+                        this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
+                    }
                 }
             }
         },
