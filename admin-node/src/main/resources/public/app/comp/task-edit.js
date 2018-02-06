@@ -107,7 +107,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
                 if (this.editFor === "New") {
                     this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
                 } else if (this.editFor === "Copy") {
-                    if (newVal === this.editTaskFormModelInitBackup.jobComponent && this.editTaskFormModelInitBackup !== null) {
+                    if (this.editTaskFormModelInitBackup !== null && newVal === this.editTaskFormModelInitBackup.jobComponent) {
                         this.editTaskFormModel.params = this.editTaskFormModelInitBackup.params;
                     } else {
                         this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
