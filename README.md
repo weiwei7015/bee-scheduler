@@ -23,7 +23,7 @@
 >“不用！数据表会在系统首次启动的时候自动生成”
   
 ## 下载最新的可运行包
-[https://git.oschina.net/hellovivi/bee-scheduler/releases](https://git.oschina.net/hellovivi/bee-scheduler/releases)
+[https://gitee.com/kangroo/bee-scheduler/releases](https://gitee.com/kangroo/bee-scheduler/releases)
   
 ## 单机运行模式:
 ```shell
