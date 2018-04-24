@@ -3,7 +3,7 @@
 
     <groupId>com.bee.scheduler</groupId>
     <artifactId>bee-scheduler</artifactId>
-    <version>1.0-Beta.9</version>
+    <version>1.0-Beta.10</version>
     <packaging>pom</packaging>
 
     <modules>
