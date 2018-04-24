@@ -62,17 +62,14 @@ public class BootStrap {
     // 系统启动监听器，用于系统启动完成后的初始化操作
     @Bean
     public ApplicationListener<ContextRefreshedEvent> applicationListener() {
-        return new ApplicationListener<ContextRefreshedEvent>() {
-            @Override
-            public void onApplicationEvent(ContextRefreshedEvent event) {
-                ApplicationContext applicationContext = event.getApplicationContext();
-                try {
-                    logger.info("SpringContext Refreshed!");
-                    SystemInitializer systemInitializer = new SystemInitializer(applicationContext);
-                    systemInitializer.init();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        return event -> {
+            ApplicationContext applicationContext = event.getApplicationContext();
+            try {
+                logger.info("SpringContext Refreshed!");
+                SystemInitializer systemInitializer = new SystemInitializer(applicationContext);
+                systemInitializer.init();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
     }

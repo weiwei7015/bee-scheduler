@@ -3,7 +3,10 @@ package com.bee.scheduler.admin;
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
-import com.alibaba.fastjson.serializer.*;
+import com.alibaba.fastjson.serializer.DateCodec;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializeWriter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.scheduler.admin.core.SystemInitializer;
@@ -24,7 +27,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,21 +90,18 @@ public class BootStrap {
                 });
 
                 SerializeConfig serializeConfig = new SerializeConfig();
-                serializeConfig.put(TimeOfDay.class, new ObjectSerializer() {
-                    @Override
-                    public void write(JSONSerializer serializer, Object object, Object fieldName, Type fieldType, int features) throws IOException {
-                        SerializeWriter out = serializer.getWriter();
-                        if (object == null) {
-                            serializer.getWriter().writeNull();
-                            return;
-                        }
-                        TimeOfDay timeOfDay = (TimeOfDay) object;
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(Calendar.HOUR_OF_DAY, timeOfDay.getHour());
-                        cal.set(Calendar.MINUTE, timeOfDay.getMinute());
-                        cal.set(Calendar.SECOND, timeOfDay.getSecond());
-                        out.write(String.valueOf(cal.getTimeInMillis()));
+                serializeConfig.put(TimeOfDay.class, (serializer, object, fieldName, fieldType, features) -> {
+                    SerializeWriter out = serializer.getWriter();
+                    if (object == null) {
+                        serializer.getWriter().writeNull();
+                        return;
                     }
+                    TimeOfDay timeOfDay = (TimeOfDay) object;
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(Calendar.HOUR_OF_DAY, timeOfDay.getHour());
+                    cal.set(Calendar.MINUTE, timeOfDay.getMinute());
+                    cal.set(Calendar.SECOND, timeOfDay.getSecond());
+                    out.write(String.valueOf(cal.getTimeInMillis()));
                 });
 
                 fastJsonConfig.setSerializeConfig(serializeConfig);
@@ -128,18 +127,15 @@ public class BootStrap {
     // 系统启动监听器，用于系统启动完成后的初始化操作
     @Bean
     public ApplicationListener<ContextRefreshedEvent> applicationListener() {
-        return new ApplicationListener<ContextRefreshedEvent>() {
-            @Override
-            public void onApplicationEvent(ContextRefreshedEvent event) {
+        return event -> {
 
-                ApplicationContext applicationContext = event.getApplicationContext();
-                try {
-                    logger.info("SpringContext Refreshed!");
-                    SystemInitializer systemInitializer = new SystemInitializer(applicationContext);
-                    systemInitializer.init();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            ApplicationContext applicationContext = event.getApplicationContext();
+            try {
+                logger.info("SpringContext Refreshed!");
+                SystemInitializer systemInitializer = new SystemInitializer(applicationContext);
+                systemInitializer.init();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
     }
