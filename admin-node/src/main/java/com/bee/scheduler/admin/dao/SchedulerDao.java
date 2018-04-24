@@ -20,16 +20,13 @@ public class SchedulerDao extends DaoBase {
 
         final List<ClusterSchedulerNode> result = new ArrayList<>();
 
-        jdbcTemplate.query(sqlQueryResult.toString(), new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet rs) throws SQLException {
-                ClusterSchedulerNode clusterSchedulerNode = new ClusterSchedulerNode();
-                clusterSchedulerNode.setName(rs.getString("name"));
-                clusterSchedulerNode.setInstanceName(rs.getString("instanceName"));
-                clusterSchedulerNode.setLastCheckinTime(new Date(rs.getLong("lastCheckin")));
-                clusterSchedulerNode.setCheckinInterval(rs.getLong("checkinInterval"));
-                result.add(clusterSchedulerNode);
-            }
+        jdbcTemplate.query(sqlQueryResult.toString(), rs -> {
+            ClusterSchedulerNode clusterSchedulerNode = new ClusterSchedulerNode();
+            clusterSchedulerNode.setName(rs.getString("name"));
+            clusterSchedulerNode.setInstanceName(rs.getString("instanceName"));
+            clusterSchedulerNode.setLastCheckinTime(new Date(rs.getLong("lastCheckin")));
+            clusterSchedulerNode.setCheckinInterval(rs.getLong("checkinInterval"));
+            result.add(clusterSchedulerNode);
         }, schedulerName);
 
         return result;

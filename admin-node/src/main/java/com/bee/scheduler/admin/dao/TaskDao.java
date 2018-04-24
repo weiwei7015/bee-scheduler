@@ -5,13 +5,10 @@ import com.bee.scheduler.admin.model.Pageable;
 import com.bee.scheduler.admin.model.Task;
 import com.bee.scheduler.core.Constants;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
 import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -54,45 +51,41 @@ public class TaskDao extends DaoBase {
         final List<Task> result = new ArrayList<>();
 
 
-        jdbcTemplate.query(sqlQueryResult.toString(), new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet rs) throws SQLException {
+        jdbcTemplate.query(sqlQueryResult.toString(), rs -> {
+            Task task = new Task();
+            task.setName(rs.getString("name"));
+            task.setGroup(rs.getString("group"));
+            task.setTriggerType(rs.getString("triggerType"));
+            String jobComponent = rs.getString("jobComponent");
+            task.setJobComponent(jobComponent.substring(jobComponent.lastIndexOf(".") + 1));
+            task.setPrevFireTime(rs.getLong("prevFireTime"));
+            task.setNextFireTime(rs.getLong("nextFireTime"));
+            task.setStartTime(rs.getLong("startTime"));
+            task.setEndTime(rs.getLong("endTime"));
+            task.setMisfireInstr(rs.getInt("misfireInstr"));
+            task.setState(rs.getString("state"));
+            task.setDescription(rs.getString("description"));
 
-                Task task = new Task();
-                task.setName(rs.getString("name"));
-                task.setGroup(rs.getString("group"));
-                task.setTriggerType(rs.getString("triggerType"));
-                String jobComponent = rs.getString("jobComponent");
-                task.setJobComponent(jobComponent.substring(jobComponent.lastIndexOf(".") + 1));
-                task.setPrevFireTime(rs.getLong("prevFireTime"));
-                task.setNextFireTime(rs.getLong("nextFireTime"));
-                task.setStartTime(rs.getLong("startTime"));
-                task.setEndTime(rs.getLong("endTime"));
-                task.setMisfireInstr(rs.getInt("misfireInstr"));
-                task.setState(rs.getString("state"));
-                task.setDescription(rs.getString("description"));
+            try {
+                Blob blobLocator = rs.getBlob("data");
+                if (blobLocator != null) {
+                    InputStream binaryInput = blobLocator.getBinaryStream();
 
-                try {
-                    Blob blobLocator = rs.getBlob("data");
-                    if (blobLocator != null) {
-                        InputStream binaryInput = blobLocator.getBinaryStream();
-
-                        Properties properties = new Properties();
-                        if (binaryInput != null) {
-                            try {
-                                properties.load(binaryInput);
-                            } finally {
-                                binaryInput.close();
-                            }
+                    Properties properties = new Properties();
+                    if (binaryInput != null) {
+                        try {
+                            properties.load(binaryInput);
+                        } finally {
+                            binaryInput.close();
                         }
-                        Map<Object, Object> data = new HashMap<>(properties);
-                        task.setData(data);
                     }
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
+                    Map<Object, Object> data = new HashMap<>(properties);
+                    task.setData(data);
                 }
-                result.add(task);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
             }
+            result.add(task);
         }, args.toArray());
 
         return new Pageable<>(page, pageSize, resultTotal, result);
@@ -132,48 +125,45 @@ public class TaskDao extends DaoBase {
         final List<ExecutingTask> result = new ArrayList<>();
 
 
-        jdbcTemplate.query(sqlQueryResult.toString(), new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet rs) throws SQLException {
-                ExecutingTask executingTask = new ExecutingTask();
-                executingTask.setName(rs.getString("name"));
-                String group = rs.getString("group");
-                executingTask.setGroup(group);
-                executingTask.setTriggerType(rs.getString("triggerType"));
-                String jobComponent = rs.getString("jobComponent");
-                executingTask.setJobComponent(jobComponent.substring(jobComponent.lastIndexOf(".") + 1));
-                executingTask.setPrevFireTime(rs.getLong("prevFireTime"));
-                executingTask.setNextFireTime(rs.getLong("nextFireTime"));
-                executingTask.setStartTime(rs.getLong("startTime"));
-                executingTask.setEndTime(rs.getLong("endTime"));
-                executingTask.setMisfireInstr(rs.getInt("misfireInstr"));
-                executingTask.setState(rs.getString("state"));
-                executingTask.setDescription(rs.getString("description"));
+        jdbcTemplate.query(sqlQueryResult.toString(), rs -> {
+            ExecutingTask executingTask = new ExecutingTask();
+            executingTask.setName(rs.getString("name"));
+            String group = rs.getString("group");
+            executingTask.setGroup(group);
+            executingTask.setTriggerType(rs.getString("triggerType"));
+            String jobComponent = rs.getString("jobComponent");
+            executingTask.setJobComponent(jobComponent.substring(jobComponent.lastIndexOf(".") + 1));
+            executingTask.setPrevFireTime(rs.getLong("prevFireTime"));
+            executingTask.setNextFireTime(rs.getLong("nextFireTime"));
+            executingTask.setStartTime(rs.getLong("startTime"));
+            executingTask.setEndTime(rs.getLong("endTime"));
+            executingTask.setMisfireInstr(rs.getInt("misfireInstr"));
+            executingTask.setState(rs.getString("state"));
+            executingTask.setDescription(rs.getString("description"));
 
-                executingTask.setFiredWay(Constants.TASK_GROUP_MANUAL.equals(group) ? Constants.TaskFiredWay.MANUAL : Constants.TASK_GROUP_TMP.equals(group) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE);
-                executingTask.setFiredTime(rs.getLong("fireTime"));
+            executingTask.setFiredWay(Constants.TASK_GROUP_MANUAL.equals(group) ? Constants.TaskFiredWay.MANUAL : Constants.TASK_GROUP_TMP.equals(group) ? Constants.TaskFiredWay.TMP : Constants.TaskFiredWay.SCHEDULE);
+            executingTask.setFiredTime(rs.getLong("fireTime"));
 
-                try {
-                    Blob blobLocator = rs.getBlob("data");
-                    if (blobLocator != null) {
-                        InputStream binaryInput = blobLocator.getBinaryStream();
+            try {
+                Blob blobLocator = rs.getBlob("data");
+                if (blobLocator != null) {
+                    InputStream binaryInput = blobLocator.getBinaryStream();
 
-                        Properties properties = new Properties();
-                        if (binaryInput != null) {
-                            try {
-                                properties.load(binaryInput);
-                            } finally {
-                                binaryInput.close();
-                            }
+                    Properties properties = new Properties();
+                    if (binaryInput != null) {
+                        try {
+                            properties.load(binaryInput);
+                        } finally {
+                            binaryInput.close();
                         }
-                        Map<Object, Object> data = new HashMap<>(properties);
-                        executingTask.setData(data);
                     }
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
+                    Map<Object, Object> data = new HashMap<>(properties);
+                    executingTask.setData(data);
                 }
-                result.add(executingTask);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
             }
+            result.add(executingTask);
         }, args.toArray());
 
         return result;
