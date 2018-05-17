@@ -7,7 +7,7 @@ require.config({
         vue: '/public/lib/vue.min',
         vue_router: '/public/lib/vue-router.min',
         vue_resource: '/public/lib/vue-resource.min',
-        ELEMENT: '/public/lib/element-ui-2.0.11/index',
+        ELEMENT: '/public/lib/element-ui-2.3.8/index',
         moment: '/public/lib/moment.min',
         text: '/public/lib/text'
     },
