@@ -53,7 +53,7 @@ public class BootStrap {
             stringBuilder.append(arg).append(" ");
         }
         if (!Pattern.matches(".* --dburl=\\S+ .*", stringBuilder)) {
-            throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false)");
+            throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
         }
 
         app.run(args);
