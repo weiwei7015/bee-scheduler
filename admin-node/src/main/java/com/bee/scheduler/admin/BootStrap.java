@@ -17,45 +17,40 @@ import org.quartz.TimeOfDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class BootStrap {
-
     private static Log logger = LogFactory.getLog(BootStrap.class);
-
     @Autowired
     private Environment env;
-
     @Autowired
     private DataSource dataSource;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication app = new SpringApplication(BootStrap.class);
-
-        //检查启动参数
-        StringBuilder stringBuilder = new StringBuilder(" ");
-        for (String arg : args) {
-            stringBuilder.append(arg).append(" ");
-        }
-        if (!Pattern.matches(".* --dburl=\\S+ .*", stringBuilder)) {
-            throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
-        }
-
+        app.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
+            //检查启动参数
+            ConfigurableEnvironment env = event.getEnvironment();
+            if (!env.containsProperty("dburl")) {
+                throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
+            }
+        });
         app.run(args);
     }
 
@@ -66,8 +61,8 @@ public class BootStrap {
 
     // mvc相关配置
     @Bean
-    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-        return new WebMvcConfigurerAdapter() {
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
             @Override
             public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
                 FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
@@ -119,7 +114,7 @@ public class BootStrap {
         BeeSchedulerFactoryBean beeSchedulerFactoryBean = new BeeSchedulerFactoryBean("BeeScheduler", dataSource);
         beeSchedulerFactoryBean.setClusterMode(env.containsProperty("cluster"));
         if (env.containsProperty("thread-pool-size")) {
-            beeSchedulerFactoryBean.setThreadPoolSize(Integer.valueOf(env.getProperty("thread-pool-size")));
+            beeSchedulerFactoryBean.setThreadPoolSize(env.getRequiredProperty("thread-pool-size", Integer.TYPE));
         }
         return beeSchedulerFactoryBean;
     }
