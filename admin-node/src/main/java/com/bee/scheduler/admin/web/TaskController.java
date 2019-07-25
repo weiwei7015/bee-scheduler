@@ -10,7 +10,7 @@ import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeDailyTimeIntervalOpt
 import com.bee.scheduler.admin.model.TaskConfig.ScheduleTypeSimpleOptions;
 import com.bee.scheduler.admin.service.TaskService;
 import com.bee.scheduler.core.Constants;
-import com.bee.scheduler.core.job.JobComponent;
+import com.bee.scheduler.core.job.AbstractJobComponent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -129,7 +129,7 @@ public class TaskController {
         }
 
 
-        Class<? extends JobComponent> jobComponentClass = RamLocal.JobComponentMap.get(taskConfig.getJobComponent()).getClass();
+        Class<? extends AbstractJobComponent> jobComponentClass = RamLocal.JobComponentMap.get(taskConfig.getJobComponent()).getClass();
         JobDataMap dataMap = new JobDataMap();
         dataMap.put(Constants.JOB_DATA_KEY_TASK_PARAM, taskConfig.getParams());
         dataMap.put(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE, taskConfig.getLinkageRule());
@@ -521,7 +521,7 @@ public class TaskController {
         String name = quickTaskConfig.getName();
         String group = Constants.TASK_GROUP_TMP;
 
-        Class<? extends JobComponent> jobComponentClass = RamLocal.JobComponentMap.get(quickTaskConfig.getJobComponent()).getClass();
+        Class<? extends AbstractJobComponent> jobComponentClass = RamLocal.JobComponentMap.get(quickTaskConfig.getJobComponent()).getClass();
         JobDetail jobDetail = JobBuilder.newJob(jobComponentClass).withIdentity(name, group).build();
 
         JobDataMap jobDataMap = new JobDataMap();

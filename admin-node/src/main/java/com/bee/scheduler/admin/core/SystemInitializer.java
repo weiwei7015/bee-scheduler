@@ -3,7 +3,7 @@ package com.bee.scheduler.admin.core;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.Constants;
 import com.bee.scheduler.core.job.BuildInJobComponent;
-import com.bee.scheduler.core.job.JobComponent;
+import com.bee.scheduler.core.job.AbstractJobComponent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
@@ -61,9 +61,9 @@ public class SystemInitializer {
         Resource[] resources = resourcePatternResolver.getResources("classpath*:com/bee/scheduler/core/job/*.class");
         for (Resource resource : resources) {
             @SuppressWarnings("unchecked")
-            Class<? extends JobComponent> clazz = (Class<? extends JobComponent>) Class.forName(simpleMetadataReaderFactory.getMetadataReader(resource).getClassMetadata().getClassName());
-            if (clazz != JobComponent.class && JobComponent.class.isAssignableFrom(clazz)) {
-                JobComponent jobComponent = clazz.newInstance();
+            Class<? extends AbstractJobComponent> clazz = (Class<? extends AbstractJobComponent>) Class.forName(simpleMetadataReaderFactory.getMetadataReader(resource).getClassMetadata().getClassName());
+            if (clazz != AbstractJobComponent.class && AbstractJobComponent.class.isAssignableFrom(clazz)) {
+                AbstractJobComponent jobComponent = clazz.newInstance();
                 RamLocal.JobComponentMap.put(clazz.getSimpleName(), jobComponent);
             }
         }

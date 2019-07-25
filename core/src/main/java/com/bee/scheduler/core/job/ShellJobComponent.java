@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 /**
  * @author weiwei 该组件提供运行服务端脚本的功能
  */
-public class ShellJobComponent extends JobComponent {
+public class ShellJobComponent extends AbstractJobComponent {
     @Override
     public String getName() {
         return "ShellJobComponent";

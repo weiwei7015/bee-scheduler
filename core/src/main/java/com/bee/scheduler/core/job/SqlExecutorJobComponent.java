@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 /**
  * @author weiwei 该组件提供链接Mysql数据库执行Sql的功能
  */
-public class SqlExecutorJobComponent extends JobComponent {
+public class SqlExecutorJobComponent extends AbstractJobComponent {
     @Override
     public String getName() {
         return "SqlExecutor";

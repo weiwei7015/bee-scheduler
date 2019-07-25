@@ -20,7 +20,7 @@ import java.util.*;
 /**
  * @author weiwei Dubbo客户端组件,该组件提供调用dubbo服务的功能
  */
-public class DubboInvokerJobComponent extends JobComponent {
+public class DubboInvokerJobComponent extends AbstractJobComponent {
     private static Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
 
     static {

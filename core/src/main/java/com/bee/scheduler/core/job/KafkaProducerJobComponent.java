@@ -15,7 +15,7 @@ import java.util.Properties;
 /**
  * @author weiwei 用于发送Kafka消息
  */
-public class KafkaProducerJobComponent extends JobComponent {
+public class KafkaProducerJobComponent extends AbstractJobComponent {
     @Override
     public String getName() {
         return "KafkaProducerJob";

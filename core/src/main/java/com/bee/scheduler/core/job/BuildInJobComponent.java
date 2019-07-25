@@ -16,7 +16,7 @@ import java.util.Calendar;
  * @author weiwei
  * 用于清除历史任务记录
  */
-public class BuildInJobComponent extends JobComponent {
+public class BuildInJobComponent extends AbstractJobComponent {
     @Override
     public String getName() {
         return "BuildInJobComponent";

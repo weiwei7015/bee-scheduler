@@ -12,7 +12,7 @@ import org.quartz.JobExecutionException;
 /**
  * @author weiwei 任务组件接口
  */
-public abstract class JobComponent implements Job {
+public abstract class AbstractJobComponent implements Job {
     /**
      * 名称
      */

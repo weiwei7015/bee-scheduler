@@ -11,7 +11,7 @@ import java.net.URL;
 /**
  * @author weiwei 用于发起HTTP请求
  */
-public class HttpClientJobComponent extends JobComponent {
+public class HttpClientJobComponent extends AbstractJobComponent {
 
     @Override
     public String getName() {

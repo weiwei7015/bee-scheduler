@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.admin.core.RamLocal;
 import com.bee.scheduler.admin.model.HttpResponseBodyWrapper;
 import com.bee.scheduler.core.job.BuildInJobComponent;
-import com.bee.scheduler.core.job.JobComponent;
+import com.bee.scheduler.core.job.AbstractJobComponent;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class JobComponentController {
         JSONObject jobComponents = new JSONObject();
 
         for (String jobComponentId : RamLocal.JobComponentMap.keySet()) {
-            JobComponent jobComponent = RamLocal.JobComponentMap.get(jobComponentId);
+            AbstractJobComponent jobComponent = RamLocal.JobComponentMap.get(jobComponentId);
             if (jobComponent instanceof BuildInJobComponent) {
                 continue;
             }

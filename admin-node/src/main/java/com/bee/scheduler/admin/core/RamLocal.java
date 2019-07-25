@@ -2,7 +2,7 @@ package com.bee.scheduler.admin.core;
 
 
 import com.bee.scheduler.admin.model.Notification;
-import com.bee.scheduler.core.job.JobComponent;
+import com.bee.scheduler.core.job.AbstractJobComponent;
 
 import java.util.*;
 
@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class RamLocal {
     // Job Map<Name，JobComponent>
-    public static Map<String, JobComponent> JobComponentMap = new HashMap<>();
+    public static Map<String, AbstractJobComponent> JobComponentMap = new HashMap<>();
     // 通知
     public static List<Notification> notifications = Collections.synchronizedList(new ArrayList<Notification>());
 
