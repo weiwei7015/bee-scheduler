@@ -1,6 +1,6 @@
-package com.bee.scheduler.admin.web;
+package com.bee.scheduler.daemonnode.web;
 
-import com.bee.scheduler.admin.model.HttpResponseBodyWrapper;
+import com.bee.scheduler.daemonnode.model.HttpResponseBodyWrapper;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

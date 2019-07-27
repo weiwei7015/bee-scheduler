@@ -1,9 +1,9 @@
-package com.bee.scheduler.admin.web;
+package com.bee.scheduler.daemonnode.web;
 
-import com.bee.scheduler.admin.model.ExecutedTask;
-import com.bee.scheduler.admin.model.HttpResponseBodyWrapper;
-import com.bee.scheduler.admin.model.Pageable;
-import com.bee.scheduler.admin.service.TaskService;
+import com.bee.scheduler.daemonnode.model.ExecutedTask;
+import com.bee.scheduler.daemonnode.model.HttpResponseBodyWrapper;
+import com.bee.scheduler.daemonnode.model.Pageable;
+import com.bee.scheduler.daemonnode.service.TaskService;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;

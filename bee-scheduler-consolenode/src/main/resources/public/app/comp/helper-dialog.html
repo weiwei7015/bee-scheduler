@@ -1,0 +1,56 @@
+<el-dialog title="Help" :visible.sync="helperDialogVisible">
+    <span slot="title"><i class="iconfont icon-tips"></i> 使用帮助</span>
+    <div style="max-height: 500px;overflow-y: auto">
+        <h3>1、调度方式</h3>
+        <h4>SimpleTrigger：</h4>
+        <div>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行任务。</div>
+        <h4>CalendarIntervalTrigger：</h4>
+        <div>类似于SimpleTrigger，指定从某一个时间开始，以一定的时间间隔执行的任务。 但是不同的是SimpleTrigger指定的时间间隔为毫秒，没办法指定每隔一个月执行一次（每月的时间间隔不是固定值），而CalendarIntervalTrigger支持的间隔单位有<b>秒，分钟，小时，天，星期，月，年</b>。</div>
+        <h4>DailyTimeIntervalTrigger：</h4>
+        <div>指定每天的某个时间段内，以一定的时间间隔执行任务。并且它可以支持指定星期。它适合的任务类似于：指定每天9:00 至 18:00 ，每隔70秒执行一次，并且只要周一至周五执行。</div>
+        <h4>CronTrigger：</h4>
+        <div>适合于更复杂的任务，它支持通过<b>Cron</b>语法来制定执行计划。</div>
+        <h3>2、Cron表达式</h3>
+        <h4>格式：秒 分 时 日 月 周 年（年可以省略）</h4>
+        <h3>3、联动任务配置</h3>
+        <div>联动任务表示主任务执行完成后，自动触发其他任务的机制，配置采用JSON格式，示例如下：</div>
+        <pre class="bg-dark-white font-code">
+    [
+        {task:'group.name',delay:5000,next:[
+                {task:'group.name',delay:5000,next:[]},
+                {task:'group.name',delay:5000,next:[]}
+            ]
+        },
+        {...},
+        {...}
+    ]
+    //task：需要联动触发的任务
+    //delay：延迟多久触发，单位是毫秒，可选参数
+    //next：下一级联动任务（如a执行完成后，触发b，b执行完成后，触发c），可选参数
+        </pre>
+        <div>当然，以上是完整的配置示例，大部分场景中，如果不需要配置delay和next，可以使用以下简化的配置：</div>
+        <pre class="bg-dark-white font-code">
+    ["Hello.world1","Hello.world2"]
+    //表示主任务执行完成后，立即触发Hello.world1和Hello.world2
+        </pre>
+        <pre class="bg-dark-white font-code">
+    ["Hello.world1",{task:'Hello.world2',delay:5000}]
+    //表示主任务执行完成后，立即触发Hello.world1，并在5秒后触发Hello.world2
+        </pre>
+        <div class="text-danger"><i class="el-icon el-icon-information"></i> 注意：目前并没有对联动任务配置的合理性做严格检查，配置不当可能会造成环形联动（如a->b->c->a...）,请谨慎配置</div>
+        <!--<el-collapse v-model="title" accordion>
+            <el-collapse-item title="执行临时任务" name="ExecTmpTask">
+                待完善...
+            </el-collapse-item>
+            <el-collapse-item title="创建任务" name="CreateTask">
+
+            </el-collapse-item>
+            <el-collapse-item title="待完善" name="3">
+                待完善...
+            </el-collapse-item>
+            <el-collapse-item title="待完善" name="4">
+                待完善...
+            </el-collapse-item>
+        </el-collapse>-->
+    </div>
+</el-dialog>

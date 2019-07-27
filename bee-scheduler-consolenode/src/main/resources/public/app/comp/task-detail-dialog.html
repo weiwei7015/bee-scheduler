@@ -1,0 +1,51 @@
+<el-dialog :visible.sync="dialogVisible">
+    <span slot="title" class="el-dialog__title"><i class="iconfont icon-detail"></i> 任务详情</span>
+    <div v-loading="loading" style="height: 400px;overflow: auto">
+        <div v-show="!loading">
+            <template v-if="taskDetail">
+                <el-form label-width="100px" class="no-item-margin form-label-muted">
+                    <h2 class="no-margin">{{taskDetail.group}}.{{taskDetail.name}}</h2>
+                    <div class="spr"></div>
+                    <h4 class="no-margin">调度规则</h4>
+                    <div class="hr"></div>
+                    <el-form-item label="调度方式">{{taskDetail.scheduleType === 1?"SimpleTrigger":taskDetail.scheduleType === 2?"CalendarIntervalTrigger":taskDetail.scheduleType === 3?"DailyTimeIntervalTrigger":taskDetail.scheduleType === 4?"CronTrigger":"unknown"}}</el-form-item>
+                    <template v-if="taskDetail.scheduleType == 1"><!--Simple-->
+                        <el-form-item label="执行频率">每隔 {{taskDetail.scheduleTypeSimpleOptions.interval}} 毫秒</el-form-item>
+                        <el-form-item label="重复策略">{{taskDetail.scheduleTypeSimpleOptions.repeatCount === -1?"无限重复":"重复 "+ taskDetail.scheduleTypeSimpleOptions.repeatCount +" 次"}}</el-form-item>
+                        <el-form-item label="Misfire策略">{{taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===0?"SmartPolicy":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===-1?"IgnoreMisfires":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===1?"FireNow":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===2?"NowWithExistingCount":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===3?"NowWithRemainingCount":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===4?"NextWithRemainingCount":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===5?"NextWithExistingCount":"unknown"}}</el-form-item>
+                    </template>
+                    <template v-if="taskDetail.scheduleType == 2"><!--CalendarInterval-->
+                        <el-form-item label="执行频率">每隔 {{taskDetail.scheduleTypeCalendarIntervalOptions.interval}} {{taskDetail.scheduleTypeCalendarIntervalOptions.intervalUnit === "SECOND"?"秒":taskDetail.scheduleTypeCalendarIntervalOptions.intervalUnit === "MINUTE"?"分":taskDetail.scheduleTypeCalendarIntervalOptions.intervalUnit === "HOUR"?"时":taskDetail.scheduleTypeCalendarIntervalOptions.intervalUnit === "DAY"?"天":taskDetail.scheduleTypeCalendarIntervalOptions.intervalUnit === "WEEK"?"周":taskDetail.scheduleTypeCalendarIntervalOptions.intervalUnit === "MONTH"?"月":taskDetail.scheduleTypeCalendarIntervalOptions.intervalUnit === "YEAR"?"年":"unknown"}}</el-form-item>
+                        <el-form-item label="Misfire策略">{{taskDetail.scheduleTypeCalendarIntervalOptions.misfireHandlingType===0?"SmartPolicy":taskDetail.scheduleTypeCalendarIntervalOptions.misfireHandlingType===-1?"IgnoreMisfires":taskDetail.scheduleTypeCalendarIntervalOptions.misfireHandlingType===1?"FireAndProceed":taskDetail.scheduleTypeCalendarIntervalOptions.misfireHandlingType===2?"DoNothing":"unknown"}}</el-form-item>
+                    </template>
+                    <template v-if="taskDetail.scheduleType == 3"><!--DailyTimeInterval-->
+                        <el-form-item label="执行频率">每隔 {{taskDetail.scheduleTypeDailyTimeIntervalOptions.interval}} {{taskDetail.scheduleTypeDailyTimeIntervalOptions.intervalUnit === "SECOND"?"秒":taskDetail.scheduleTypeDailyTimeIntervalOptions.intervalUnit === "MINUTE"?"分":taskDetail.scheduleTypeDailyTimeIntervalOptions.intervalUnit === "HOUR"?"时":"unknown"}}</el-form-item>
+                        <el-form-item label="时间段开始">{{$moment(taskDetail.scheduleTypeDailyTimeIntervalOptions.startTimeOfDay).format("HH:mm:ss")}}</el-form-item>
+                        <el-form-item label="时间段结束">{{$moment(taskDetail.scheduleTypeDailyTimeIntervalOptions.endTimeOfDay).format("HH:mm:ss")}}</el-form-item>
+                        <el-form-item label="周几执行">{{taskDetail.scheduleTypeDailyTimeIntervalOptions.daysOfWeek.join("，").replace("2","周一").replace("3","周二").replace("4","周三").replace("5","周四").replace("6","周五").replace("7","周六").replace("1","周日")}}</el-form-item>
+                        <el-form-item label="Misfire策略">{{taskDetail.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType===0?"SmartPolicy":taskDetail.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType===-1?"IgnoreMisfires":taskDetail.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType===1?"FireAndProceed":taskDetail.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType===2?"DoNothing":"unknown"}}</el-form-item>
+                    </template>
+                    <template v-if="taskDetail.scheduleType == 4"><!--Cron-->
+                        <el-form-item label="Cron表达式">{{taskDetail.scheduleTypeCronOptions.cron}}</el-form-item>
+                        <el-form-item label="Misfire策略">{{taskDetail.scheduleTypeCronOptions.misfireHandlingType===0?"SmartPolicy":taskDetail.scheduleTypeCronOptions.misfireHandlingType===-1?"IgnoreMisfires":taskDetail.scheduleTypeCronOptions.misfireHandlingType===1?"FireAndProceed":taskDetail.scheduleTypeCronOptions.misfireHandlingType===2?"DoNothing":"unknown"}}</el-form-item>
+                    </template>
+                    <h4 class="no-margin">任务内容</h4>
+                    <div class="hr"></div>
+                    <el-form-item label="任务组件">{{taskDetail.jobComponent}}</el-form-item>
+                    <el-form-item label="任务参数">{{taskDetail.params}}</el-form-item>
+                    <el-form-item label="任务描述">{{taskDetail.description||"- -"}}</el-form-item>
+                    <h4 class="no-margin">高级选项</h4>
+                    <div class="hr"></div>
+                    <!--<el-form-item label="激活选项">{{taskDetail.startAtType === 1?"立即激活":taskDetail.startAtType === 2?"指定时间激活":"unknown"}}</el-form-item>-->
+                    <el-form-item v-if="taskDetail.startAtType == 2" label="激活时间">{{$moment(taskDetail.startAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
+                    <el-form-item label="销毁选项">{{taskDetail.endAtType === 1?"永不销毁":taskDetail.endAtType === 2?"指定时间销毁":"unknown"}}</el-form-item>
+                    <el-form-item v-if="taskDetail.endAtType == 2" label="销毁时间">{{$moment(taskDetail.endAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
+                    <el-form-item label="联动任务">{{taskDetail.linkageRule||"- -"}}</el-form-item>
+                </el-form>
+            </template>
+            <template v-else>
+                <div class="text-center text-extra-light-silver" style="font-size: 16px;margin: 20px"><i class="iconfont icon-404" style="font-size: 30px"></i> 未找到相关任务信息，该任务可能已被删除</div>
+            </template>
+        </div>
+    </div>
+</el-dialog>

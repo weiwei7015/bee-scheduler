@@ -1,0 +1,33 @@
+<el-dialog :visible.sync="visible">
+    <span slot="title" class="el-dialog__title"><i class="iconfont icon-flash"></i>  执行临时任务</span>
+    <div v-loading="initializing">
+        <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="100px">
+            <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
+                <el-input v-model="editTaskFormModel.name"></el-input>
+            </el-form-item>
+            <el-form-item label="任务组件" prop="jobComponent" :rules="validators.jobComponent">
+                <el-select v-model="editTaskFormModel.jobComponent" placeholder="请选择任务组件" style="width: 100%">
+                    <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="任务参数" prop="params">
+                <el-input type="textarea" v-model="editTaskFormModel.params" :autosize="{minRows: 4, maxRows: 15}" class="font-code" placeholder="请输入任务组件需要的参数（JSON格式）"></el-input>
+            </el-form-item>
+            <el-form-item label="延迟选项">
+                <el-radio-group v-model="editTaskFormModel.enableStartDelay">
+                    <el-radio :label="false">立即执行</el-radio>
+                    <el-radio :label="true">延迟执行</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item v-if="editTaskFormModel.enableStartDelay == true" label="延迟多久" style="width: 300px">
+                <el-input placeholder="请输入延迟时间（ms）" v-model="editTaskFormModel.startDelay">
+                    <template slot="append">ms</template>
+                </el-input>
+            </el-form-item>
+        </el-form>
+    </div>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="visible = false" :disable="!initializing">取 消</el-button>
+        <el-button type="primary" @click="post" :loading="postTaskInProcess" :disable="!initializing">执 行</el-button>
+    </span>
+</el-dialog>

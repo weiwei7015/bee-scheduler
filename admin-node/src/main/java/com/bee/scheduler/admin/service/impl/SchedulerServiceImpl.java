@@ -1,8 +1,8 @@
-package com.bee.scheduler.admin.service.impl;
+package com.bee.scheduler.daemonnode.service.impl;
 
-import com.bee.scheduler.admin.dao.SchedulerDao;
-import com.bee.scheduler.admin.model.ClusterSchedulerNode;
-import com.bee.scheduler.admin.service.SchedulerService;
+import com.bee.scheduler.daemonnode.dao.SchedulerDao;
+import com.bee.scheduler.daemonnode.model.ClusterSchedulerNode;
+import com.bee.scheduler.daemonnode.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

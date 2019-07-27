@@ -1,4 +1,4 @@
-package com.bee.scheduler.admin.core;
+package com.bee.scheduler.daemonnode.core;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

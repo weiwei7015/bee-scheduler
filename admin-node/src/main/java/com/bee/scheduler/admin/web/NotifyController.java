@@ -1,7 +1,7 @@
-package com.bee.scheduler.admin.web;
+package com.bee.scheduler.daemonnode.web;
 
-import com.bee.scheduler.admin.core.RamLocal;
-import com.bee.scheduler.admin.model.Notification;
+import com.bee.scheduler.daemonnode.core.RamLocal;
+import com.bee.scheduler.daemonnode.model.Notification;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;

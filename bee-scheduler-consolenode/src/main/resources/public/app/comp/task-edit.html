@@ -1,0 +1,189 @@
+<div class="content" v-loading="initEditFormModelInProcess">
+    <!--<div class="content-pendant">-->
+    <!--<el-button type="text" @click="$helperDialog.open('CreateTask')"><i class="iconfont icon-tips"></i> 使用帮助</el-button>-->
+    <!--</div>-->
+    <div class="content-header">
+        <div class="breadcrumb">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{path:'/task/list'}">任务管理</el-breadcrumb-item>
+                <el-breadcrumb-item>{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}}</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="title">
+            <template v-if="editFor==='New'"><i class="iconfont icon-plus"></i> 创建任务</template>
+            <template v-else-if="editFor==='Edit'"><i class="iconfont icon-edit"></i> 编辑任务</template>
+            <template v-else-if="editFor==='Copy'"><i class="iconfont icon-copy"></i> 复制任务</template>
+        </div>
+    </div>
+    <div class="content-body" v-show="!initEditFormModelInProcess">
+        <div style="width: 800px">
+            <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="100px">
+                <h4 class="no-margin">基本信息</h4>
+                <div class="hr"></div>
+                <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
+                    <el-input v-model="editTaskFormModel.name" :disabled="editFor==='Edit'"></el-input>
+                </el-form-item>
+                <el-form-item label="所属组" prop="group" :rules="validators.taskGroup">
+                    <el-autocomplete v-model="editTaskFormModel.group" :fetch-suggestions="queryTaskGroup" placeholder="" :trigger-on-focus="false" :disabled="editFor==='Edit'" style="width: 100%"></el-autocomplete>
+                </el-form-item>
+                <h4 class="no-margin">调度规则</h4>
+                <div class="hr"></div>
+                <el-form-item label="调度方式" prop="scheduleType">
+                    <el-radio-group v-model="editTaskFormModel.scheduleType">
+                        <el-radio :label="1">SimpleTrigger</el-radio>
+                        <el-radio :label="2">CalendarIntervalTrigger</el-radio>
+                        <el-radio :label="3">DailyTimeIntervalTrigger</el-radio>
+                        <el-radio :label="4">CronTrigger</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <template v-if="editTaskFormModel.scheduleType == 1"><!--Simple-->
+                    <el-form-item label="执行频率" prop="scheduleTypeSimpleOptions.interval" style="width: 350px">
+                        <el-input placeholder="请输入时间间隔" v-model="editTaskFormModel.scheduleTypeSimpleOptions.interval">
+                            <template slot="prepend">每隔</template>
+                            <template slot="append">毫秒</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="重复策略" prop="scheduleTypeSimpleOptions.repeatType">
+                        <el-radio-group v-model="editTaskFormModel.scheduleTypeSimpleOptions.repeatType">
+                            <el-radio :label="1">无限重复</el-radio>
+                            <el-radio :label="2">有限次数</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item v-if="editTaskFormModel.scheduleTypeSimpleOptions.repeatType == 2" label="重复次数" prop="scheduleTypeSimpleOptions.repeatCount">
+                        <el-input v-model="editTaskFormModel.scheduleTypeSimpleOptions.repeatCount"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Misfire策略" prop="scheduleTypeSimpleOptions.misfireHandlingType">
+                        <el-select v-model="editTaskFormModel.scheduleTypeSimpleOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
+                            <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="IgnoreMisfires" :value="-1"></el-option>
+                            <el-option label="FireNow" :value="1"></el-option>
+                            <el-option label="NowWithExistingCount" :value="2"></el-option>
+                            <el-option label="NowWithRemainingCount" :value="3"></el-option>
+                            <el-option label="NextWithRemainingCount" :value="4"></el-option>
+                            <el-option label="NextWithExistingCount" :value="5"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+                <template v-if="editTaskFormModel.scheduleType == 2"><!--CalendarInterval-->
+                    <el-form-item label="执行频率" prop="scheduleTypeCalendarIntervalOptions.interval" style="width: 300px">
+                        <el-input placeholder="请输入时间间隔" v-model="editTaskFormModel.scheduleTypeCalendarIntervalOptions.interval">
+                            <template slot="prepend">每隔</template>
+                            <el-select slot="append" v-model="editTaskFormModel.scheduleTypeCalendarIntervalOptions.intervalUnit" placeholder="请选择" style="width: 65px">
+                                <el-option label="秒" value="SECOND"></el-option>
+                                <el-option label="分" value="MINUTE"></el-option>
+                                <el-option label="时" value="HOUR"></el-option>
+                                <el-option label="天" value="DAY"></el-option>
+                                <el-option label="周" value="WEEK"></el-option>
+                                <el-option label="月" value="MONTH"></el-option>
+                                <el-option label="年" value="YEAR"></el-option>
+                            </el-select>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="Misfire策略" prop="scheduleTypeCalendarIntervalOptions.misfireHandlingType">
+                        <el-select v-model="editTaskFormModel.scheduleTypeCalendarIntervalOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
+                            <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="IgnoreMisfires" :value="-1"></el-option>
+                            <el-option label="FireAndProceed" :value="1"></el-option>
+                            <el-option label="DoNothing" :value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+                <template v-if="editTaskFormModel.scheduleType == 3"><!--DailyTimeInterval-->
+                    <el-form-item label="执行频率" prop="scheduleTypeDailyTimeIntervalOptions.interval" style="width: 300px">
+                        <el-input placeholder="请输入时间间隔" v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.interval">
+                            <template slot="prepend">每隔</template>
+                            <el-select slot="append" v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.intervalUnit" placeholder="请选择" style="width: 65px">
+                                <el-option label="秒" value="SECOND"></el-option>
+                                <el-option label="分" value="MINUTE"></el-option>
+                                <el-option label="时" value="HOUR"></el-option>
+                            </el-select>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="时间段开始" prop="scheduleTypeDailyTimeIntervalOptions.startTimeOfDay">
+                        <el-time-picker v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.startTimeOfDay" placeholder="请选择时间"></el-time-picker>
+                    </el-form-item>
+                    <el-form-item label="时间段结束" prop="scheduleTypeDailyTimeIntervalOptions.endTimeOfDay">
+                        <el-time-picker v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.endTimeOfDay" placeholder="请选择时间"></el-time-picker>
+                    </el-form-item>
+                    <el-form-item label="周几执行" prop="scheduleTypeDailyTimeIntervalOptions.daysOfWeek">
+                        <el-checkbox-group v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.daysOfWeek">
+                            <el-checkbox :label="2">周一</el-checkbox>
+                            <el-checkbox :label="3">周二</el-checkbox>
+                            <el-checkbox :label="4">周三</el-checkbox>
+                            <el-checkbox :label="5">周四</el-checkbox>
+                            <el-checkbox :label="6">周五</el-checkbox>
+                            <el-checkbox :label="7">周六</el-checkbox>
+                            <el-checkbox :label="1">周日</el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                    <el-form-item label="Misfire策略" prop="scheduleTypeDailyTimeIntervalOptions.misfireHandlingType">
+                        <el-select v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
+                            <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="IgnoreMisfires" :value="-1"></el-option>
+                            <el-option label="FireAndProceed" :value="1"></el-option>
+                            <el-option label="DoNothing" :value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+                <template v-if="editTaskFormModel.scheduleType == 4"><!--Cron-->
+                    <el-form-item label="Cron表达式" prop="scheduleTypeCronOptions.cron">
+                        <el-input v-model="editTaskFormModel.scheduleTypeCronOptions.cron" placeholder="请输入Cron表达式"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Misfire策略" prop="scheduleTypeCronOptions.misfireHandlingType">
+                        <el-select v-model="editTaskFormModel.scheduleTypeCronOptions.misfireHandlingType" placeholder="请选择" style="width: 100%">
+                            <el-option label="SmartPolicy" :value="0"></el-option>
+                            <el-option label="IgnoreMisfires" :value="-1"></el-option>
+                            <el-option label="FireAndProceed" :value="1"></el-option>
+                            <el-option label="DoNothing" :value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+                <h4 class="no-margin">任务内容</h4>
+                <div class="hr"></div>
+                <el-form-item label="任务组件" prop="jobComponent" :rules="validators.jobComponent">
+                    <el-select v-model="editTaskFormModel.jobComponent" :disabled="editFor==='Edit'" placeholder="请选择任务组件" style="width: 100%">
+                        <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key">
+                            <div>{{item.name}}<span class="text-silver"> - {{item.description||"无描述"}}</span></div>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="任务参数" prop="params">
+                    <el-input type="textarea" v-model="editTaskFormModel.params" class="font-code" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入任务组件需要的参数（JSON格式）"></el-input>
+                </el-form-item>
+                <el-form-item label="任务描述" prop="description">
+                    <el-input type="textarea" v-model="editTaskFormModel.description" :autosize="{minRows: 2, maxRows: 5}" placeholder="请详细描述该任务"></el-input>
+                </el-form-item>
+                <h4 class="no-margin">高级选项</h4>
+                <div class="hr"></div>
+                <el-form-item label="激活选项" prop="startAtType">
+                    <el-radio-group v-model="editTaskFormModel.startAtType">
+                        <el-radio :label="1">立即激活</el-radio>
+                        <el-radio :label="2">指定时间激活</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="editTaskFormModel.startAtType == 2" label="激活时间" prop="startAt">
+                    <el-date-picker v-model="editTaskFormModel.startAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="销毁选项" prop="endAtType">
+                    <el-radio-group v-model="editTaskFormModel.endAtType">
+                        <el-radio :label="1">永不销毁</el-radio>
+                        <el-radio :label="2">指定时间销毁</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="editTaskFormModel.endAtType == 2" label="销毁时间" prop="endAt">
+                    <el-date-picker v-model="editTaskFormModel.endAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="联动任务" prop="linkageRule">
+                    <el-input type="textarea" v-model="editTaskFormModel.linkageRule" class="font-code" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入联动任务规则（JSON格式）"></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
+        <div class="hr"></div>
+        <div>
+            <el-button @click="routerGoback">取 消</el-button>
+            <el-button type="primary" @click="postTask" :loading="postTaskInProcess">保 存</el-button>
+        </div>
+
+    </div>
+</div>

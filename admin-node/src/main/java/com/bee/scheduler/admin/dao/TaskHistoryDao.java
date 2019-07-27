@@ -1,7 +1,7 @@
-package com.bee.scheduler.admin.dao;
+package com.bee.scheduler.daemonnode.dao;
 
-import com.bee.scheduler.admin.model.ExecutedTask;
-import com.bee.scheduler.admin.model.Pageable;
+import com.bee.scheduler.daemonnode.model.ExecutedTask;
+import com.bee.scheduler.daemonnode.model.Pageable;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;

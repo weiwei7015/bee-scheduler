@@ -1,8 +1,8 @@
-package com.bee.scheduler.admin.core;
+package com.bee.scheduler.daemonnode.core;
 
 
-import com.bee.scheduler.admin.model.Notification;
-import com.bee.scheduler.core.job.AbstractJobComponent;
+import com.bee.scheduler.daemonnode.model.Notification;
+import com.bee.scheduler.context.job.AbstractJobComponent;
 
 import java.util.*;
 

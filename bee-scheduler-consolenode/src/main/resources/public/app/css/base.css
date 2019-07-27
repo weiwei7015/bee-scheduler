@@ -1,0 +1,402 @@
+/******* base *******/
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #eef1f6;
+    color: #48576a;
+    font-size: 14px;
+}
+
+body, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6, input, textarea, keygen, select, button, pre {
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+hr {
+    padding: 0;
+    margin: 10px;
+    border: 1px solid #D3DCE6;
+    height: 0;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+/**ScrollBar*/
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    cursor: pointer;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #EFF2F7;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #c0ccda;
+}
+
+/******* app *******/
+.app {
+    width: 100%;
+    height: 100%;
+    min-width: 1200px;
+}
+
+.main {
+    height: 100%;
+}
+
+.main .side {
+    z-index: 1000;
+    box-sizing: border-box;
+    width: 230px;
+    float: left;
+    position: fixed;
+    overflow: auto;
+    background-color: #324157;
+    top: 0;
+    bottom: 0;
+    margin-bottom: auto;
+}
+
+.main .content-wrapper {
+    padding-left: 230px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.side .logo {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.side .logo .logo-img {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+.side .logo .logo-img img {
+    width: 100%;
+    height: 100%;
+}
+
+.side .logo .logo-text {
+    display: inline-block;
+    font-size: 19px;
+    color: #fff;
+    position: absolute;
+    top: 25px;
+    margin-left: 5px;
+}
+
+.content-wrapper .content {
+    background-color: #ffffff;
+    height: 100%;
+    box-shadow: 0 0 10px #eee;
+    width: 100%;
+    position: relative;
+}
+
+.content .content-pendant {
+    position: absolute;
+    top: 60px;
+    right: 50px;
+    z-index: 2;
+}
+
+.content .content-header {
+    padding: 0 15px;
+    border-bottom: 1px solid #D3DCE6;
+    color: #8492A6;
+    line-height: 45px;
+    height: 45px;
+    box-sizing: border-box;
+}
+
+.content .content-body {
+    padding: 20px;
+    box-sizing: border-box;
+    top: 45px;
+    bottom: 0;
+    margin: auto;
+    overflow: auto;
+    position: absolute;
+    width: 100%;
+}
+
+.content .content-header .title {
+    font-size: 20px;
+    font-weight: normal;
+    color: #48576a;
+}
+
+.content .content-header .title .sub-title {
+    font-size: 12px;
+    font-weight: normal;
+    color: #99A9BF;
+}
+
+.content .content-header .breadcrumb {
+    float: right;
+}
+
+.content .content-header .breadcrumb .el-breadcrumb {
+    line-height: 45px;
+}
+
+/******* special *******/
+[v-cloak] {
+    display: none;
+}
+
+/******* box *******/
+.box {
+    border: 1px solid #D3DCE6;
+    background-color: #ffffff;
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+}
+
+.box.box-primary {
+    background-color: rgba(32, 160, 255, .1);
+    border-color: rgba(32, 160, 255, .2);
+    color: #20a0ff;
+}
+
+.box.box-success {
+    background-color: rgba(18, 206, 102, .1);
+    border-color: rgba(18, 206, 102, .2);
+    color: #13ce66;
+}
+
+.box.box-warning {
+    background-color: rgba(247, 186, 41, .1);
+    border-color: rgba(247, 186, 41, .2);
+    color: #f7ba2a;
+}
+
+.box.box-danger {
+    background-color: rgba(255, 73, 73, .1);
+    border-color: rgba(255, 73, 73, .2);
+    color: #ff4949;
+}
+
+.box.box-hover:hover {
+    border-color: #8391a5;
+}
+
+.box .box-header {
+    padding: 10px;
+    border-bottom: 1px solid #D3DCE6;
+}
+
+.box .box-body {
+    padding: 10px;
+}
+
+.box .box-footer {
+    padding: 10px;
+    border-top: 1px solid #D3DCE6;
+}
+
+/******* el-menu *******/
+.el-menu {
+    border-right: none;
+}
+
+.el-menu .iconfont {
+    margin-right: 5px;
+    width: 24px;
+    text-align: center;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+/******* el-form *****/
+.el-form.form-label-muted .el-form-item__label {
+    color: #99A9BF;
+}
+
+.el-form.no-item-margin .el-form-item {
+    margin-bottom: 0;
+}
+
+/******* CheckBox *******/
+.el-checkbox-group.small .el-checkbox__label {
+    font-size: 12px;
+}
+
+/******* Radio *******/
+.el-radio-group.small .el-radio__label {
+    font-size: 12px;
+}
+
+/******* ace-editor *******/
+.el-input-wrapper {
+    width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #bfcbd9;
+    box-sizing: border-box;
+    outline: 0;
+    padding: 10px;
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+}
+
+.el-input-wrapper:hover {
+    border-color: #8391a5;
+    /*border-color: #20a0ff;*/
+}
+
+.el-input-wrapper:focus, .el-input-wrapper:active {
+    outline: 0;
+    border-color: #20a0ff;
+}
+
+/******* LogPannel *******/
+pre.log {
+    background-color: #000;
+    color: #fff;
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 20px;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: auto;
+    white-space: pre-wrap;
+    /*border: 1px solid #ccc;*/
+    border-radius: 3px;
+}
+
+/******* Commons *******/
+.text-center {
+    text-align: center
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.bg-darkwhite {
+    background-color: #F9FAFC;
+}
+
+.bg-orange {
+    background-color: #f19c00;
+}
+
+.no-border {
+    border: none !important;
+}
+
+div.hr {
+    height: 1px;
+    background-color: #D3DCE6;
+    margin: 10px 0;
+}
+
+div.spr {
+    height: 1px;
+    margin: 5px 0;
+}
+
+.spr.spr-x {
+    margin: 7px 0;
+}
+
+.font-code, .font-code textarea, .font-code input {
+    font-family: "InputMono", "Consolas", "Monaco", "Menlo", sans-serif !important;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.text-white {
+    color: #ffffff;
+}
+
+.text-info {
+    color: #20A0FF;
+}
+
+.text-success {
+    color: #13CE66;
+}
+
+.text-danger {
+    color: #FF4949;
+}
+
+.text-warning {
+    color: #F7BA2A;
+}
+
+.text-light-gray {
+    color: #E5E9F2;
+}
+
+.text-gray {
+    color: #D3DCE6;
+}
+
+.text-extra-light-silver {
+    color: #C0CCDA;
+}
+
+.text-silver {
+    color: #8492A6;
+}
+
+.bg-light-gray {
+    background-color: #E5E9F2;
+}
+
+.bg-dark-white {
+    background-color: #F9FAFC;
+}
+
+.bg-extra-light-gray {
+    background-color: #EFF2F7;
+}
+
+/********* task-box **********/
+.box.task-box .task-title {
+    line-height: 36px;
+}

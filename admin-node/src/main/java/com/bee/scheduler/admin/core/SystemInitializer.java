@@ -1,9 +1,9 @@
-package com.bee.scheduler.admin.core;
+package com.bee.scheduler.daemonnode.core;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.Constants;
-import com.bee.scheduler.core.job.BuildInJobComponent;
-import com.bee.scheduler.core.job.AbstractJobComponent;
+import com.bee.scheduler.context.Constants;
+import com.bee.scheduler.context.job.BuildInJobComponent;
+import com.bee.scheduler.context.job.AbstractJobComponent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;

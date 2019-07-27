@@ -1,6 +1,6 @@
-package com.bee.scheduler.admin.model;
+package com.bee.scheduler.daemonnode.model;
 
-import com.bee.scheduler.core.Constants;
+import com.bee.scheduler.context.Constants;
 
 /**
  * @author weiwei 任务历史

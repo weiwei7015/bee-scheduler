@@ -1,6 +1,6 @@
-package com.bee.scheduler.core;
+package com.bee.scheduler.context;
 
-import com.bee.scheduler.core.job.AbstractJobComponent;
+import com.bee.scheduler.context.job.AbstractJobComponent;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,6 +1,6 @@
-package com.bee.scheduler.admin.web;
+package com.bee.scheduler.daemonnode.web;
 
-import com.bee.scheduler.admin.model.UserLoginSession;
+import com.bee.scheduler.daemonnode.model.UserLoginSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

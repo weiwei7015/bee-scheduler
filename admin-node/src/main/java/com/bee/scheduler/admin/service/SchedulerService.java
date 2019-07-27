@@ -1,7 +1,7 @@
-package com.bee.scheduler.admin.service;
+package com.bee.scheduler.daemonnode.service;
 
 
-import com.bee.scheduler.admin.model.ClusterSchedulerNode;
+import com.bee.scheduler.daemonnode.model.ClusterSchedulerNode;
 
 import java.util.List;
 

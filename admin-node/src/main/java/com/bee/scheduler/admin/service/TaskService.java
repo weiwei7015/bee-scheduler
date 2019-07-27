@@ -1,10 +1,10 @@
-package com.bee.scheduler.admin.service;
+package com.bee.scheduler.daemonnode.service;
 
 
-import com.bee.scheduler.admin.model.ExecutedTask;
-import com.bee.scheduler.admin.model.ExecutingTask;
-import com.bee.scheduler.admin.model.Pageable;
-import com.bee.scheduler.admin.model.Task;
+import com.bee.scheduler.daemonnode.model.ExecutedTask;
+import com.bee.scheduler.daemonnode.model.ExecutingTask;
+import com.bee.scheduler.daemonnode.model.Pageable;
+import com.bee.scheduler.daemonnode.model.Task;
 
 import java.util.Date;
 import java.util.List;

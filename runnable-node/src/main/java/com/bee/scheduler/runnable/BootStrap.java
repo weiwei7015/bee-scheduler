@@ -1,6 +1,6 @@
 package com.bee.scheduler.runnable;
 
-import com.bee.scheduler.core.BeeSchedulerFactoryBean;
+import com.bee.scheduler.context.BeeSchedulerFactoryBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

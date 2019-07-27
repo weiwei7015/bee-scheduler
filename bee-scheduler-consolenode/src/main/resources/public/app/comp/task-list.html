@@ -1,0 +1,58 @@
+<div class="content">
+    <div class="content-header">
+        <div class="breadcrumb">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
+                <el-breadcrumb-item>任务管理</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="title"><i class="iconfont icon-yy-task"></i> 任务管理</div>
+    </div>
+    <div class="content-body">
+        <el-row>
+            <el-col :span="8">
+                <el-autocomplete :fetch-suggestions="querySuggestion" v-model="queryParams.keyword" style="width:100%" :debounce="0" placeholder="任务名 g:任务组 s:任务状态">
+                    <el-button slot="append" icon="el-icon-search" @click="query"></el-button>
+                </el-autocomplete>
+            </el-col>
+            <el-col :span="16" class="text-right">
+                <el-button-group v-show="showCommandBtnGroup">
+                    <el-button v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-recovery"></i></el-button>
+                    <el-button v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
+                    <el-button @click="executeTask"><i class="iconfont icon-play"></i></el-button>
+                    <el-button @click="goEditTask"><i class="iconfont icon-edit"></i></el-button>
+                    <el-button @click="goCopyTask"><i class="iconfont icon-copy"></i></el-button>
+                    <el-button @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
+                </el-button-group>
+                <el-button-group>
+                    <el-button type="primary" @click="goCreateTask"><i class="iconfont icon-plus"></i></el-button>
+                    <el-button type="primary" @click="createQuickTask"><i class="iconfont icon-flash"></i></el-button>
+                </el-button-group>
+            </el-col>
+        </el-row>
+        <div class="hr"></div>
+
+        <div v-loading="queryLoading">
+            <el-table :data="queryResult.result" :show-header="true" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="40"></el-table-column>
+                <el-table-column label="状态" width="150">
+                    <template scope="scope">{{scope.row.state}}</template>
+                </el-table-column>
+                <el-table-column label="任务" show-overflow-tooltip>
+                    <template scope="scope">
+                        <el-button type="text" class="no-padding" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)"><span class="text-bold">{{scope.row.group + "." + scope.row.name}}</span></el-button>
+                        <span class="text-silver"> - {{scope.row.description||"无描述"}}</span></template>
+                </el-table-column>
+            </el-table>
+            <div class="spr"></div>
+            <template v-if="queryResult.result && queryResult.result.length > 0">
+                <div class="text-right">
+                    <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
+                </div>
+            </template>
+        </div>
+
+    </div>
+    <!--Dialog-->
+    <quick-task-dialog :visible.sync="quickTaskDialogVisible"></quick-task-dialog>
+</div>

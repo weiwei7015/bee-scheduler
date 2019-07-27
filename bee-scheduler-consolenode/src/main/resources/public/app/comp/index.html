@@ -1,0 +1,22 @@
+<div class="main">
+    <div class="side">
+        <div class="logo">
+            <a href="/" class="logo-img"><img src="/public/app/img/logo.png"/></a>
+            <span class="logo-text">Bee Scheduler</span>
+            <!--<span class="logo-text"><el-badge value="BETA">Bee Scheduler</el-badge></span>-->
+        </div>
+        <!--<div class="text-center text-extra-light-silver">ST : {{now?$moment(now).format("YYYY-MM-DD HH:mm:ss"):"- -"}}</div>-->
+        <div class="spr"></div>
+        <el-menu unique-opened="true" background-color="#324157" text-color="#fff" active-text-color="#F47023" router="true" ref="nav" :default-active="$route.path" v-once>
+            <el-menu-item index="/dashboard"><i class="iconfont icon-dashboard""></i> <span slot="title">Dashboard</span></el-menu-item>
+            <el-menu-item index="/task/list"><i class="iconfont icon-yy-task"></i> <span slot="title">任务管理</span></el-menu-item>
+            <el-menu-item index="/task/history/list"><i class="iconfont icon-history"></i> <span slot="title">历史任务</span></el-menu-item>
+            <el-menu-item index="/cluster" v-if="$AppConfig.clusterMode"><i class="iconfont icon-icons01"></i> <span slot="title">集群节点</span></el-menu-item>
+            <el-menu-item index="/settings"><i class="iconfont icon-settings"></i> <span slot="title">系统设置</span></el-menu-item>
+            <el-menu-item index="/help"><i class="iconfont icon-tips"></i> <span slot="title">使用帮助</span></el-menu-item>
+        </el-menu>
+    </div>
+    <div class="content-wrapper">
+        <router-view></router-view>
+    </div>
+</div>

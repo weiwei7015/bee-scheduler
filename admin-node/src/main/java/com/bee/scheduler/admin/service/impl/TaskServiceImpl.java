@@ -1,12 +1,12 @@
-package com.bee.scheduler.admin.service.impl;
+package com.bee.scheduler.daemonnode.service.impl;
 
-import com.bee.scheduler.admin.dao.TaskDao;
-import com.bee.scheduler.admin.dao.TaskHistoryDao;
-import com.bee.scheduler.admin.model.ExecutedTask;
-import com.bee.scheduler.admin.model.ExecutingTask;
-import com.bee.scheduler.admin.model.Pageable;
-import com.bee.scheduler.admin.model.Task;
-import com.bee.scheduler.admin.service.TaskService;
+import com.bee.scheduler.daemonnode.dao.TaskDao;
+import com.bee.scheduler.daemonnode.dao.TaskHistoryDao;
+import com.bee.scheduler.daemonnode.model.ExecutedTask;
+import com.bee.scheduler.daemonnode.model.ExecutingTask;
+import com.bee.scheduler.daemonnode.model.Pageable;
+import com.bee.scheduler.daemonnode.model.Task;
+import com.bee.scheduler.daemonnode.service.TaskService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

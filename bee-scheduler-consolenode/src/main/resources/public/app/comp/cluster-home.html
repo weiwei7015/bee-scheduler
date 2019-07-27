@@ -1,0 +1,35 @@
+<div class="content" v-loading="clusterInfoLoading">
+    <div class="content-header">
+        <div class="breadcrumb">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
+                <el-breadcrumb-item>集群节点</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="title"><i class="iconfont icon-icons01"></i> 集群节点</div>
+    </div>
+    <div class="content-body">
+        <div style="float: left;width: 240px">
+            <h4 class="no-margin">节点数量：</h4>
+            <div class="hr"></div>
+            <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">{{nodes.length}}</div>
+            <div class="spr"></div>
+            <div class="text-center">
+                <el-button @click="refreshClusterInfo">刷新</el-button>
+            </div>
+        </div>
+        <div style="margin-left: 260px;">
+            <h4 class="no-margin">节点列表：</h4>
+            <div class="hr"></div>
+            <el-table :data="nodes" style="width: 100%">
+                <el-table-column prop="instanceName" label="实例ID"></el-table-column>
+                <el-table-column label="最后签到时间">
+                    <template scope="scope">{{$moment(scope.row.lastCheckinTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
+                </el-table-column>
+                <el-table-column prop="checkinInterval" label="签到频率">
+                    <template scope="scope">{{scope.row.checkinInterval}} ms</template>
+                </el-table-column>
+            </el-table>
+        </div>
+    </div>
+</div>

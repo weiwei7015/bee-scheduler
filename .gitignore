@@ -1,5 +1,3 @@
-admin-node/target/
-runnable-node/target/
-core/target/
+**/target
 .idea/
 **/*.iml

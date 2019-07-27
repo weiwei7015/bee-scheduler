@@ -1,6 +1,6 @@
-package com.bee.scheduler.admin.dao;
+package com.bee.scheduler.daemonnode.dao;
 
-import com.bee.scheduler.admin.model.ClusterSchedulerNode;
+import com.bee.scheduler.daemonnode.model.ClusterSchedulerNode;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
 

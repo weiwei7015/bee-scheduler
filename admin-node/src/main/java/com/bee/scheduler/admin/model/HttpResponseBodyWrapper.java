@@ -1,4 +1,4 @@
-package com.bee.scheduler.admin.model;
+package com.bee.scheduler.daemonnode.model;
 
 import java.util.Date;
 
