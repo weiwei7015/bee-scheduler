@@ -6,7 +6,7 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
         data: function () {
             var vm = this;
             var validators = {
-                jobComponent: [
+                jobModule: [
                     {required: true, message: '请选择任务组件', trigger: 'change'}
                 ],
                 taskName: [
@@ -16,12 +16,12 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
             };
             var data = {
                 validators: validators,
-                jobComponentList: {},
+                jobModuleList: {},
                 postTaskInProcess: false,
                 initializing: false,
                 editTaskFormModel: {
                     name: '',
-                    jobComponent: '',
+                    jobModule: '',
                     params: '',
                     enableStartDelay: false,
                     startDelay: 1000
@@ -30,16 +30,16 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
 
             data.initializing = true;
             vm.$http.get("/job-component/list").then(function (re) {
-                data.jobComponentList = re.body.data;
+                data.jobModuleList = re.body.data;
                 data.initializing = false;
             });
 
             return data;
         },
         watch: {
-            'editTaskFormModel.jobComponent': function (newVal, oldVal) {
-                var selectedJobComponent = this.jobComponentList[newVal];
-                this.editTaskFormModel.params = selectedJobComponent.paramTemplate;
+            'editTaskFormModel.jobModule': function (newVal, oldVal) {
+                var selectedJobModule = this.jobModuleList[newVal];
+                this.editTaskFormModel.params = selectedJobModule.paramTemplate;
             },
             'visible': function (newVal) {
                 if (newVal) {

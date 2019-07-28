@@ -93,7 +93,7 @@ public class TaskController {
                 throw new BizzException(BizzException.error_code_invalid_params, "任务所属组只允许使用字母、数字和下划线，请检查");
             }
         }
-        if (StringUtils.isEmpty(taskConfig.getJobModuleId())) {
+        if (StringUtils.isEmpty(taskConfig.getJobModule())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请选择任务组件");
         }
         if (StringUtils.isNotEmpty(taskConfig.getParams())) {
@@ -208,7 +208,7 @@ public class TaskController {
             }
         }
 
-        if (StringUtils.isEmpty(quickTaskConfig.getJobModuleId())) {
+        if (StringUtils.isEmpty(quickTaskConfig.getJobModule())) {
             throw new BizzException(BizzException.error_code_invalid_params, "请选择任务组件");
         }
         if (StringUtils.isNotEmpty(quickTaskConfig.getParams())) {

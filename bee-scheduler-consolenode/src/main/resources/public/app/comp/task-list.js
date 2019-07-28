@@ -29,7 +29,7 @@ define(['text!comp/task-list.html'], function (tpl) {
                 taskStatus: ["WAITING", "ACQUIRED", "PAUSED", "BLOCKED", "PAUSED_BLOCKED", "ERROR", "DELETED"],
                 selectedItems: [],
                 enabledCommandBtn: [],
-                jobComponentList: {}
+                jobModuleList: {}
             };
 
             vm.$http.get("/task/groups").then(function (re) {

@@ -141,9 +141,9 @@
                 </template>
                 <h4 class="no-margin">任务内容</h4>
                 <div class="hr"></div>
-                <el-form-item label="任务组件" prop="jobComponent" :rules="validators.jobComponent">
-                    <el-select v-model="editTaskFormModel.jobComponent" :disabled="editFor==='Edit'" placeholder="请选择任务组件" style="width: 100%">
-                        <el-option v-for="(item, key) in jobComponentList" :label="item.name" :value="key">
+                <el-form-item label="任务组件" prop="jobModule" :rules="validators.jobModule">
+                    <el-select v-model="editTaskFormModel.jobModule" :disabled="editFor==='Edit'" placeholder="请选择任务组件" style="width: 100%">
+                        <el-option v-for="(item, key) in jobModuleList" :label="item.name" :value="key">
                             <div>{{item.name}}<span class="text-silver"> - {{item.description||"无描述"}}</span></div>
                         </el-option>
                     </el-select>

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
+import java.util.Date;
 
 @Controller
 public class TimeController {
@@ -15,10 +15,9 @@ public class TimeController {
     private Scheduler scheduler;
 
     @ResponseBody
-    @RequestMapping("/configs")
+    @RequestMapping("/server-time")
     HttpResponseBodyWrapper configs() throws Exception {
-        HashMap<Object, Object> model = new HashMap<>();
-        model.put("clusterMode", scheduler.getMetaData().isJobStoreClustered());
-        return new HttpResponseBodyWrapper(model);
+        return new HttpResponseBodyWrapper(new Date().getTime());
     }
+
 }

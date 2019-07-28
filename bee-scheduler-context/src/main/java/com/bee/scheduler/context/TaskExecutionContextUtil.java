@@ -24,31 +24,35 @@ public class TaskExecutionContextUtil {
     }
 
     public static TaskExecutionContext convert(JobExecutionContext context) {
-        JobKey jobKey = context.getJobDetail().getKey();
-        Trigger trigger = context.getTrigger();
-        Scheduler scheduler = context.getScheduler();
-
-        TaskExecutionContext taskExecutionContext = new TaskExecutionContext();
-        taskExecutionContext.setTaskModuleId(getTaskModuleId(context));
-        taskExecutionContext.setParam(getTaskParam(context));
-        taskExecutionContext.setLinkageRule(getTaskLinkageRule(context));
-        taskExecutionContext.setSchedulerName(jobKey.getGroup());
         try {
-            taskExecutionContext.setSchedulerInstanceId(scheduler.getSchedulerInstanceId());
+            JobKey jobKey = context.getJobDetail().getKey();
+            Trigger trigger = context.getTrigger();
+            Scheduler scheduler = context.getScheduler();
+
+            TaskExecutionContext taskExecutionContext = new TaskExecutionContext();
+            taskExecutionContext.setTaskModuleId(getTaskModuleId(context));
+            taskExecutionContext.setParam(getTaskParam(context));
+            taskExecutionContext.setLinkageRule(getTaskLinkageRule(context));
+            taskExecutionContext.setSchedulerName(scheduler.getSchedulerName());
+            try {
+                taskExecutionContext.setSchedulerInstanceId(scheduler.getSchedulerInstanceId());
+            } catch (SchedulerException e) {
+                taskExecutionContext.setSchedulerInstanceId("unknown");
+            }
+            taskExecutionContext.setJobGroup(jobKey.getGroup());
+            taskExecutionContext.setJobName(jobKey.getName());
+            taskExecutionContext.setTriggerGroup(trigger.getKey().getGroup());
+            taskExecutionContext.setTriggerName(trigger.getKey().getName());
+            taskExecutionContext.setFireInstanceId(context.getFireInstanceId());
+            taskExecutionContext.setFireTime(context.getFireTime());
+            taskExecutionContext.setJobRunTime(context.getJobRunTime());
+            taskExecutionContext.setRefireCount(context.getRefireCount());
+            taskExecutionContext.setPreviousFireTime(context.getPreviousFireTime());
+            taskExecutionContext.setLogger(getLogger(context));
+            return taskExecutionContext;
         } catch (SchedulerException e) {
-            taskExecutionContext.setSchedulerInstanceId("unknown");
+            throw new RuntimeException(e);
         }
-        taskExecutionContext.setJobGroup(jobKey.getGroup());
-        taskExecutionContext.setJobName(jobKey.getName());
-        taskExecutionContext.setTriggerGroup(trigger.getKey().getGroup());
-        taskExecutionContext.setTriggerName(trigger.getKey().getName());
-        taskExecutionContext.setFireInstanceId(context.getFireInstanceId());
-        taskExecutionContext.setFireTime(context.getFireTime());
-        taskExecutionContext.setJobRunTime(context.getJobRunTime());
-        taskExecutionContext.setRefireCount(context.getRefireCount());
-        taskExecutionContext.setPreviousFireTime(context.getPreviousFireTime());
-        taskExecutionContext.setLogger(getLogger(context));
-        return taskExecutionContext;
     }
 
     //获取任务参数
