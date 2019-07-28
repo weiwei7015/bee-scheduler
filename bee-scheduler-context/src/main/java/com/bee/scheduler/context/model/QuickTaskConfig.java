@@ -1,9 +1,9 @@
-package com.bee.scheduler.consolenode.model;
+package com.bee.scheduler.context.model;
 
 /**
  * @author weiwei
  */
-public class TmpTaskConfig extends TaskConfig {
+public class QuickTaskConfig extends TaskConfig {
     private Boolean enableStartDelay;
     private Integer startDelay;
 

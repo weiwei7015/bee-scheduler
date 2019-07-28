@@ -1,4 +1,4 @@
-package com.bee.scheduler.consolenode.model;
+package com.bee.scheduler.context.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import org.quartz.*;
@@ -27,6 +27,9 @@ public class TaskConfig {
     public static final int END_AT_TYPE_NEVER = 1;
     public static final int END_AT_TYPE_GIVEN_TIME = 2;
 
+    //触发器状态
+    public enum TriggerState {NONE, NORMAL, PAUSED, COMPLETE, ERROR, BLOCKED}
+
     private String name = "";
     private String group = "";
     private Integer scheduleType = SCHEDULE_TYPE_CRON_TRIGGER;
@@ -38,7 +41,7 @@ public class TaskConfig {
     private Date startAt;
     private Integer endAtType = END_AT_TYPE_NEVER;
     private Date endAt;
-    private String jobComponent = "";
+    private String jobModuleId = "";
     private String params = "";
     private String description = "";
     private String linkageRule = "";
@@ -131,12 +134,12 @@ public class TaskConfig {
         this.endAt = endAt;
     }
 
-    public String getJobComponent() {
-        return jobComponent;
+    public String getJobModuleId() {
+        return jobModuleId;
     }
 
-    public void setJobComponent(String jobComponent) {
-        this.jobComponent = jobComponent;
+    public void setJobModuleId(String jobModuleId) {
+        this.jobModuleId = jobModuleId;
     }
 
     public String getParams() {

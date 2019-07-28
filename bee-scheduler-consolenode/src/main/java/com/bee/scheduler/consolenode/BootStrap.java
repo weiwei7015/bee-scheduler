@@ -11,6 +11,7 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.scheduler.consolenode.core.SystemInitializer;
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
+import com.bee.scheduler.context.CustomQuartzSchedulerFactoryBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.TimeOfDay;
@@ -111,13 +112,18 @@ public class BootStrap {
 
     //调度器工厂
     @Bean
-    public BeeSchedulerFactoryBean beeSchedulerFactoryBean() {
-        BeeSchedulerFactoryBean beeSchedulerFactoryBean = new BeeSchedulerFactoryBean("BeeScheduler", dataSource);
+    public CustomQuartzSchedulerFactoryBean customQuartzSchedulerFactoryBean() {
+        CustomQuartzSchedulerFactoryBean beeSchedulerFactoryBean = new CustomQuartzSchedulerFactoryBean("BeeScheduler", dataSource);
         beeSchedulerFactoryBean.setClusterMode(env.containsProperty("cluster"));
         if (env.containsProperty("thread-pool-size")) {
             beeSchedulerFactoryBean.setThreadPoolSize(env.getRequiredProperty("thread-pool-size", Integer.TYPE));
         }
         return beeSchedulerFactoryBean;
+    }
+
+    @Bean
+    public BeeSchedulerFactoryBean beeSchedulerFactoryBean(CustomQuartzSchedulerFactoryBean customQuartzSchedulerFactoryBean) {
+        return new BeeSchedulerFactoryBean(customQuartzSchedulerFactoryBean);
     }
 
     // 系统启动监听器，用于系统启动完成后的初始化操作
