@@ -15,17 +15,8 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>com.bee.scheduler</groupId>
-            <artifactId>bee-scheduler-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
