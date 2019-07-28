@@ -13,7 +13,7 @@
         <dependency>
             <groupId>com.bee.scheduler</groupId>
             <artifactId>bee-scheduler-core</artifactId>
-            <version>${revision}</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

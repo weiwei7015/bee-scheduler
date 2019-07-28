@@ -11,13 +11,8 @@
     <dependencies>
         <dependency>
             <groupId>com.bee.scheduler</groupId>
-            <artifactId>bee-scheduler-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.bee.scheduler</groupId>
             <artifactId>bee-scheduler-context</artifactId>
-            <version>${revision}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
