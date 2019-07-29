@@ -23,24 +23,26 @@
 ## 下载最新的可运行包
 [https://gitee.com/kangroo/bee-scheduler/releases](https://gitee.com/kangroo/bee-scheduler/releases)
   
-## 单机运行模式:
+## 单机运行模式
+### 运行管理节点:console-node:
 ```shell
 java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false"
 ```
 启动完成后浏览器访问：http://ip:port  ，请使用IE9+、Chrome、Safari、Firefox等现代浏览器  
   
 ## 集群运行模式：
-### 1、运行一个管理节点（使用--cluster开启集群）：
+### 1、运行管理节点:console-node，并使用--cluster开启集群：
 ```shell
 java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false" --cluster
 ```
 启动完成后浏览器访问管理节点：http://ip:port **（注意：管理节点本身也是一个调度节点，参与任务执行）**，请使用IE9+、Chrome、Safari、Firefox等现代浏览器 
 
-### 2、使用daemon-node扩展节点
+### 2、运行扩展节点:daemon-node
 ```shell
 java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false"
 ```
-启动完成后，会自动加入集群（基于db做注册），访问管理节点能看到集群信息
+启动完成后，访问管理节点能看到集群信息
+扩展节点的数量可以随时增减，新增的节点启动完成后，会自动加入集群，停止的扩展节点会自动退出集群
 
 ### 3、运行参数
 |参数名|类型|是否必须|含义|默认值|
