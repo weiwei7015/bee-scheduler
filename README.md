@@ -42,7 +42,7 @@ java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.
 java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false"
 ```
 启动完成后，访问管理节点能看到集群信息
-扩展节点的数量可以随时增减，新增的节点启动完成后，会自动加入集群，停止的扩展节点会自动退出集群
+>扩展节点的数量可以随时增减，新增的节点启动完成后，会自动加入集群，停止的扩展节点会自动退出集群
 
 #### 3、运行参数
 |参数名|类型|是否必须|含义|默认值|
