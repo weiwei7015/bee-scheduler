@@ -49,7 +49,7 @@ java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler
 |:-:|:-:|:-:|:-:|:-:|
 |--dburl|int|是|指定数据库连接串| - |
 |--server.port|int|管理节点必须|指定管理后台http端口号| - |
-|--thread-pool-size|int|否|用于并发执行任务的线程数|1|
+|--thread-pool-size|int|否|用于并发执行任务的线程数,建议最大不要超过100|1|
 |--instance-id|string|否|实例ID|AUTO(自动生成)|
 |--cluster| - |否|是否开启集群模式|无需参数值|
 
