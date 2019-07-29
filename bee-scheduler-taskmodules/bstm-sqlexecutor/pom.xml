@@ -23,7 +23,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <TaskModuleClass>com.bee.scheduler.taskmodule.SqlExecutorJobComponent</TaskModuleClass>
+                            <TaskModuleClass>com.bee.scheduler.taskmodule.SqlExecutorTaskModule</TaskModuleClass>
                         </manifestEntries>
                         <compress>false</compress>
                     </archive>

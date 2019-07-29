@@ -18,7 +18,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <TaskModuleClass>com.bee.scheduler.taskmodule.ShellJobComponent</TaskModuleClass>
+                            <TaskModuleClass>com.bee.scheduler.taskmodule.ShellTaskModule</TaskModuleClass>
                         </manifestEntries>
                         <compress>false</compress>
                     </archive>

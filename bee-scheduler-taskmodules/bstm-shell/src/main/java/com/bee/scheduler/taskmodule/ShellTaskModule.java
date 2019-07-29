@@ -12,16 +12,16 @@ import java.io.InputStreamReader;
 /**
  * @author weiwei 该组件提供运行服务端脚本的功能
  */
-public class ShellJobComponent extends AbstractTaskModule {
+public class ShellTaskModule extends AbstractTaskModule {
 
     @Override
     public String getId() {
-        return "ShellJobComponent";
+        return "ShellTaskModule";
     }
 
     @Override
     public String getName() {
-        return "ShellJobComponent";
+        return "ShellTaskModule";
     }
 
     @Override

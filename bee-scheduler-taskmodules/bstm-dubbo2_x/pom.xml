@@ -34,7 +34,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <TaskModuleClass>com.bee.scheduler.taskmodule.DubboInvokerJobComponent</TaskModuleClass>
+                            <TaskModuleClass>com.bee.scheduler.taskmodule.DubboInvokerTaskModule</TaskModuleClass>
                         </manifestEntries>
                         <compress>false</compress>
                     </archive>

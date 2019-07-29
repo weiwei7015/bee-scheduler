@@ -16,15 +16,15 @@ import java.util.Properties;
 /**
  * @author weiwei 用于发送Kafka消息
  */
-public class KafkaProducerJobComponent extends AbstractTaskModule {
+public class KafkaProducerTaskModule extends AbstractTaskModule {
     @Override
     public String getId() {
-        return "KafkaProducerJob";
+        return "KafkaProducerTaskModule";
     }
 
     @Override
     public String getName() {
-        return "KafkaProducerJob";
+        return "KafkaProducerTaskModule";
     }
 
     @Override
