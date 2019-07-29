@@ -8,9 +8,6 @@
 - 支持联动任务，直接页面操作来配置出任何你想要的联动规则
 - 详细的任务历史记录（执行时间、执行节点、耗时、日志、状态、触发方式等等。。。）
 - 支持临时任务，一键执行一次性任务
- 
-### 更新日志
-[https://gitee.com/kangroo/bee-scheduler/releases](https://gitee.com/kangroo/bee-scheduler/releases)
 
 ### 环境要求
 - java要求1.8以上的版本
