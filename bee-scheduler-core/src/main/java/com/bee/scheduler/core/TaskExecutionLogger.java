@@ -73,8 +73,16 @@ public class TaskExecutionLogger {
         }
     }
 
+    private void appendLog(String msg) {
+        appendLog(null, msg);
+    }
+
     private void appendLog(String level, String msg) {
-        logContent.append("[").append(level).append("]").append(" [").append(DATE_FORMAT.format(new Date())).append("] : ").append(msg).append("\n");
+        if (level != null) {
+            logContent.append("[").append(level).append("]").append(" [").append(DATE_FORMAT.format(new Date())).append("] : ").append(msg).append("\n");
+        } else {
+            logContent.append(msg).append("\n");
+        }
     }
 
     public String getLog() {
