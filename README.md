@@ -20,7 +20,7 @@
 >“不用建表吗（黑人问号脸.jpg）？？？”  
 >“不用！数据表会在系统首次启动的时候自动生成”
   
-### 下载最新的可运行包
+### 更新日志
 [https://gitee.com/kangroo/bee-scheduler/releases](https://gitee.com/kangroo/bee-scheduler/releases)
   
 ### 单机运行模式
