@@ -7,7 +7,6 @@ import java.util.Date;
  * @author weiwei
  */
 public class TaskExecutionLogger {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final String LOG_LEVEL_DEBUG = "DEBUG";
     private static final String LOG_LEVEL_INFO = "INFO";
     private static final String LOG_LEVEL_WARN = "WARN";
@@ -78,8 +77,9 @@ public class TaskExecutionLogger {
     }
 
     private void appendLog(String level, String msg) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat();
         if (level != null) {
-            logContent.append("[").append(level).append("]").append(" [").append(DATE_FORMAT.format(new Date())).append("] : ").append(msg).append("\n");
+            logContent.append("[").append(level).append("]").append(" [").append(dateFormatter.format(new Date())).append("] : ").append(msg).append("\n");
         } else {
             logContent.append(msg).append("\n");
         }
