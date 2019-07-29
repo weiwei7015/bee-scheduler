@@ -118,6 +118,9 @@ public class BootStrap {
         if (env.containsProperty("thread-pool-size")) {
             beeSchedulerFactoryBean.setThreadPoolSize(env.getRequiredProperty("thread-pool-size", Integer.TYPE));
         }
+        if (env.containsProperty("instance-id")) {
+            beeSchedulerFactoryBean.setInstanceId(env.getRequiredProperty("instance-id"));
+        }
         return beeSchedulerFactoryBean;
     }
 

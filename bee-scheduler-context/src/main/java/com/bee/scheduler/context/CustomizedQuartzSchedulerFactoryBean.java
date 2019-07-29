@@ -91,4 +91,12 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
     public void setThreadPoolSize(int threadPoolSize) {
         this.threadPoolSize = threadPoolSize;
     }
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
 }
