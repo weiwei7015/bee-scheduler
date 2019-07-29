@@ -1,14 +1,26 @@
 package com.bee.scheduler.context.exception;
 
-import org.quartz.SchedulerException;
-
 /**
  * @author weiwei
  */
 public class TaskSchedulerException extends Exception {
-    private SchedulerException schedulerException;
 
-    public TaskSchedulerException(SchedulerException schedulerException) {
-        this.schedulerException = schedulerException;
+    public TaskSchedulerException() {
+    }
+
+    public TaskSchedulerException(String message) {
+        super(message);
+    }
+
+    public TaskSchedulerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public TaskSchedulerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public TaskSchedulerException(Throwable cause) {
+        super(cause);
     }
 }

@@ -74,7 +74,7 @@ public class TaskExecutionLogger {
     }
 
     private void appendLog(String level, String msg) {
-        logContent.append("[").append(level).append("]").append(" [").append(DATE_FORMAT.format(new Date())).append("] : ").append(msg).append("\r\n");
+        logContent.append("[").append(level).append("]").append(" [").append(DATE_FORMAT.format(new Date())).append("] : ").append(msg).append("\n");
     }
 
     public String getLog() {

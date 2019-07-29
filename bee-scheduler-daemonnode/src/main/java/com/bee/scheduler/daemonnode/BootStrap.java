@@ -1,7 +1,7 @@
 package com.bee.scheduler.daemonnode;
 
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
-import com.bee.scheduler.context.CustomQuartzSchedulerFactoryBean;
+import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +45,8 @@ public class BootStrap {
 
     //调度器工厂
     @Bean
-    public CustomQuartzSchedulerFactoryBean customQuartzSchedulerFactoryBean() {
-        CustomQuartzSchedulerFactoryBean beeSchedulerFactoryBean = new CustomQuartzSchedulerFactoryBean("BeeScheduler", dataSource);
+    public CustomizedQuartzSchedulerFactoryBean customizedQuartzSchedulerFactoryBean() {
+        CustomizedQuartzSchedulerFactoryBean beeSchedulerFactoryBean = new CustomizedQuartzSchedulerFactoryBean("BeeScheduler", dataSource);
         beeSchedulerFactoryBean.setClusterMode(true);
         if (env.containsProperty("thread-pool-size")) {
             beeSchedulerFactoryBean.setThreadPoolSize(env.getRequiredProperty("thread-pool-size", Integer.TYPE));
@@ -55,8 +55,8 @@ public class BootStrap {
     }
 
     @Bean
-    public BeeSchedulerFactoryBean beeSchedulerFactoryBean(CustomQuartzSchedulerFactoryBean customQuartzSchedulerFactoryBean) {
-        return new BeeSchedulerFactoryBean(customQuartzSchedulerFactoryBean);
+    public BeeSchedulerFactoryBean beeSchedulerFactoryBean(CustomizedQuartzSchedulerFactoryBean customizedQuartzSchedulerFactoryBean) {
+        return new BeeSchedulerFactoryBean(customizedQuartzSchedulerFactoryBean);
     }
 
 

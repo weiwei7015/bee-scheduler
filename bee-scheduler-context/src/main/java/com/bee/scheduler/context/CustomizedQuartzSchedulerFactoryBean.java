@@ -17,7 +17,7 @@ import java.util.Properties;
 /**
  * @author weiwei.
  */
-public class CustomQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
+public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
     private static final long CLUSTER_CHECKIN_INTERVAL = 5000;
     private static final long MISFIRE_THRESHOLD = 5000;
     private String instanceId;
@@ -25,7 +25,7 @@ public class CustomQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
     private int threadPoolSize = 10;
     private List<AbstractTaskListener> taskListenerList = new ArrayList<>();
 
-    public CustomQuartzSchedulerFactoryBean(String name, String instanceId, DataSource dataSource) {
+    public CustomizedQuartzSchedulerFactoryBean(String name, String instanceId, DataSource dataSource) {
         this.instanceId = instanceId;
         this.setDataSource(dataSource);
         this.setSchedulerName(name);
@@ -33,7 +33,7 @@ public class CustomQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
         this.setAutoStartup(false);
     }
 
-    public CustomQuartzSchedulerFactoryBean(String name, DataSource dataSource) {
+    public CustomizedQuartzSchedulerFactoryBean(String name, DataSource dataSource) {
         this(name, null, dataSource);
     }
 
