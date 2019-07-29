@@ -23,14 +23,14 @@
 ## 下载最新的可运行包
 [https://gitee.com/kangroo/bee-scheduler/releases](https://gitee.com/kangroo/bee-scheduler/releases)
   
-## 单机运行模式
+### 单机运行模式
 #### 运行管理节点:console-node:
 ```shell
 java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false"
 ```
 启动完成后浏览器访问：http://ip:port  ，请使用IE9+、Chrome、Safari、Firefox等现代浏览器  
   
-## 集群运行模式：
+### 集群运行模式：
 #### 1、运行管理节点:console-node，并使用--cluster开启集群：
 ```shell
 java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false" --cluster
@@ -44,7 +44,7 @@ java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler
 启动完成后，访问管理节点能看到集群信息
 扩展节点的数量可以随时增减，新增的节点启动完成后，会自动加入集群，停止的扩展节点会自动退出集群
 
-### 3、运行参数
+#### 3、运行参数
 |参数名|类型|是否必须|含义|默认值|
 |:-:|:-:|:-:|:-:|:-:|
 |--dburl|int|是|指定数据库连接串| - |
@@ -53,7 +53,7 @@ java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler
 |--instance-id|string|否|实例ID|AUTO(自动生成)|
 |--cluster| - |否|是否开启集群模式|无需参数值|
 
-## 管理界面截图
+### 管理界面截图
 ![BeeScheduler](readme/1.png "BeeScheduler")
 ![BeeScheduler](readme/2.png "BeeScheduler")
 ![BeeScheduler](readme/3.png "BeeScheduler")
@@ -61,5 +61,5 @@ java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler
 ![BeeScheduler](readme/5.png "BeeScheduler")
 ![BeeScheduler](readme/6.png "BeeScheduler")
   
-## 开源协议
+### 开源协议
 [MIT](http://opensource.org/licenses/MIT)
