@@ -65,9 +65,9 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         connection.setReadTimeout(timeout);
         connection.connect();
 
+        //响应内容
         int responseCode = connection.getResponseCode();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-        // 存放数据
         StringBuilder result = new StringBuilder();
         String temp;
         while ((temp = bufferedReader.readLine()) != null) {
