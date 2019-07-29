@@ -65,11 +65,7 @@ public class SqlExecutorJobComponent extends AbstractTaskModule {
             throw new RuntimeException("暂不支持该数据库[" + url + "]");
         }
 
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = DriverManager.getConnection(url);
-            preparedStatement = connection.prepareStatement(sql);
+        try (Connection connection = DriverManager.getConnection(url); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             if ("query".equalsIgnoreCase(type)) {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 int count = 0;
@@ -80,13 +76,6 @@ public class SqlExecutorJobComponent extends AbstractTaskModule {
             } else if ("update".equalsIgnoreCase(type)) {
                 int result = preparedStatement.executeUpdate();
                 taskLogger.info("任务执行成功 -> 影响记录总数：" + result);
-            }
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
-            if (preparedStatement != null) {
-                preparedStatement.close();
             }
         }
 
