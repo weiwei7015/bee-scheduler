@@ -6,6 +6,8 @@ import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -56,7 +58,6 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         int timeout = taskParam.getIntValue("timeout");
         String method = StringUtils.upperCase(taskParam.getString("method"));
 
-
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestProperty("user-agent", "BeeScheduler");
         connection.setRequestMethod(method);
@@ -64,9 +65,23 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         connection.setReadTimeout(timeout);
         connection.connect();
 
-        int result = connection.getResponseCode();
+        int responseCode = connection.getResponseCode();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+        // 存放数据
+        StringBuilder result = new StringBuilder();
+        String temp;
+        while ((temp = bufferedReader.readLine()) != null) {
+            if (result.length() >= 600) {
+                result.append("...").append("\r");
+                break;
+            }
+            result.append(temp).append("\r");
+        }
+        bufferedReader.close();
 
-        taskLogger.info("任务执行成功 -> response status code:" + result);
+        taskLogger.info("任务执行成功: ");
+        taskLogger.info("Code: " + responseCode);
+        taskLogger.info("Content: " + result.toString());
         return true;
     }
 }

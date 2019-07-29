@@ -266,7 +266,7 @@ public class TaskScheduler {
             taskConfig.setStartAt(abstractTrigger.getStartTime());
             taskConfig.setEndAtType(abstractTrigger.getEndTime() == null ? TaskConfig.END_AT_TYPE_NEVER : TaskConfig.END_AT_TYPE_GIVEN_TIME);
             taskConfig.setEndAt(abstractTrigger.getEndTime());
-            taskConfig.setJobModule(jobDetail.getJobClass().getSimpleName());
+            taskConfig.setJobModule(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_MODULE_ID));
             taskConfig.setParams(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_PARAM));
             taskConfig.setDescription(abstractTrigger.getDescription());
             taskConfig.setLinkageRule(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE));
