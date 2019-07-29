@@ -7,5 +7,5 @@
 >>     \/___/  \/____/\/____/     \/_____/\/____/ \/_/\/_/\/____/\/__,_ /\/___/  \/____/\/____/ \/_/
 >>
 >> Runnable-Node
->> Bee-Scheduler V1.0-Beta , Build With Quartz-2.3.0
+>> Bee-Scheduler V2.0.0-Beta , Build With Quartz-2.3.1
 
