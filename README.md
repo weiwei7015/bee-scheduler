@@ -8,7 +8,10 @@
 - 支持联动任务，直接页面操作来配置出任何你想要的联动规则
 - 详细的任务历史记录（执行时间、执行节点、耗时、日志、状态、触发方式等等。。。）
 - 支持临时任务，一键执行一次性任务
-  
+ 
+### 更新日志
+[https://gitee.com/kangroo/bee-scheduler/releases](https://gitee.com/kangroo/bee-scheduler/releases)
+
 ### 环境要求
 - java要求1.8以上的版本
 - Mysql数据库，用于存储任务数据
@@ -19,9 +22,6 @@
   
 >“不用建表吗（黑人问号脸.jpg）？？？”  
 >“不用！数据表会在系统首次启动的时候自动生成”
-  
-### 更新日志
-[https://gitee.com/kangroo/bee-scheduler/releases](https://gitee.com/kangroo/bee-scheduler/releases)
   
 ### 单机运行模式
 #### 运行管理节点:console-node:
