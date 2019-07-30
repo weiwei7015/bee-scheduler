@@ -9,6 +9,7 @@ import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.bee.scheduler.consolenode.core.BuildInTaskModuleLoader;
 import com.bee.scheduler.consolenode.core.ClassPathJarArchiveTaskModuleLoader;
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
 import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
@@ -54,6 +55,7 @@ public class ApplicationBootStrap {
                     ConfigurableApplicationContext applicationContext = event.getApplicationContext();
                     logger.info("loading task modules...");
                     try {
+                        new BuildInTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
                         new ClassPathJarArchiveTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
                     } catch (Exception e) {
                         throw new RuntimeException(e);

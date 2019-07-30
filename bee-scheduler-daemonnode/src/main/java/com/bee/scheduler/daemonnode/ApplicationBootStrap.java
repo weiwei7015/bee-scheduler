@@ -3,6 +3,7 @@ package com.bee.scheduler.daemonnode;
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
 import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
 import com.bee.scheduler.context.executor.TaskModuleRegistry;
+import com.bee.scheduler.daemonnode.core.BuildInTaskModuleLoader;
 import com.bee.scheduler.daemonnode.core.ClassPathJarArchiveTaskModuleLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +39,7 @@ public class ApplicationBootStrap {
                     ConfigurableApplicationContext applicationContext = event.getApplicationContext();
                     logger.info("loading task modules...");
                     try {
+                        new BuildInTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
                         new ClassPathJarArchiveTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
