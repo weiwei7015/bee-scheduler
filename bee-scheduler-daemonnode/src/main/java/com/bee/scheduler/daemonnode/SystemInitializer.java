@@ -8,18 +8,23 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.springframework.boot.loader.LaunchedURLClassLoader;
 import org.springframework.boot.loader.archive.Archive;
+import org.springframework.boot.loader.archive.ExplodedArchive;
 import org.springframework.boot.loader.archive.JarFileArchive;
 import org.springframework.boot.loader.jar.JarFile;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 import org.springframework.util.ClassUtils;
 
+import java.io.File;
+import java.net.URI;
 import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author weiwei 系统初始化程序
@@ -67,17 +72,17 @@ public class SystemInitializer {
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         SimpleMetadataReaderFactory simpleMetadataReaderFactory = new SimpleMetadataReaderFactory(resourcePatternResolver);
         JarFile.registerUrlProtocolHandler();
-        Resource[] resources = resourcePatternResolver.getResources("classpath*:task_modules/*.jar");
-        for (Resource resource : resources) {
 
+        Archive sourceCodeArchive = createArchive();
+        List<Archive> taskModulesArchive = sourceCodeArchive.getNestedArchives(entry -> !entry.isDirectory() && Pattern.matches("task_modules/.*\\.jar$", entry.getName()));
+        for (Archive archive : taskModulesArchive) {
             ArrayList<URL> urls = new ArrayList<>();
-            JarFileArchive taskModuleArchive = new JarFileArchive(resource.getFile());
-            urls.add(taskModuleArchive.getUrl());
-            List<Archive> nestedArchives = taskModuleArchive.getNestedArchives(entry -> !entry.isDirectory() && entry.getName().startsWith("lib/"));
+            urls.add(archive.getUrl());
+            List<Archive> nestedArchives = archive.getNestedArchives(entry -> !entry.isDirectory() && entry.getName().startsWith("lib/"));
             for (Archive item : nestedArchives) {
                 urls.add(item.getUrl());
             }
-            String moduleClass = taskModuleArchive.getManifest().getMainAttributes().getValue("TaskModuleClass");
+            String moduleClass = archive.getManifest().getMainAttributes().getValue("TaskModuleClass");
             ClassLoader classLoader = new LaunchedURLClassLoader(urls.toArray(new URL[0]), ClassUtils.getDefaultClassLoader());
 
             AbstractTaskModule module = (AbstractTaskModule) classLoader.loadClass(moduleClass).newInstance();
@@ -104,5 +109,27 @@ public class SystemInitializer {
 //        }
         // 启动Scheduler
         scheduler.start();
+    }
+
+    private Archive createArchive() throws Exception {
+        ProtectionDomain protectionDomain;
+        ClassLoader classLoader = ClassUtils.getDefaultClassLoader();
+        if (classLoader instanceof LaunchedURLClassLoader) {
+            protectionDomain = ((LaunchedURLClassLoader) classLoader).getClass().getProtectionDomain();
+        } else {
+            protectionDomain = getClass().getProtectionDomain();
+        }
+        CodeSource codeSource = protectionDomain.getCodeSource();
+        URI location = (codeSource != null) ? codeSource.getLocation().toURI() : null;
+        String path = (location != null) ? location.getSchemeSpecificPart() : null;
+        System.out.println(path);
+        if (path == null) {
+            throw new IllegalStateException("Unable to determine code source archive");
+        }
+        File root = new File(path);
+        if (!root.exists()) {
+            throw new IllegalStateException("Unable to determine code source archive from " + root);
+        }
+        return (root.isDirectory() ? new ExplodedArchive(root) : new JarFileArchive(root));
     }
 }
