@@ -34,6 +34,53 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-task-modules</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/task_modules</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-dubbo2_x/target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-httpclient/target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-kafka_0_10/target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-shell/target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-sqlexecutor/target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
