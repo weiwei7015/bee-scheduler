@@ -101,10 +101,10 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item label="时间段开始" prop="scheduleTypeDailyTimeIntervalOptions.startTimeOfDay">
-                        <el-time-picker v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.startTimeOfDay" placeholder="请选择时间"></el-time-picker>
+                        <el-time-picker v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.startTimeOfDay" placeholder="请选择时间" value-format="timestamp"></el-time-picker>
                     </el-form-item>
                     <el-form-item label="时间段结束" prop="scheduleTypeDailyTimeIntervalOptions.endTimeOfDay">
-                        <el-time-picker v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.endTimeOfDay" placeholder="请选择时间"></el-time-picker>
+                        <el-time-picker v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.endTimeOfDay" placeholder="请选择时间" value-format="timestamp"></el-time-picker>
                     </el-form-item>
                     <el-form-item label="周几执行" prop="scheduleTypeDailyTimeIntervalOptions.daysOfWeek">
                         <el-checkbox-group v-model="editTaskFormModel.scheduleTypeDailyTimeIntervalOptions.daysOfWeek">

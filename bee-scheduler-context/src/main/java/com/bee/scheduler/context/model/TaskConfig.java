@@ -1,6 +1,5 @@
 package com.bee.scheduler.context.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import org.quartz.*;
 
 import java.util.Date;
@@ -236,7 +235,6 @@ public class TaskConfig {
     }
 
     public static class ScheduleTypeDailyTimeIntervalOptions {
-        @JSONField()
         private TimeOfDay startTimeOfDay;
         private TimeOfDay endTimeOfDay;
         private Integer[] daysOfWeek = new Integer[0];

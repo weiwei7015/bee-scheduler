@@ -15,7 +15,7 @@ public class TaskModuleRegistry {
     public static final Map<String, AbstractTaskModule> TaskModuleMap = new HashMap<>();
 
     public static void register(AbstractTaskModule taskModule) {
-        logger.info("注册组件:" + taskModule.getId());
+        logger.info("loaded module : " + taskModule.getId());
         TaskModuleMap.put(taskModule.getId(), taskModule);
     }
 

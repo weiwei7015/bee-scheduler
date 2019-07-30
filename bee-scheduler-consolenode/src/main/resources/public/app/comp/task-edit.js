@@ -49,7 +49,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
                     scheduleTypeDailyTimeIntervalOptions: {
                         startTimeOfDay: null,
                         endTimeOfDay: null,
-                        daysOfWeek: [],
+                        daysOfWeek: [2, 3, 4, 5, 6, 7, 1],
                         interval: 2,
                         intervalUnit: "HOUR",
                         misfireHandlingType: 0

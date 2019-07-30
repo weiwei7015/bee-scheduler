@@ -1,14 +1,5 @@
 package com.bee.scheduler.consolenode;
 
-import com.alibaba.fastjson.parser.DefaultJSONParser;
-import com.alibaba.fastjson.parser.ParserConfig;
-import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
-import com.alibaba.fastjson.serializer.DateCodec;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.SerializeWriter;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bee.scheduler.consolenode.core.BuildInTaskModuleLoader;
 import com.bee.scheduler.consolenode.core.ClassPathJarArchiveTaskModuleLoader;
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
@@ -18,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.TimeOfDay;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
@@ -29,14 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Type;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class ApplicationBootStrap {
@@ -74,54 +58,6 @@ public class ApplicationBootStrap {
     @Bean
     public static PropertySourcesPlaceholderConfigurer PropertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
-    }
-
-    // mvc相关配置
-    @Bean
-    public WebMvcConfigurer webMvcConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-                FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
-                FastJsonConfig fastJsonConfig = new FastJsonConfig();
-                fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteMapNullValue);
-
-                ParserConfig.getGlobalInstance().putDeserializer(TimeOfDay.class, new ObjectDeserializer() {
-                    private final DateCodec dateCodec = new DateCodec();
-
-                    @Override
-                    public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
-                        Date date = dateCodec.deserialze(parser, Date.class, fieldName);
-                        //noinspection unchecked
-                        return (T) TimeOfDay.hourAndMinuteAndSecondFromDate(date);
-                    }
-
-                    @Override
-                    public int getFastMatchToken() {
-                        return 0;
-                    }
-                });
-
-                SerializeConfig serializeConfig = new SerializeConfig();
-                serializeConfig.put(TimeOfDay.class, (serializer, object, fieldName, fieldType, features) -> {
-                    SerializeWriter out = serializer.getWriter();
-                    if (object == null) {
-                        serializer.getWriter().writeNull();
-                        return;
-                    }
-                    TimeOfDay timeOfDay = (TimeOfDay) object;
-                    Calendar cal = Calendar.getInstance();
-                    cal.set(Calendar.HOUR_OF_DAY, timeOfDay.getHour());
-                    cal.set(Calendar.MINUTE, timeOfDay.getMinute());
-                    cal.set(Calendar.SECOND, timeOfDay.getSecond());
-                    out.write(String.valueOf(cal.getTimeInMillis()));
-                });
-
-                fastJsonConfig.setSerializeConfig(serializeConfig);
-                fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-                converters.add(fastJsonHttpMessageConverter);
-            }
-        };
     }
 
     //调度器工厂
