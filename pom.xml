@@ -19,11 +19,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>bee-scheduler-consolenode</module>
-        <module>bee-scheduler-context</module>
         <module>bee-scheduler-core</module>
-        <module>bee-scheduler-daemonnode</module>
+        <module>bee-scheduler-context</module>
         <module>bee-scheduler-taskmodules</module>
+        <module>bee-scheduler-consolenode</module>
+        <module>bee-scheduler-daemonnode</module>
     </modules>
 
     <build>
