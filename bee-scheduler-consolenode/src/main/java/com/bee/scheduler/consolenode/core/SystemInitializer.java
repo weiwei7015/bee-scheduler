@@ -24,7 +24,6 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * @author weiwei 系统初始化程序
@@ -74,7 +73,13 @@ public class SystemInitializer {
         JarFile.registerUrlProtocolHandler();
 
         Archive sourceCodeArchive = createArchive();
-        List<Archive> taskModulesArchive = sourceCodeArchive.getNestedArchives(entry -> !entry.isDirectory() && Pattern.matches("task_modules/.*\\.jar$", entry.getName()));
+        List<Archive> taskModulesArchive = sourceCodeArchive.getNestedArchives(entry -> {
+            if (entry.isDirectory()) {
+                return false;
+            } else {
+                return entry.getName().contains("task_modules/");
+            }
+        });
         for (Archive archive : taskModulesArchive) {
             ArrayList<URL> urls = new ArrayList<>();
             urls.add(archive.getUrl());
