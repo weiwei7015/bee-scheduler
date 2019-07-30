@@ -122,7 +122,6 @@ public class SystemInitializer {
         CodeSource codeSource = protectionDomain.getCodeSource();
         URI location = (codeSource != null) ? codeSource.getLocation().toURI() : null;
         String path = (location != null) ? location.getSchemeSpecificPart() : null;
-        System.out.println(path);
         if (path == null) {
             throw new IllegalStateException("Unable to determine code source archive");
         }
