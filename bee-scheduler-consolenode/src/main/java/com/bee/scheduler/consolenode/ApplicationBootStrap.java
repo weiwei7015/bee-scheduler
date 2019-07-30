@@ -9,20 +9,22 @@ import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.bee.scheduler.consolenode.core.SystemInitializer;
+import com.bee.scheduler.consolenode.core.ClassPathJarArchiveTaskModuleLoader;
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
 import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
+import com.bee.scheduler.context.executor.TaskModuleRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.TimeOfDay;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
@@ -36,22 +38,34 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
-public class BootStrap {
-    private static Log logger = LogFactory.getLog(BootStrap.class);
-    @Autowired
-    private Environment env;
-    @Autowired
-    private DataSource dataSource;
+public class ApplicationBootStrap {
+    private static Log logger = LogFactory.getLog(ApplicationBootStrap.class);
 
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(BootStrap.class);
-        app.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
-            //检查启动参数
-            ConfigurableEnvironment env = event.getEnvironment();
-            if (!env.containsProperty("dburl")) {
-                throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
-            }
-        });
+        SpringApplication app = new SpringApplication(ApplicationBootStrap.class);
+        app.addListeners(
+                (ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
+                    ConfigurableEnvironment env = event.getEnvironment();
+                    if (!env.containsProperty("dburl")) {
+                        throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
+                    }
+                },
+                (ApplicationListener<ApplicationReadyEvent>) event -> {
+                    ConfigurableApplicationContext applicationContext = event.getApplicationContext();
+                    logger.info("loading task modules...");
+                    try {
+                        new ClassPathJarArchiveTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    logger.info("starting scheduler...");
+                    try {
+                        applicationContext.getBean(Scheduler.class).start();
+                    } catch (SchedulerException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
         app.run(args);
     }
 
@@ -102,9 +116,7 @@ public class BootStrap {
                 });
 
                 fastJsonConfig.setSerializeConfig(serializeConfig);
-
                 fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-
                 converters.add(fastJsonHttpMessageConverter);
             }
         };
@@ -112,7 +124,7 @@ public class BootStrap {
 
     //调度器工厂
     @Bean
-    public CustomizedQuartzSchedulerFactoryBean customizedQuartzSchedulerFactoryBean() {
+    public CustomizedQuartzSchedulerFactoryBean schedulerFactoryBean(Environment env, DataSource dataSource) {
         CustomizedQuartzSchedulerFactoryBean beeSchedulerFactoryBean = new CustomizedQuartzSchedulerFactoryBean("BeeScheduler", dataSource);
         beeSchedulerFactoryBean.setClusterMode(env.containsProperty("cluster"));
         if (env.containsProperty("thread-pool-size")) {
@@ -127,20 +139,5 @@ public class BootStrap {
     @Bean
     public BeeSchedulerFactoryBean beeSchedulerFactoryBean(CustomizedQuartzSchedulerFactoryBean customizedQuartzSchedulerFactoryBean) {
         return new BeeSchedulerFactoryBean(customizedQuartzSchedulerFactoryBean);
-    }
-
-    // 系统启动监听器，用于系统启动完成后的初始化操作
-    @Bean
-    public ApplicationListener<ContextRefreshedEvent> applicationListener() {
-        return event -> {
-            ApplicationContext applicationContext = event.getApplicationContext();
-            try {
-                logger.info("SpringContext Refreshed!");
-                SystemInitializer systemInitializer = new SystemInitializer(applicationContext);
-                systemInitializer.init();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        };
     }
 }
