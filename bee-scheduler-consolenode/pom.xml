@@ -84,6 +84,12 @@
                                         <include>*.jar</include>
                                     </includes>
                                 </resource>
+                                <resource>
+                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-mail/target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
                             </resources>
                         </configuration>
                     </execution>
