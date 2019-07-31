@@ -35,5 +35,5 @@ public abstract class AbstractTaskModule {
      */
     public abstract String getAuthor();
 
-    public abstract boolean run(TaskExecutionContext context) throws Exception;
+    public abstract TaskExecutionResult run(TaskExecutionContext context) throws Exception;
 }

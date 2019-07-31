@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -55,7 +56,7 @@ public class KafkaProducerTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public boolean run(TaskExecutionContext context) throws Exception {
+    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
         TaskExecutionLogger taskLogger = context.getLogger();
 
@@ -81,6 +82,6 @@ public class KafkaProducerTaskModule extends AbstractTaskModule {
             producer.close();
         }
         taskLogger.info("任务执行成功");
-        return true;
+        return TaskExecutionResult.success();
     }
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
 
@@ -53,6 +54,16 @@ public class TaskExecutionContextUtil {
         } catch (SchedulerException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void setTaskExecutionResult(JobExecutionContext context, TaskExecutionResult result) {
+        Map<String, Object> contextResultMap = getContextResultMap(context);
+        contextResultMap.put(Constants.JOB_EXEC_CONTEXT_RESULT_MAP_KEY_TASK_RESULT, result);
+    }
+
+    public static TaskExecutionResult getTaskExecutionResult(JobExecutionContext context) {
+        Map<String, Object> contextResultMap = getContextResultMap(context);
+        return (TaskExecutionResult) contextResultMap.get(Constants.JOB_EXEC_CONTEXT_RESULT_MAP_KEY_TASK_RESULT);
     }
 
     //获取任务参数

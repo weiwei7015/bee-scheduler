@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -41,15 +42,13 @@ public class ShellTaskModule extends AbstractTaskModule {
 
     @Override
     public String getParamTemplate() {
-        StringBuilder t = new StringBuilder();
-        t.append("{\r");
-        t.append("    shell:''\r");
-        t.append("}");
-        return t.toString();
+        return "{\r" +
+                "    shell:''\r" +
+                "}";
     }
 
     @Override
-    public boolean run(TaskExecutionContext context) throws Exception {
+    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
         TaskExecutionLogger taskLogger = context.getLogger();
 
@@ -63,10 +62,10 @@ public class ShellTaskModule extends AbstractTaskModule {
         String line;
         StringBuilder back = new StringBuilder();
         while ((line = br.readLine()) != null) {
-            back.append(line + "\r");
+            back.append(line).append("\r");
         }
         taskLogger.info("任务执行成功 -> " + back.toString());
 
-        return true;
+        return TaskExecutionResult.success();
     }
 }

@@ -2,6 +2,7 @@ package com.bee.scheduler.context.listener;
 
 import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.core.TaskExecutionContext;
+import com.bee.scheduler.core.TaskExecutionResult;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public abstract class AbstractTaskListener implements JobListener, TriggerListen
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
-        taskWasExecuted(TaskExecutionContextUtil.convert(context), context.getScheduler(), jobException);
+        taskWasExecuted(TaskExecutionContextUtil.convert(context), TaskExecutionContextUtil.getTaskExecutionResult(context), context.getScheduler(), jobException);
     }
 
 
@@ -57,7 +58,7 @@ public abstract class AbstractTaskListener implements JobListener, TriggerListen
 
     }
 
-    protected void taskWasExecuted(TaskExecutionContext context, Scheduler scheduler, JobExecutionException jobException) {
+    protected void taskWasExecuted(TaskExecutionContext context, TaskExecutionResult result, Scheduler scheduler, JobExecutionException jobException) {
 
     }
 

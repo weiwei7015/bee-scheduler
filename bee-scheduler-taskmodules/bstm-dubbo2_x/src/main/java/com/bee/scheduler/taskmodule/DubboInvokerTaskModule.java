@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
@@ -140,24 +141,22 @@ public class DubboInvokerTaskModule extends AbstractTaskModule {
 
     @Override
     public String getParamTemplate() {
-        StringBuilder t = new StringBuilder();
-        t.append("{\r");
-        t.append("    url:'',\r");
-        t.append("    registry:'zookeeper://127.0.0.1:2181',\r");
-        t.append("    service:'',\r");
-        t.append("    version:'',\r");
-        t.append("    group:'',\r");
-        t.append("    method:'',\r");
-        t.append("    timeout:10000,\r");
-        t.append("    loadbalance:'random',\r");
-        t.append("    params:[],\r");
-        t.append("    paramsType:[]\r");
-        t.append("}");
-        return t.toString();
+        return "{\r" +
+                "    url:'',\r" +
+                "    registry:'zookeeper://127.0.0.1:2181',\r" +
+                "    service:'',\r" +
+                "    version:'',\r" +
+                "    group:'',\r" +
+                "    method:'',\r" +
+                "    timeout:10000,\r" +
+                "    loadbalance:'random',\r" +
+                "    params:[],\r" +
+                "    paramsType:[]\r" +
+                "}";
     }
 
     @Override
-    public boolean run(TaskExecutionContext context) throws Exception {
+    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
         TaskExecutionLogger taskLogger = context.getLogger();
 
@@ -196,26 +195,25 @@ public class DubboInvokerTaskModule extends AbstractTaskModule {
 //             GenericService genericService = referenceConfig.get();
 
         // 解析类型别名
-        JSONArray paramTypeJsonArray = methodParamsType;
-        String[] paramTypeStrArray = new String[paramTypeJsonArray.size()];
-        Class<?>[] paramTypeArray = new Class<?>[paramTypeJsonArray.size()];
+        String[] paramTypeStrArray = new String[methodParamsType.size()];
+        Class<?>[] paramTypeArray = new Class<?>[methodParamsType.size()];
 
-        for (int i = 0; i < paramTypeJsonArray.size(); i++) {
-            String type = paramTypeJsonArray.getString(i);
+        for (int i = 0; i < methodParamsType.size(); i++) {
+            String type = methodParamsType.getString(i);
             String typeLowerCase = type.toLowerCase();
             paramTypeStrArray[i] = TYPE_ALIASES.containsKey(typeLowerCase) ? TYPE_ALIASES.get(typeLowerCase).getName() : type;
-            paramTypeArray[i] = TYPE_ALIASES.containsKey(typeLowerCase) ? TYPE_ALIASES.get(typeLowerCase) : Map.class;
+            paramTypeArray[i] = TYPE_ALIASES.getOrDefault(typeLowerCase, Map.class);
         }
 
-        JSONArray argsJsonArray = methodParams;
-        Object[] params = new Object[argsJsonArray.size()];
-        for (int i = 0; i < argsJsonArray.size(); i++) {
-            params[i] = argsJsonArray.getObject(i, paramTypeArray[i]);
+        Object[] params = new Object[methodParams.size()];
+        for (int i = 0; i < methodParams.size(); i++) {
+            params[i] = methodParams.getObject(i, paramTypeArray[i]);
         }
 
         Object result = genericService.$invoke(method, paramTypeStrArray, params);
 
         taskLogger.info("任务执行成功 -> return:" + result + "");
-        return true;
+
+        return TaskExecutionResult.success();
     }
 }

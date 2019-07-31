@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.Constants;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
 import org.quartz.spi.OperableTrigger;
@@ -22,7 +23,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
     }
 
     @Override
-    public void taskWasExecuted(TaskExecutionContext context, Scheduler scheduler, JobExecutionException jobException) {
+    public void taskWasExecuted(TaskExecutionContext context, TaskExecutionResult result, Scheduler scheduler, JobExecutionException jobException) {
         TaskExecutionLogger taskLogger = context.getLogger();
         JSONArray taskLinkageRule = context.getLinkageRule();
 
@@ -89,5 +90,4 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
             }
         }
     }
-
 }

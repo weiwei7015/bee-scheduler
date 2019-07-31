@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.mail.Address;
@@ -62,7 +63,7 @@ public class MailTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public boolean run(TaskExecutionContext context) throws Exception {
+    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
         TaskExecutionLogger taskLogger = context.getLogger();
 //        String protocol = taskParam.getString("protocol");
@@ -114,6 +115,6 @@ public class MailTaskModule extends AbstractTaskModule {
         transport.sendMessage(message, message.getAllRecipients());
         transport.close();
 
-        return true;
+        return TaskExecutionResult.success();
     }
 }

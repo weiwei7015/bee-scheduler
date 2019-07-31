@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,17 +42,15 @@ public class SqlExecutorTaskModule extends AbstractTaskModule {
 
     @Override
     public String getParamTemplate() {
-        StringBuilder t = new StringBuilder();
-        t.append("{\r");
-        t.append("    url:'jdbc:mysql://localhost:3306/mysql',\r");
-        t.append("    type:'query',\r");
-        t.append("    sql:''\r");
-        t.append("}");
-        return t.toString();
+        return "{\r" +
+                "    url:'jdbc:mysql://localhost:3306/mysql',\r" +
+                "    type:'query',\r" +
+                "    sql:''\r" +
+                "}";
     }
 
     @Override
-    public boolean run(TaskExecutionContext context) throws Exception {
+    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
         TaskExecutionLogger taskLogger = context.getLogger();
 
@@ -65,21 +64,28 @@ public class SqlExecutorTaskModule extends AbstractTaskModule {
             throw new RuntimeException("暂不支持该数据库[" + url + "]");
         }
 
-        try (Connection connection = DriverManager.getConnection(url); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+        JSONObject data = new JSONObject();
+        try (
+                Connection connection = DriverManager.getConnection(url);
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
             if ("query".equalsIgnoreCase(type)) {
                 ResultSet resultSet = preparedStatement.executeQuery();
-                int count = 0;
+                int affectedRowCount = 0;
                 while (resultSet.next()) {
-                    count = count + 1;
+                    affectedRowCount = affectedRowCount + 1;
                 }
-                taskLogger.info("任务执行成功 -> 查询到" + count + "条记录");
+                taskLogger.info("任务执行成功 -> 查询到" + affectedRowCount + "条记录");
+                data.put("affected_row_count", affectedRowCount);
             } else if ("update".equalsIgnoreCase(type)) {
-                int result = preparedStatement.executeUpdate();
-                taskLogger.info("任务执行成功 -> 影响记录总数：" + result);
+                int affectedRowCount = preparedStatement.executeUpdate();
+                taskLogger.info("任务执行成功 -> 影响记录总数：" + affectedRowCount);
+                data.put("affected_row_count", affectedRowCount);
             }
         }
 
-        return true;
+        return TaskExecutionResult.success(data);
     }
 
 }

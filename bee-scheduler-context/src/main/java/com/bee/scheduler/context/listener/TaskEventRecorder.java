@@ -3,6 +3,7 @@ package com.bee.scheduler.context.listener;
 import com.bee.scheduler.context.Constants;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,10 +48,10 @@ public class TaskEventRecorder extends AbstractTaskListener {
 
         try {
             String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-            Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
-            PreparedStatement preparedStatement = null;
-            try {
-                preparedStatement = connection.prepareStatement(sql);
+            try (
+                    Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
+                    PreparedStatement preparedStatement = connection.prepareStatement(sql)
+            ) {
                 preparedStatement.setString(1, schedulerName);
                 preparedStatement.setString(2, schedulerInstanceId);
                 preparedStatement.setString(3, context.getFireInstanceId());
@@ -66,13 +67,6 @@ public class TaskEventRecorder extends AbstractTaskListener {
                 preparedStatement.execute();
             } catch (Exception e) {
                 logger.error(e);
-            } finally {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -80,7 +74,7 @@ public class TaskEventRecorder extends AbstractTaskListener {
     }
 
     @Override
-    public void taskWasExecuted(TaskExecutionContext context, Scheduler scheduler, JobExecutionException jobException) {
+    public void taskWasExecuted(TaskExecutionContext context, TaskExecutionResult result, Scheduler scheduler, JobExecutionException jobException) {
         String taskJobGroup = context.getJobGroup();
         String taskJobName = context.getJobName();
         String triggerGroup = context.getTriggerGroup();
@@ -91,14 +85,14 @@ public class TaskEventRecorder extends AbstractTaskListener {
         Date currentTime = Calendar.getInstance().getTime();
 
         // 记录执行历史
-        Constants.TaskExecState execState = jobException == null ? Constants.TaskExecState.SUCCESS : Constants.TaskExecState.FAIL;
+        Constants.TaskExecState execState = jobException == null ? Constants.TaskExecState.SUCCESS : result.isSuccess() ? Constants.TaskExecState.SUCCESS : Constants.TaskExecState.FAIL;
         Constants.TaskFiredWay firedWay = triggerGroup.equals(Constants.TASK_GROUP_MANUAL) ? Constants.TaskFiredWay.MANUAL : triggerGroup.equals(Constants.TASK_GROUP_TMP) ? Constants.TaskFiredWay.TMP : triggerGroup.equals(Constants.TASK_GROUP_LINKAGE) ? Constants.TaskFiredWay.LINKAGE : Constants.TaskFiredWay.SCHEDULE;
         try {
-            Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
             String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME,FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement preparedStatement = null;
-            try {
-                preparedStatement = connection.prepareStatement(sql);
+            try (
+                    Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + schedulerName);
+                    PreparedStatement preparedStatement = connection.prepareStatement(sql)
+            ) {
                 preparedStatement.setString(1, schedulerName);
                 preparedStatement.setString(2, schedulerInstanceId);
                 preparedStatement.setString(3, context.getFireInstanceId());
@@ -115,19 +109,11 @@ public class TaskEventRecorder extends AbstractTaskListener {
                 preparedStatement.execute();
             } catch (Exception e) {
                 logger.error(e);
-            } finally {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
-
 
     @Override
     public boolean vetoTaskExecution(TaskExecutionContext context, Scheduler scheduler) {

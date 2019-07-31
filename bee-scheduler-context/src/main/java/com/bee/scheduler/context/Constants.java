@@ -11,6 +11,8 @@ public class Constants {
 
     public static final String JOB_EXEC_CONTEXT_RESULT_MAP_KEY_TASK_LOG = "TASK_EXEC_LOGGER";
 
+    public static final String JOB_EXEC_CONTEXT_RESULT_MAP_KEY_TASK_RESULT = "TASK_EXEC_RESULT";
+
     public static final String TASK_GROUP_TMP = "Tmp";
 
     public static final String TASK_GROUP_MANUAL = "Manual";

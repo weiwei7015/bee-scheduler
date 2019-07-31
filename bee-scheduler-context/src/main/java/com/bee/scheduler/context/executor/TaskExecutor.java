@@ -6,6 +6,7 @@ import com.bee.scheduler.context.exception.TaskModuleNotFountException;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
@@ -21,7 +22,6 @@ public class TaskExecutor implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        boolean execSuccess = true;
         JobDetail jobDetail = context.getJobDetail();
 
         TaskExecutionContext taskExecutionContext = TaskExecutionContextUtil.convert(context);
@@ -35,20 +35,20 @@ public class TaskExecutor implements Job {
             if (taskModule == null) {
                 throw new TaskModuleNotFountException();
             }
-            execSuccess = taskModule.run(taskExecutionContext);
+            TaskExecutionResult result = taskModule.run(taskExecutionContext);
+            logger.info("任务结果:" + result.getData().toJSONString());
+            taskLogger.info("任务结果:" + result.getData().toJSONString());
+            logger.info("任务[" + jobDetail.getKey() + "]执行" + (result.isSuccess() ? "成功" : "失败!"));
+            taskLogger.info("执行任务结束 -> " + (result.isSuccess() ? "成功" : "失败"));
+            TaskExecutionContextUtil.setTaskExecutionResult(context, result);
         } catch (TaskModuleNotFountException e) {
-            execSuccess = false;
-            logger.error("任务[" + jobDetail.getKey() + "]未找到组件:" + taskExecutionContext.getTaskModuleId());
+            logger.error("未找到组件:" + taskExecutionContext.getTaskModuleId());
             taskLogger.error("任务[" + jobDetail.getKey() + "]未找到组件:" + taskExecutionContext.getTaskModuleId());
             throw new JobExecutionException("未找到组件:" + taskExecutionContext.getTaskModuleId());
         } catch (Throwable e) {
-            execSuccess = false;
             logger.error("任务[" + jobDetail.getKey() + "]异常 -> " + e.getMessage(), e);
             taskLogger.error("执行任务异常 -> " + e.getMessage(), e);
             throw new JobExecutionException(e);
-        } finally {
-            logger.info("任务[" + jobDetail.getKey() + "]执行" + (execSuccess ? "成功" : "失败!"));
-            taskLogger.info("执行任务结束 -> " + (execSuccess ? "成功" : "失败"));
         }
     }
 }

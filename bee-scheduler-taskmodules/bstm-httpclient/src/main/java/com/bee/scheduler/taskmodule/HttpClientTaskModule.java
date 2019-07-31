@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
+import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -50,7 +51,7 @@ public class HttpClientTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public boolean run(TaskExecutionContext context) throws Exception {
+    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
         TaskExecutionLogger taskLogger = context.getLogger();
 
@@ -82,6 +83,10 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         taskLogger.info("任务执行成功: ");
         taskLogger.info("Code: " + responseCode);
         taskLogger.info("Content: " + result.toString());
-        return true;
+
+        JSONObject data = new JSONObject();
+        data.put("response_code", responseCode);
+        data.put("response_content", result.toString());
+        return TaskExecutionResult.success(data);
     }
 }
