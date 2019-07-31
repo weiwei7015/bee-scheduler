@@ -44,16 +44,14 @@ public class KafkaProducerTaskModule extends AbstractTaskModule {
 
     @Override
     public String getParamTemplate() {
-        StringBuilder t = new StringBuilder();
-        t.append("{\r");
-        t.append("    brokerList:'',\r");
-        t.append("    messages:[\r");
-        t.append("        {topic:'',content:{}},\r");
-        t.append("        {topic:'',content:''},\r");
-        t.append("        {topic:'',content:[{},{}]}\r");
-        t.append("    ]\r");
-        t.append("}");
-        return t.toString();
+        return "{\r" +
+                "    brokerList:'',\r" +
+                "    messages:[\r" +
+                "        {topic:'',content:{}},\r" +
+                "        {topic:'',content:''},\r" +
+                "        {topic:'',content:[{},{}]}\r" +
+                "    ]\r" +
+                "}";
     }
 
     @Override
