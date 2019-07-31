@@ -86,7 +86,8 @@ public class MailTaskModule extends AbstractTaskModule {
         properties.put("mail.smtp.auth", smtpAuth);
         properties.put("mail.smtp.ssl.enable", smtpSSLEnable);
 
-        Message message = new MimeMessage(Session.getInstance(properties));
+        Session session = Session.getInstance(properties);
+        Message message = new MimeMessage(session);
         //发件人
         message.setFrom(new InternetAddress(from));
         //收件人
@@ -106,7 +107,7 @@ public class MailTaskModule extends AbstractTaskModule {
         // 邮件内容
         message.setText(content);
         // 得到邮差对象
-        Transport transport = Session.getInstance(properties).getTransport();
+        Transport transport = session.getTransport();
         // 连接自己的邮箱账户
         transport.connect(account, password);
         // 发送邮件
