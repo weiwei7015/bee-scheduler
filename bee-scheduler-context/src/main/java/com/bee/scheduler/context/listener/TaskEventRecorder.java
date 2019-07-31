@@ -85,7 +85,7 @@ public class TaskEventRecorder extends AbstractTaskListener {
         Date currentTime = Calendar.getInstance().getTime();
 
         // 记录执行历史
-        Constants.TaskExecState execState = jobException == null ? Constants.TaskExecState.SUCCESS : result.isSuccess() ? Constants.TaskExecState.SUCCESS : Constants.TaskExecState.FAIL;
+        Constants.TaskExecState execState = result == null ? Constants.TaskExecState.FAIL : result.isSuccess() ? Constants.TaskExecState.SUCCESS : Constants.TaskExecState.FAIL;
         Constants.TaskFiredWay firedWay = triggerGroup.equals(Constants.TASK_GROUP_MANUAL) ? Constants.TaskFiredWay.MANUAL : triggerGroup.equals(Constants.TASK_GROUP_TMP) ? Constants.TaskFiredWay.TMP : triggerGroup.equals(Constants.TASK_GROUP_LINKAGE) ? Constants.TaskFiredWay.LINKAGE : Constants.TaskFiredWay.SCHEDULE;
         try {
             String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME,FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";

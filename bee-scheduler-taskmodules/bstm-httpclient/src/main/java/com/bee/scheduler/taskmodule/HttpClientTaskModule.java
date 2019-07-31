@@ -66,8 +66,9 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         connection.setReadTimeout(timeout);
         connection.connect();
 
+        //响应状态码
+        int responseStatus = connection.getResponseCode();
         //响应内容
-        int responseCode = connection.getResponseCode();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
         StringBuilder result = new StringBuilder();
         String temp;
@@ -80,13 +81,15 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         }
         bufferedReader.close();
 
-        taskLogger.info("任务执行成功: ");
-        taskLogger.info("Code: " + responseCode);
-        taskLogger.info("Content: " + result.toString());
+        taskLogger.info("response status: " + responseStatus);
 
         JSONObject data = new JSONObject();
-        data.put("response_code", responseCode);
+        data.put("response_status", responseStatus);
         data.put("response_content", result.toString());
-        return TaskExecutionResult.success(data);
+        if (responseStatus == 200) {
+            return TaskExecutionResult.success(data);
+        } else {
+            return TaskExecutionResult.fail(data);
+        }
     }
 }
