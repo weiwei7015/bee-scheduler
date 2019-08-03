@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author weiwei
  */
 public enum TaskSpecialGroup {
-    TMP;
+    TMP, LINKTMP;
 
     public static boolean contains(String group) {
         for (TaskSpecialGroup item : TaskSpecialGroup.values()) {

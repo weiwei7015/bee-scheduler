@@ -8,7 +8,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
             var editFor = vm.$route.meta.editFor;
 
             var validators = {
-                jobModule: [
+                taskModule: [
                     {required: true, message: '请选择任务组件', trigger: 'change'}
                 ],
                 taskName: [
@@ -28,7 +28,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
                 editFor: editFor,
                 validators: validators,
                 taskGroupList: [],
-                jobModuleList: {},
+                taskModuleList: {},
                 postTaskInProcess: false,
                 initEditFormModelInProcess: false,
                 editTaskFormModel: {
@@ -62,7 +62,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
                     startAt: null,
                     endAtType: 1,
                     endAt: null,
-                    jobModule: '',
+                    taskModule: '',
                     params: '',
                     description: '',
                     linkageRule: ''
@@ -82,7 +82,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
 
             data.initEditFormModelInProcess = true;
             vm.$http.get("/job-component/list").then(function (re) {
-                data.jobModuleList = re.body.data;
+                data.taskModuleList = re.body.data;
                 if (editFor === "Edit" || editFor === "Copy") {
                     var name = vm.$route.params.name;
                     var group = vm.$route.params.group;
@@ -102,15 +102,15 @@ define(['text!comp/task-edit.html'], function (tpl) {
             return data;
         },
         watch: {
-            'editTaskFormModel.jobModule': function (newVal, oldVal) {
-                var selectedJobModule = this.jobModuleList[newVal];
+            'editTaskFormModel.taskModule': function (newVal, oldVal) {
+                var selectedtaskModule = this.taskModuleList[newVal];
                 if (this.editFor === "New") {
-                    this.editTaskFormModel.params = selectedJobModule.paramTemplate;
+                    this.editTaskFormModel.params = selectedtaskModule.paramTemplate;
                 } else if (this.editFor === "Copy") {
-                    if (this.editTaskFormModelInitBackup !== null && newVal === this.editTaskFormModelInitBackup.jobModule) {
+                    if (this.editTaskFormModelInitBackup !== null && newVal === this.editTaskFormModelInitBackup.taskModule) {
                         this.editTaskFormModel.params = this.editTaskFormModelInitBackup.params;
                     } else {
-                        this.editTaskFormModel.params = selectedJobModule.paramTemplate;
+                        this.editTaskFormModel.params = selectedtaskModule.paramTemplate;
                     }
                 }
             }

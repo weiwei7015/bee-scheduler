@@ -21,7 +21,7 @@ import java.util.Date;
  * @author weiwei 任务事件监听， 存储数据库
  */
 public class TaskEventRecorder extends AbstractTaskListener {
-    private Log logger = LogFactory.getLog(getClass());
+    private Log logger = LogFactory.getLog(TaskEventRecorder.class);
 
     @Override
     public String getName() {

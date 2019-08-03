@@ -46,7 +46,7 @@ public class TaskScheduler {
         try {
             JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(getJobKey(taskConfig.getGroup(), taskConfig.getName())).build();
 
-            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getJobModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
+            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getTaskModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
             TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(getTriggerKeyOfScheduleWay(taskConfig.getGroup(), taskConfig.getName())).withDescription(taskConfig.getDescription()).usingJobData(jobDataMap);
 
             if (taskConfig.getStartAtType() == TaskConfig.START_AT_TYPE_NOW) {
@@ -147,7 +147,7 @@ public class TaskScheduler {
     public void reschedule(TaskConfig taskConfig) throws TaskSchedulerException {
         try {
             TriggerKey taskTriggerKey = getTriggerKeyOfScheduleWay(taskConfig.getGroup(), taskConfig.getName());
-            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getJobModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
+            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getTaskModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
             TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskTriggerKey).withDescription(taskConfig.getDescription()).usingJobData(jobDataMap);
 
             if (taskConfig.getStartAtType() == TaskConfig.START_AT_TYPE_NOW) {
@@ -266,7 +266,7 @@ public class TaskScheduler {
             taskConfig.setStartAt(taskTrigger.getStartTime());
             taskConfig.setEndAtType(taskTrigger.getEndTime() == null ? TaskConfig.END_AT_TYPE_NEVER : TaskConfig.END_AT_TYPE_GIVEN_TIME);
             taskConfig.setEndAt(taskTrigger.getEndTime());
-            taskConfig.setJobModule(taskTrigger.getJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID));
+            taskConfig.setTaskModule(taskTrigger.getJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID));
             taskConfig.setParams(taskTrigger.getJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM));
             taskConfig.setDescription(taskTrigger.getDescription());
             taskConfig.setLinkageRule(taskTrigger.getJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE));
@@ -398,7 +398,7 @@ public class TaskScheduler {
 
             JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(name, group).build();
 
-            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(quickTaskConfig.getJobModule(), quickTaskConfig.getParams(), quickTaskConfig.getLinkageRule());
+            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(quickTaskConfig.getTaskModule(), quickTaskConfig.getParams(), quickTaskConfig.getLinkageRule());
             OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(group + "." + name, TaskFiredWay.TMP.name()).usingJobData(jobDataMap).build();
 
             if (quickTaskConfig.getEnableStartDelay() && quickTaskConfig.getStartDelay() != null) {

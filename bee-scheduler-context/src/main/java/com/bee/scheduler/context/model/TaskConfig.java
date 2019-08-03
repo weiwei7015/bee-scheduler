@@ -40,7 +40,7 @@ public class TaskConfig {
     private Date startAt;
     private Integer endAtType = END_AT_TYPE_NEVER;
     private Date endAt;
-    private String jobModule = "";
+    private String taskModule = "";
     private String params = "";
     private String description = "";
     private String linkageRule = "";
@@ -133,12 +133,12 @@ public class TaskConfig {
         this.endAt = endAt;
     }
 
-    public String getJobModule() {
-        return jobModule;
+    public String getTaskModule() {
+        return taskModule;
     }
 
-    public void setJobModule(String jobModule) {
-        this.jobModule = jobModule;
+    public void setTaskModule(String taskModule) {
+        this.taskModule = taskModule;
     }
 
     public String getParams() {
