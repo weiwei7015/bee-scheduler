@@ -44,10 +44,12 @@ public class TaskExecutor implements Job {
         } catch (TaskModuleNotFountException e) {
             logger.error("未找到组件:" + taskExecutionContext.getTaskModuleId());
             taskLogger.error("任务[" + jobDetail.getKey() + "]未找到组件:" + taskExecutionContext.getTaskModuleId());
+            TaskExecutionContextUtil.setTaskExecutionResult(context, TaskExecutionResult.fail());
             throw new JobExecutionException("未找到组件:" + taskExecutionContext.getTaskModuleId());
         } catch (Throwable e) {
             logger.error("任务[" + jobDetail.getKey() + "]异常 -> " + e.getMessage(), e);
             taskLogger.error("执行任务异常 -> " + e.getMessage(), e);
+            TaskExecutionContextUtil.setTaskExecutionResult(context, TaskExecutionResult.fail());
             throw new JobExecutionException(e);
         }
     }
