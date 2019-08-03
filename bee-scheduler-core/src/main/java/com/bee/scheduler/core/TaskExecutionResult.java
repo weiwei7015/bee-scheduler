@@ -15,7 +15,7 @@ public class TaskExecutionResult {
     }
 
     public static TaskExecutionResult success() {
-        return success(null);
+        return success(new JSONObject());
     }
 
     public static TaskExecutionResult success(JSONObject data) {
@@ -23,7 +23,7 @@ public class TaskExecutionResult {
     }
 
     public static TaskExecutionResult fail() {
-        return fail(null);
+        return fail(new JSONObject());
     }
 
     public static TaskExecutionResult fail(JSONObject data) {

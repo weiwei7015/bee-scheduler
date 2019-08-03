@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.bee.scheduler.consolenode.exception.BizzException;
 import com.bee.scheduler.consolenode.model.*;
 import com.bee.scheduler.consolenode.service.TaskService;
-import com.bee.scheduler.context.Constants;
 import com.bee.scheduler.context.TaskScheduler;
+import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.model.QuickTaskConfig;
 import com.bee.scheduler.context.model.TaskConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -110,8 +110,8 @@ public class TaskController {
                 throw new BizzException(BizzException.error_code_invalid_params, "联动任务规则输入有误，必须是JSON格式");
             }
         }
-        if (Constants.TASK_GROUP_MANUAL.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_TMP.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_LINKAGE.equalsIgnoreCase(taskConfig.getGroup()) || Constants.TASK_GROUP_SYSTEM.equalsIgnoreCase(taskConfig.getGroup())) {
-            throw new BizzException(BizzException.error_code_invalid_params, "任务所属组不允许使用\"tmp\"、\"manual\"、\"linkage\"、\"system\"");
+        if (TaskSpecialGroup.contains(taskConfig.getGroup())) {
+            throw new BizzException(BizzException.error_code_invalid_params, "任务组不允许使用系统保留关键词:" + taskConfig.getGroup());
         }
 
         if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_CRON_TRIGGER) {
@@ -126,7 +126,7 @@ public class TaskController {
     @ResponseBody
     @GetMapping("/task/detail")
     public HttpResponseBodyWrapper detail(String group, String name) throws Exception {
-        return new HttpResponseBodyWrapper(scheduler.getTaskDef(group, name));
+        return new HttpResponseBodyWrapper(scheduler.getTaskConfig(group, name));
     }
 
     @ResponseBody
@@ -191,7 +191,7 @@ public class TaskController {
             String[] group$name = StringUtils.split(taskId, "-");
             String name = group$name[1];
             String group = group$name[0];
-            scheduler.execute(group, name);
+            scheduler.trigger(group, name);
         }
     }
 

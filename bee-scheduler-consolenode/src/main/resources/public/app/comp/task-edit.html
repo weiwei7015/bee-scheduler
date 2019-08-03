@@ -27,7 +27,7 @@
                 <el-form-item label="所属组" prop="group" :rules="validators.taskGroup">
                     <el-autocomplete v-model="editTaskFormModel.group" :fetch-suggestions="queryTaskGroup" placeholder="" :trigger-on-focus="false" :disabled="editFor==='Edit'" style="width: 100%"></el-autocomplete>
                 </el-form-item>
-                <h4 class="no-margin">调度规则</h4>
+                <h4 class="no-margin">执行计划</h4>
                 <div class="hr"></div>
                 <el-form-item label="调度方式" prop="scheduleType">
                     <el-radio-group v-model="editTaskFormModel.scheduleType">

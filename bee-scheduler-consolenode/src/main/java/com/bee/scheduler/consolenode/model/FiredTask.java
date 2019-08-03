@@ -1,6 +1,6 @@
 package com.bee.scheduler.consolenode.model;
 
-import com.bee.scheduler.context.Constants;
+import com.bee.scheduler.context.common.TaskFiredWay;
 
 /**
  * Created by wei-wei
@@ -9,7 +9,7 @@ public class FiredTask extends Task {
     private String instanceId;
     private String fireId;
     private Long firedTime;
-    private Constants.TaskFiredWay firedWay;
+    private TaskFiredWay firedWay;
 
     public String getInstanceId() {
         return instanceId;
@@ -35,11 +35,11 @@ public class FiredTask extends Task {
         this.firedTime = firedTime;
     }
 
-    public Constants.TaskFiredWay getFiredWay() {
+    public TaskFiredWay getFiredWay() {
         return firedWay;
     }
 
-    public void setFiredWay(Constants.TaskFiredWay firedWay) {
+    public void setFiredWay(TaskFiredWay firedWay) {
         this.firedWay = firedWay;
     }
 }

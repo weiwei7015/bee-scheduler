@@ -1,6 +1,7 @@
 package com.bee.scheduler.consolenode.model;
 
-import com.bee.scheduler.context.Constants;
+import com.bee.scheduler.context.common.TaskExecState;
+import com.bee.scheduler.context.common.TaskFiredWay;
 
 /**
  * @author weiwei 任务历史
@@ -9,13 +10,13 @@ public class ExecutedTask extends FiredTask {
     private Long completeTime;
     private Long expendTime;
     private Integer refired;
-    private Constants.TaskExecState execState;
+    private TaskExecState execState;
     private String log;
 
     public ExecutedTask() {
     }
 
-    public ExecutedTask(String schedulerName, String instanceId, String fireId, String name, String group, Long firedTime, Long completeTime, Long expendTime, int refired, Constants.TaskExecState execState, Constants.TaskFiredWay firedWay, String log) {
+    public ExecutedTask(String schedulerName, String instanceId, String fireId, String name, String group, Long firedTime, Long completeTime, Long expendTime, int refired, TaskExecState execState, TaskFiredWay firedWay, String log) {
         this.setSchedulerName(schedulerName);
         this.setInstanceId(instanceId);
         this.setFireId(fireId);
@@ -54,11 +55,11 @@ public class ExecutedTask extends FiredTask {
         this.refired = refired;
     }
 
-    public Constants.TaskExecState getExecState() {
+    public TaskExecState getExecState() {
         return execState;
     }
 
-    public void setExecState(Constants.TaskExecState execState) {
+    public void setExecState(TaskExecState execState) {
         this.execState = execState;
     }
 

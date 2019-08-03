@@ -6,7 +6,7 @@
                 <el-form label-width="100px" class="no-item-margin form-label-muted">
                     <h2 class="no-margin">{{taskDetail.group}}.{{taskDetail.name}}</h2>
                     <div class="spr"></div>
-                    <h4 class="no-margin">调度规则</h4>
+                    <h4 class="no-margin">执行计划</h4>
                     <div class="hr"></div>
                     <el-form-item label="调度方式">{{taskDetail.scheduleType === 1?"SimpleTrigger":taskDetail.scheduleType === 2?"CalendarIntervalTrigger":taskDetail.scheduleType === 3?"DailyTimeIntervalTrigger":taskDetail.scheduleType === 4?"CronTrigger":"unknown"}}</el-form-item>
                     <template v-if="taskDetail.scheduleType == 1"><!--Simple-->

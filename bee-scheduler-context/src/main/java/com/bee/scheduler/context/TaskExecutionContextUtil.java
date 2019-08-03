@@ -2,6 +2,7 @@ package com.bee.scheduler.context;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bee.scheduler.context.common.Constants;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
@@ -18,9 +19,9 @@ import java.util.Map;
 public class TaskExecutionContextUtil {
     public static JobDataMap buildJobDataMapForTask(String taskModuleId, String taskParam, String linkageRule) {
         JobDataMap dataMap = new JobDataMap();
-        dataMap.put(Constants.JOB_DATA_KEY_TASK_MODULE_ID, taskModuleId);
-        dataMap.put(Constants.JOB_DATA_KEY_TASK_PARAM, taskParam);
-        dataMap.put(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE, linkageRule);
+        dataMap.put(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID, taskModuleId);
+        dataMap.put(Constants.TRIGGER_DATA_KEY_TASK_PARAM, taskParam);
+        dataMap.put(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE, linkageRule);
         return dataMap;
     }
 
@@ -69,24 +70,24 @@ public class TaskExecutionContextUtil {
     //获取任务参数
     private static JSONObject getTaskParam(JobExecutionContext context) {
         JobDataMap mergedJobDataMap = context.getMergedJobDataMap();
-        if (mergedJobDataMap.getString(Constants.JOB_DATA_KEY_TASK_PARAM) == null) {
+        if (mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM) == null) {
             return new JSONObject();
         }
-        return JSONObject.parseObject(mergedJobDataMap.getString(Constants.JOB_DATA_KEY_TASK_PARAM));
+        return JSONObject.parseObject(mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM));
     }
 
     //获取任务组件ID
     private static String getTaskModuleId(JobExecutionContext context) {
-        return context.getMergedJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_MODULE_ID);
+        return context.getMergedJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID);
     }
 
     //获取任务联动规则
     private static JSONArray getTaskLinkageRule(JobExecutionContext context) {
         JobDataMap mergedJobDataMap = context.getMergedJobDataMap();
-        if (StringUtils.isBlank(mergedJobDataMap.getString(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE))) {
+        if (StringUtils.isBlank(mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE))) {
             return null;
         }
-        return JSONObject.parseArray(mergedJobDataMap.getString(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE));
+        return JSONObject.parseArray(mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE));
     }
 
     private static TaskExecutionLogger getLogger(JobExecutionContext context) {

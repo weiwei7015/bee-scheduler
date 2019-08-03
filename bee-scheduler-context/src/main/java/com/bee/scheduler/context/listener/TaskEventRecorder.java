@@ -1,6 +1,6 @@
 package com.bee.scheduler.context.listener;
 
-import com.bee.scheduler.context.Constants;
+import com.bee.scheduler.context.common.TaskExecState;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
@@ -31,8 +31,8 @@ public class TaskEventRecorder extends AbstractTaskListener {
 
     @Override
     public void taskExecutionVetoed(TaskExecutionContext context, Scheduler scheduler) {
-        String taskJobGroup = context.getJobGroup();
-        String taskJobName = context.getJobName();
+        String taskGroup = context.getJobGroup();
+        String taskName = context.getJobName();
         String triggerGroup = context.getTriggerGroup();
         String triggerName = context.getTriggerName();
         String schedulerInstanceId = context.getSchedulerInstanceId();
@@ -41,11 +41,9 @@ public class TaskEventRecorder extends AbstractTaskListener {
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        taskLogger.warning("任务[" + taskJobGroup + "." + taskJobName + "]已被取消执行！");
+        taskLogger.warning("任务[" + taskGroup + "." + taskName + "]已被取消执行！");
 
         // 记录执行历史
-        Constants.TaskFiredWay firedWay = triggerGroup.equals(Constants.TASK_GROUP_MANUAL) ? Constants.TaskFiredWay.MANUAL : triggerGroup.equals(Constants.TASK_GROUP_TMP) ? Constants.TaskFiredWay.TMP : triggerGroup.equals(Constants.TASK_GROUP_LINKAGE) ? Constants.TaskFiredWay.LINKAGE : Constants.TaskFiredWay.SCHEDULE;
-
         try {
             String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
             try (
@@ -55,14 +53,14 @@ public class TaskEventRecorder extends AbstractTaskListener {
                 preparedStatement.setString(1, schedulerName);
                 preparedStatement.setString(2, schedulerInstanceId);
                 preparedStatement.setString(3, context.getFireInstanceId());
-                preparedStatement.setString(4, taskJobName);
-                preparedStatement.setString(5, taskJobGroup);
+                preparedStatement.setString(4, taskName);
+                preparedStatement.setString(5, taskGroup);
                 preparedStatement.setLong(6, context.getFireTime().getTime());
-                preparedStatement.setString(7, firedWay.toString());
+                preparedStatement.setString(7, context.getTriggerGroup());
                 preparedStatement.setLong(8, currentTime.getTime());
                 preparedStatement.setLong(9, context.getJobRunTime());
                 preparedStatement.setInt(10, context.getRefireCount());
-                preparedStatement.setString(11, Constants.TaskExecState.VETOED.toString());
+                preparedStatement.setString(11, TaskExecState.VETOED.name());
                 preparedStatement.setString(12, taskLogger.getLog());
                 preparedStatement.execute();
             } catch (Exception e) {
@@ -85,8 +83,7 @@ public class TaskEventRecorder extends AbstractTaskListener {
         Date currentTime = Calendar.getInstance().getTime();
 
         // 记录执行历史
-        Constants.TaskExecState execState = result == null ? Constants.TaskExecState.FAIL : result.isSuccess() ? Constants.TaskExecState.SUCCESS : Constants.TaskExecState.FAIL;
-        Constants.TaskFiredWay firedWay = triggerGroup.equals(Constants.TASK_GROUP_MANUAL) ? Constants.TaskFiredWay.MANUAL : triggerGroup.equals(Constants.TASK_GROUP_TMP) ? Constants.TaskFiredWay.TMP : triggerGroup.equals(Constants.TASK_GROUP_LINKAGE) ? Constants.TaskFiredWay.LINKAGE : Constants.TaskFiredWay.SCHEDULE;
+        TaskExecState execState = result == null ? TaskExecState.FAIL : result.isSuccess() ? TaskExecState.SUCCESS : TaskExecState.FAIL;
         try {
             String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME,FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
             try (
@@ -99,7 +96,7 @@ public class TaskEventRecorder extends AbstractTaskListener {
                 preparedStatement.setString(4, taskJobName);
                 preparedStatement.setString(5, taskJobGroup);
                 preparedStatement.setLong(6, context.getFireTime().getTime());
-                preparedStatement.setString(7, firedWay.toString());
+                preparedStatement.setString(7, context.getTriggerGroup());
                 preparedStatement.setLong(8, currentTime.getTime());
                 preparedStatement.setLong(9, context.getJobRunTime());
                 preparedStatement.setInt(10, context.getRefireCount());

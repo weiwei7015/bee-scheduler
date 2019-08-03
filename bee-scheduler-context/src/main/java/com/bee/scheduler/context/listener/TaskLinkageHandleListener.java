@@ -2,7 +2,8 @@ package com.bee.scheduler.context.listener;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.context.Constants;
+import com.bee.scheduler.context.common.Constants;
+import com.bee.scheduler.context.common.TaskFiredWay;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
@@ -35,13 +36,12 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                         String taskKey = ((String) item);
                         taskLogger.info("触发联动任务:" + taskKey);
                         String[] group$name = StringUtils.split(taskKey, ".");
-                        String group = group$name[0];
-                        String name = group$name[1];
+                        String group = group$name[0], name = group$name[1];
                         JobKey jobKey = new JobKey(name, group);
-                        Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
+                        Trigger trigger = scheduler.getTrigger(new TriggerKey(group + "." + name, TaskFiredWay.SCHEDULE.name()));
                         JobDataMap jobDataMap = trigger.getJobDataMap();
 
-                        OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(context.getFireInstanceId() + "_" + (i + 1), Constants.TASK_GROUP_LINKAGE).forJob(jobKey).build();
+                        OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(context.getFireInstanceId() + "_" + (i + 1), TaskFiredWay.LINKAGE.name()).forJob(jobKey).build();
                         operableTrigger.setJobDataMap(jobDataMap);
 
                         scheduler.scheduleJob(operableTrigger);
@@ -58,22 +58,22 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                         String group = group$name[0];
                         String name = group$name[1];
                         JobKey jobKey = new JobKey(name, group);
-                        Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
+                        Trigger trigger = scheduler.getTrigger(new TriggerKey(group + "." + name, TaskFiredWay.SCHEDULE.name()));
                         JobDataMap jobDataMap = trigger.getJobDataMap();
 
                         if (StringUtils.isNotBlank(nextLinkageRule)) {
                             if (jobDataMap == null) {
                                 jobDataMap = new JobDataMap();
                             }
-                            String linkageRule = (String) jobDataMap.get(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE);
+                            String linkageRule = (String) jobDataMap.get(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE);
 
                             if (StringUtils.isBlank(linkageRule) || !StringUtils.equals(nextLinkageRule, linkageRule)) {
                                 taskLogger.warning("任务【" + taskKey + "】本次联动执行将采用联动配置：" + nextLinkageRule + "，覆盖默认联动配置：" + linkageRule);
-                                jobDataMap.put(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE, nextLinkageRule);
+                                jobDataMap.put(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE, nextLinkageRule);
                             }
                         }
 
-                        OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(context.getFireInstanceId() + "_" + (i + 1), Constants.TASK_GROUP_LINKAGE).forJob(jobKey).build();
+                        OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(context.getFireInstanceId() + "_" + (i + 1), TaskFiredWay.LINKAGE.name()).forJob(jobKey).build();
                         operableTrigger.setJobDataMap(jobDataMap);
                         if (delay != null) {
                             taskLogger.info("联动任务【" + taskKey + "】将在" + delay + "ms后开始执行");

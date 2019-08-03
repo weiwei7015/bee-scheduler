@@ -1,16 +1,17 @@
 package com.bee.scheduler.context;
 
+import com.bee.scheduler.context.common.Constants;
+import com.bee.scheduler.context.common.TaskFiredWay;
+import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.exception.TaskSchedulerException;
 import com.bee.scheduler.context.executor.TaskExecutor;
 import com.bee.scheduler.context.model.QuickTaskConfig;
 import com.bee.scheduler.context.model.TaskConfig;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.quartz.*;
 import org.quartz.spi.OperableTrigger;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -27,7 +28,7 @@ public class TaskScheduler {
 
     public List<String> getTaskGroups() throws TaskSchedulerException {
         try {
-            return scheduler.getTriggerGroupNames();
+            return scheduler.getJobGroupNames();
         } catch (SchedulerException e) {
             throw new TaskSchedulerException(e);
         }
@@ -43,10 +44,10 @@ public class TaskScheduler {
 
     public void schedule(TaskConfig taskConfig) throws TaskSchedulerException {
         try {
-            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getJobModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
+            JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(getJobKey(taskConfig.getGroup(), taskConfig.getName())).build();
 
-            JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(taskConfig.getName(), taskConfig.getGroup()).build();
-            TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskConfig.getName(), taskConfig.getGroup()).usingJobData(jobDataMap).withDescription(taskConfig.getDescription());
+            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getJobModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
+            TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(getTriggerKeyOfScheduleWay(taskConfig.getGroup(), taskConfig.getName())).withDescription(taskConfig.getDescription()).usingJobData(jobDataMap);
 
             if (taskConfig.getStartAtType() == TaskConfig.START_AT_TYPE_NOW) {
                 triggerBuilder.startNow();
@@ -145,9 +146,9 @@ public class TaskScheduler {
 
     public void reschedule(TaskConfig taskConfig) throws TaskSchedulerException {
         try {
-            JobDataMap dataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getJobModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
-
-            TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskConfig.getName(), taskConfig.getGroup()).usingJobData(dataMap).withDescription(taskConfig.getDescription());
+            TriggerKey taskTriggerKey = getTriggerKeyOfScheduleWay(taskConfig.getGroup(), taskConfig.getName());
+            JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getJobModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
+            TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskTriggerKey).withDescription(taskConfig.getDescription()).usingJobData(jobDataMap);
 
             if (taskConfig.getStartAtType() == TaskConfig.START_AT_TYPE_NOW) {
                 triggerBuilder.startNow();
@@ -157,7 +158,6 @@ public class TaskScheduler {
             if (taskConfig.getEndAtType() != TaskConfig.END_AT_TYPE_NEVER) {
                 triggerBuilder.endAt(taskConfig.getEndAt());
             }
-
 
             if (taskConfig.getScheduleType() == TaskConfig.SCHEDULE_TYPE_SIMPLE_TRIGGER) {
                 TaskConfig.ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
@@ -250,30 +250,30 @@ public class TaskScheduler {
         }
     }
 
-    public TaskConfig getTaskDef(String group, String name) throws TaskSchedulerException {
+    public TaskConfig getTaskConfig(String group, String name) throws TaskSchedulerException {
         try {
-            Trigger abstractTrigger = scheduler.getTrigger(new TriggerKey(name, group));
-            if (abstractTrigger == null) {
+            Trigger taskTrigger = scheduler.getTrigger(getTriggerKeyOfScheduleWay(group, name));
+            if (taskTrigger == null) {
                 return null;
             }
 
-            JobDetail jobDetail = scheduler.getJobDetail(abstractTrigger.getJobKey());
+            JobDetail jobDetail = scheduler.getJobDetail(getJobKey(group, name));
 
             TaskConfig taskConfig = new TaskConfig();
-            taskConfig.setName(abstractTrigger.getKey().getName());
-            taskConfig.setGroup(abstractTrigger.getKey().getGroup());
-            taskConfig.setStartAtType(abstractTrigger.getStartTime() == null ? TaskConfig.START_AT_TYPE_NOW : TaskConfig.START_AT_TYPE_GIVEN_TIME);
-            taskConfig.setStartAt(abstractTrigger.getStartTime());
-            taskConfig.setEndAtType(abstractTrigger.getEndTime() == null ? TaskConfig.END_AT_TYPE_NEVER : TaskConfig.END_AT_TYPE_GIVEN_TIME);
-            taskConfig.setEndAt(abstractTrigger.getEndTime());
-            taskConfig.setJobModule(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_MODULE_ID));
-            taskConfig.setParams(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_PARAM));
-            taskConfig.setDescription(abstractTrigger.getDescription());
-            taskConfig.setLinkageRule(abstractTrigger.getJobDataMap().getString(Constants.JOB_DATA_KEY_TASK_LINKAGE_RULE));
+            taskConfig.setName(jobDetail.getKey().getName());
+            taskConfig.setGroup(jobDetail.getKey().getGroup());
+            taskConfig.setStartAtType(taskTrigger.getStartTime() == null ? TaskConfig.START_AT_TYPE_NOW : TaskConfig.START_AT_TYPE_GIVEN_TIME);
+            taskConfig.setStartAt(taskTrigger.getStartTime());
+            taskConfig.setEndAtType(taskTrigger.getEndTime() == null ? TaskConfig.END_AT_TYPE_NEVER : TaskConfig.END_AT_TYPE_GIVEN_TIME);
+            taskConfig.setEndAt(taskTrigger.getEndTime());
+            taskConfig.setJobModule(taskTrigger.getJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID));
+            taskConfig.setParams(taskTrigger.getJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM));
+            taskConfig.setDescription(taskTrigger.getDescription());
+            taskConfig.setLinkageRule(taskTrigger.getJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE));
 
 
-            if (abstractTrigger instanceof SimpleTrigger) {
-                SimpleTrigger trigger = (SimpleTrigger) abstractTrigger;
+            if (taskTrigger instanceof SimpleTrigger) {
+                SimpleTrigger trigger = (SimpleTrigger) taskTrigger;
 
                 taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_SIMPLE_TRIGGER);
 
@@ -282,8 +282,8 @@ public class TaskScheduler {
                 scheduleOptions.setRepeatType(trigger.getRepeatCount() == -1 ? TaskConfig.REPEAT_TYPE_INFINITE : TaskConfig.REPEAT_TYPE_GIVEN_COUNT);
                 scheduleOptions.setRepeatCount(trigger.getRepeatCount());
                 scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
-            } else if (abstractTrigger instanceof CalendarIntervalTrigger) {
-                CalendarIntervalTrigger trigger = (CalendarIntervalTrigger) abstractTrigger;
+            } else if (taskTrigger instanceof CalendarIntervalTrigger) {
+                CalendarIntervalTrigger trigger = (CalendarIntervalTrigger) taskTrigger;
 
                 taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_CALENDAR_INTERVAL_TRIGGER);
 
@@ -291,8 +291,8 @@ public class TaskScheduler {
                 scheduleOptions.setInterval(trigger.getRepeatInterval());
                 scheduleOptions.setIntervalUnit(trigger.getRepeatIntervalUnit());
                 scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
-            } else if (abstractTrigger instanceof DailyTimeIntervalTrigger) {
-                DailyTimeIntervalTrigger trigger = (DailyTimeIntervalTrigger) abstractTrigger;
+            } else if (taskTrigger instanceof DailyTimeIntervalTrigger) {
+                DailyTimeIntervalTrigger trigger = (DailyTimeIntervalTrigger) taskTrigger;
 
                 taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_DAILY_TIME_INTERVAL_TRIGGER);
 
@@ -303,8 +303,8 @@ public class TaskScheduler {
                 scheduleOptions.setInterval(trigger.getRepeatInterval());
                 scheduleOptions.setIntervalUnit(trigger.getRepeatIntervalUnit());
                 scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());
-            } else if (abstractTrigger instanceof CronTrigger) {
-                CronTrigger trigger = (CronTrigger) abstractTrigger;
+            } else if (taskTrigger instanceof CronTrigger) {
+                CronTrigger trigger = (CronTrigger) taskTrigger;
 
                 taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_CRON_TRIGGER);
 
@@ -321,7 +321,7 @@ public class TaskScheduler {
 
     public void unschedule(String group, String name) throws TaskSchedulerException {
         try {
-            scheduler.unscheduleJob(new TriggerKey(name, group));
+            scheduler.unscheduleJob(getTriggerKeyOfScheduleWay(group, name));
         } catch (SchedulerException e) {
             throw new TaskSchedulerException(e);
         }
@@ -354,7 +354,7 @@ public class TaskScheduler {
 
     public void pause(String group, String name) throws TaskSchedulerException {
         try {
-            TriggerKey triggerKey = new TriggerKey(name, group);
+            TriggerKey triggerKey = getTriggerKeyOfScheduleWay(group, name);
             Trigger.TriggerState triggerState = scheduler.getTriggerState(triggerKey);
             if (!Trigger.TriggerState.PAUSED.equals(triggerState)) {
                 scheduler.pauseTrigger(triggerKey);
@@ -366,7 +366,7 @@ public class TaskScheduler {
 
     public void resume(String group, String name) throws TaskSchedulerException {
         try {
-            TriggerKey triggerKey = new TriggerKey(name, group);
+            TriggerKey triggerKey = getTriggerKeyOfScheduleWay(group, name);
             Trigger.TriggerState triggerState = scheduler.getTriggerState(triggerKey);
             if (Trigger.TriggerState.PAUSED.equals(triggerState)) {
                 scheduler.resumeTrigger(triggerKey);
@@ -377,18 +377,15 @@ public class TaskScheduler {
         }
     }
 
-    public void execute(String group, String name) throws TaskSchedulerException {
+    public void trigger(String group, String name) throws TaskSchedulerException {
         try {
-            JobKey jobKey = new JobKey(name, group);
-            Trigger trigger = scheduler.getTrigger(new TriggerKey(name, group));
-            JobDataMap jobDataMap = trigger.getJobDataMap();
+            JobKey taskJobKey = getJobKey(group, name);
+            Trigger taskTrigger = scheduler.getTrigger(getTriggerKeyOfScheduleWay(group, name));
+            JobDataMap taskTriggerDataMap = taskTrigger.getJobDataMap();
 
-            String randomTriggerName = DateFormatUtils.format(new Date(), "yyyyMMddHHmmssSSS");
-            OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(randomTriggerName, Constants.TASK_GROUP_MANUAL).forJob(jobKey).withDescription("手动执行【" + group + "." + name + "】").build();
-            if (jobDataMap != null) {
-                operableTrigger.setJobDataMap(jobDataMap);
-            }
-            scheduler.scheduleJob(operableTrigger);
+            TriggerBuilder triggerBuilder = newTrigger().withIdentity(group + "." + name, TaskFiredWay.MANUAL.name()).usingJobData(taskTriggerDataMap).forJob(taskJobKey);
+
+            scheduler.scheduleJob(triggerBuilder.build());
         } catch (SchedulerException e) {
             throw new TaskSchedulerException(e);
         }
@@ -397,11 +394,12 @@ public class TaskScheduler {
     public void quickTask(QuickTaskConfig quickTaskConfig) throws TaskSchedulerException {
         try {
             String name = quickTaskConfig.getName();
-            String group = Constants.TASK_GROUP_TMP;
+            String group = TaskSpecialGroup.TMP.name();
+
+            JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(name, group).build();
 
             JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(quickTaskConfig.getJobModule(), quickTaskConfig.getParams(), quickTaskConfig.getLinkageRule());
-            JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(name, group).build();
-            OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(name, group).usingJobData(jobDataMap).withDescription("临时任务").build();
+            OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(group + "." + name, TaskFiredWay.TMP.name()).usingJobData(jobDataMap).build();
 
             if (quickTaskConfig.getEnableStartDelay() && quickTaskConfig.getStartDelay() != null) {
                 Calendar startTime = Calendar.getInstance();
@@ -412,5 +410,13 @@ public class TaskScheduler {
         } catch (SchedulerException e) {
             throw new TaskSchedulerException(e);
         }
+    }
+
+    private JobKey getJobKey(String taskGroup, String taskName) {
+        return new JobKey(taskName, taskGroup);
+    }
+
+    private TriggerKey getTriggerKeyOfScheduleWay(String taskGroup, String taskName) {
+        return new TriggerKey(taskGroup + "." + taskName, TaskFiredWay.SCHEDULE.name());
     }
 }
