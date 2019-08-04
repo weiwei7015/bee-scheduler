@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.SimpleEvaluationContext;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +19,7 @@ public class ExpressionPlaceholderHandler {
     public static final int EL_SUFFIX_LENGTH = 1;
 
     public String handle(String originText, JSONObject variables) {
-        EvaluationContext evaluationContext = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+        EvaluationContext evaluationContext = new StandardEvaluationContext();
         if (variables != null) {
             variables.keySet().forEach(key -> {
                 evaluationContext.setVariable(key, variables.get(key));

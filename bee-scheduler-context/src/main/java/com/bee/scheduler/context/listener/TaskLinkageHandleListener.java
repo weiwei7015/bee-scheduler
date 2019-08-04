@@ -11,7 +11,6 @@ import com.bee.scheduler.context.listener.support.LinkageRuleResolver;
 import com.bee.scheduler.context.listener.support.ResolvedLinkageRule;
 import com.bee.scheduler.context.model.TaskConfig;
 import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -118,8 +117,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                         }
                     }
                 } catch (Exception e) {
-                    logger.error("联动任务执行异常", e);
-                    logger.error("联动任务执行异常", e);
+                    logger.error("联动任务执行异常,TaskLinkageRule:" + taskLinkageRule, e);
                 }
             }
         }

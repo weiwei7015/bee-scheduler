@@ -5,7 +5,7 @@ import com.bee.scheduler.context.model.TaskConfig;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.SimpleEvaluationContext;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 public class LinkageRuleResolver {
     private ExpressionParser elParser = new SpelExpressionParser();
@@ -33,8 +33,7 @@ public class LinkageRuleResolver {
             throw new RuntimeException("mode can only be 'create' or 'trigger'");
         }
 
-
-        EvaluationContext evaluationContext = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+        EvaluationContext evaluationContext = new StandardEvaluationContext();
         if (variables != null) {
             variables.keySet().forEach(key -> {
                 evaluationContext.setVariable(key, variables.get(key));
@@ -55,16 +54,16 @@ public class LinkageRuleResolver {
 
 
 //    public static void main(String[] args) {
-//
 //        LinkageRuleResolver linkageRuleResolver = new LinkageRuleResolver();
 //
 //        JSONObject variables = new JSONObject();
+//        variables.put("content", "helloworld");
 //        String el = "{\n" +
 //                "    \"mode\":\"Create\",\n" +
 //                "    \"delay\":1000,\n" +
 //                "    \"next\":\"[]\",\n" +
 //                "    \"task\":{},\n" +
-//                "    \"condition\":\"#age > 10\",\n" +
+//                "    \"condition\":\"'#content'.length() > 2\",\n" +
 //                "    \"exports\":\"{'aa':1,'bb':2}\"\n" +
 //                "}";
 //
