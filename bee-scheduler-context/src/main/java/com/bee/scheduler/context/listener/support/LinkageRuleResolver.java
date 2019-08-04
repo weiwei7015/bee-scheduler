@@ -15,7 +15,6 @@ public class LinkageRuleResolver {
         ResolvedLinkageRule result = new ResolvedLinkageRule();
         result.setMode(ResolvedLinkageRule.Mode.valueOf(linkageRule.getString("mode")));
         result.setDelay(linkageRule.getInteger("delay"));
-        result.setNext(linkageRule.getString("next"));
 
         Object task = linkageRule.get("task");
         if (result.getMode() == ResolvedLinkageRule.Mode.Create) {

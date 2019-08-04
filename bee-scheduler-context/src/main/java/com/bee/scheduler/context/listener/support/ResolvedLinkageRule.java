@@ -14,7 +14,6 @@ public class ResolvedLinkageRule {
     private String taskName;
     private TaskConfig taskConfig;
     private Integer delay;
-    private String next;
     private Boolean condition;
     private JSONObject exports;
 
@@ -56,14 +55,6 @@ public class ResolvedLinkageRule {
 
     public void setDelay(Integer delay) {
         this.delay = delay;
-    }
-
-    public String getNext() {
-        return next;
-    }
-
-    public void setNext(String next) {
-        this.next = next;
     }
 
     public Boolean getCondition() {
