@@ -163,7 +163,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item v-if="editTaskFormModel.startAtType == 2" label="激活时间" prop="startAt">
-                    <el-date-picker v-model="editTaskFormModel.startAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                    <el-date-picker v-model="editTaskFormModel.startAt" type="datetime" value-format="yyyy-MM-dd'T'HH:mm:ss.SSSZ" placeholder="选择日期时间"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="销毁选项" prop="endAtType">
                     <el-radio-group v-model="editTaskFormModel.endAtType">
