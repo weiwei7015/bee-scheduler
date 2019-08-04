@@ -83,7 +83,7 @@ public class TaskEventRecorder extends AbstractTaskListener {
         Date currentTime = Calendar.getInstance().getTime();
 
         // 记录执行历史
-        TaskExecState execState = result == null ? TaskExecState.FAIL : result.isSuccess() ? TaskExecState.SUCCESS : TaskExecState.FAIL;
+        TaskExecState execState = result.isSuccess() ? TaskExecState.SUCCESS : TaskExecState.FAIL;
         try {
             String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME,FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
             try (

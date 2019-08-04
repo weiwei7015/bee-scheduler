@@ -42,7 +42,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
         TaskExecutionLogger taskLogger = context.getLogger();
         JSONArray taskLinkageRule = context.getLinkageRule();
 
-        if (result == null || !result.isSuccess()) {
+        if (!result.isSuccess()) {
             return;
         }
 
