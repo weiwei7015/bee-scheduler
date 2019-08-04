@@ -55,24 +55,24 @@ public class LinkageRuleResolver {
     }
 
 
-    public static void main(String[] args) {
-
-        LinkageRuleResolver linkageRuleResolver = new LinkageRuleResolver();
-
-        JSONObject variables = new JSONObject();
-        String el = "{\n" +
-                "    \"mode\":\"Create\",\n" +
-                "    \"delay\":1000,\n" +
-                "    \"next\":\"[]\",\n" +
-                "    \"task\":{},\n" +
-                "    \"condition\":\"#age > 10\",\n" +
-                "    \"exports\":\"{'aa':1,'bb':2}\"\n" +
-                "}";
-
-
-        ResolvedLinkageRule result = linkageRuleResolver.resolve(JSONObject.parseObject(el), variables);
-
-        System.out.println("result = " + result);
-    }
+//    public static void main(String[] args) {
+//
+//        LinkageRuleResolver linkageRuleResolver = new LinkageRuleResolver();
+//
+//        JSONObject variables = new JSONObject();
+//        String el = "{\n" +
+//                "    \"mode\":\"Create\",\n" +
+//                "    \"delay\":1000,\n" +
+//                "    \"next\":\"[]\",\n" +
+//                "    \"task\":{},\n" +
+//                "    \"condition\":\"#age > 10\",\n" +
+//                "    \"exports\":\"{'aa':1,'bb':2}\"\n" +
+//                "}";
+//
+//
+//        ResolvedLinkageRule result = linkageRuleResolver.resolve(JSONObject.parseObject(el), variables);
+//
+//        System.out.println("result = " + result);
+//    }
 
 }

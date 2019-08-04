@@ -18,12 +18,6 @@ public class ResolvedLinkageRule {
     private Boolean condition;
     private JSONObject exports;
 
-
-    public static void main(String[] args) {
-        JSONObject hello = JSONObject.parseObject("{'p':{'c':1}}");
-
-    }
-
     public Mode getMode() {
         return mode;
     }

@@ -48,12 +48,12 @@ public class ExpressionPlaceholderHandler {
         return resolvedText.toString();
     }
 
-    public static void main(String[] args) {
-        ExpressionPlaceholderHandler handler = new ExpressionPlaceholderHandler();
-        JSONObject var = new JSONObject();
-        var.put("a", 12);
-        String result = handler.handle("=====$el( 1 + #a*2 )$el(2+3)asd", var);
-
-        System.out.println("result = " + result);
-    }
+//    public static void main(String[] args) {
+//        ExpressionPlaceholderHandler handler = new ExpressionPlaceholderHandler();
+//        JSONObject var = new JSONObject();
+//        var.put("a", 12);
+//        String result = handler.handle("=====$el( 1 + #a*2 )$el(2+3)asd", var);
+//
+//        System.out.println("result = " + result);
+//    }
 }
