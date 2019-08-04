@@ -1,32 +1,32 @@
 require.config({
-    // baseUrl: '/public/lib',
+    baseUrl: '/public/',
     paths: {
-        // view: '/public/app/component/view',
-        // part: '/public/app/component/part',
-        comp: '/public/app/comp',
-        vue: '/public/lib/vue-2.5.13.min',
-        vue_router: '/public/lib/vue-router-3.0.1.min',
-        vue_resource: '/public/lib/vue-resource-1.5.0.min',
-        ELEMENT: '/public/lib/element-ui-2.11.1/index',
-        moment: '/public/lib/moment-2.22.2.min',
-        text: '/public/lib/text-2.0.15',
+        // view: 'app/component/view',
+        // part: 'app/component/part',
+        comp: 'app/comp',
+        vue: 'lib/vue-2.5.13.min',
+        vue_router: 'lib/vue-router-3.0.1.min',
+        vue_resource: 'lib/vue-resource-1.5.0.min',
+        ELEMENT: 'lib/element-ui-2.11.1/index',
+        moment: 'lib/moment-2.22.2.min',
+        text: 'lib/text-2.0.15',
         css: 'lib/require-css-0.1.10.min'
     },
-    urlArgs: 'v=2019072901'
+    urlArgs: 'v=2019080501'
 });
 
 require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-dialog', 'comp/task-detail-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog, taskDetailDialog) {
 
     Vue.config.silent = true;
 
-    //注册Vue组件
+    //register plugins
     Vue.use(Elem);
     Vue.use(VueRouter);
     Vue.use(VueResource);
-    //定义moment作为全局服务
+    //defined moment as the global comp
     Vue.prototype.$moment = moment;
 
-    //定义视图组件
+    //view comps
     var views = {
         login: function (resolver) {
             require(['comp/login'], resolver);
@@ -63,7 +63,7 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
         }
     };
 
-    //配置根路由器
+    //global router
     var router = new VueRouter({
         routes: [
             {path: '/login', component: views.login},
@@ -101,42 +101,41 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
     //     }
     // });
 
-    //配置根组件
+    //root comp
     var app = new Vue({
         router: router
     });
 
-    //Http拦截器
-    Vue.http.interceptors.push(function (request, next) {
-        request.params["t"] = (new Date()).getTime();
-        next();
-    });
-    Vue.http.interceptors.push(function (request, next) {
-        next(function (response) {
-            if (response.status !== 200) {
-                // if (response.body.code <= 200) {
-                //     if (response.body.code === 102) {
-                //         app.$alert(response.body.msg, '消息', {
-                //             type: "warning",
-                //             confirmButtonText: '前往登录',
-                //             callback: function (action) {
-                //                 window.location = response.body.data;
-                //             }
-                //         });
-                //     } else {
-                //         app.$alert(response.body.msg, '消息', {type: "warning", confirmButtonText: '确定'});
-                //     }
-                // }
-                app.$alert(response.body.message, '消息', {type: "warning", confirmButtonText: '确定'});
-            }
-
-        });
-    });
+    //http interceptors
+    Vue.http.interceptors.push(
+        function (request) {
+            request.params["t"] = (new Date()).getTime();
+        },
+        function (request) {
+            return function (response) {
+                if (response.status === 0) {
+                    app.$alert("请求服务器失败，请稍后再试", '网络异常', {type: "error"});
+                }
+                if (response.status >= 400) {
+                    if (response.status === 401) {
+                        app.$alert("您尚未登录或登录信息已过期", '需要登录', {
+                            type: "warning",
+                            callback: function () {
+                                app.$router.push("/login");
+                            }
+                        });
+                    } else {
+                        app.$alert(response.body.message, response.body.error, {type: "warning"});
+                    }
+                }
+            };
+        }
+    );
 
     app.$http.get("/configs").then(function (re) {
         Vue.prototype.$AppConfig = re.body.data;
 
-        //渲染根组件
+        //mount the root comp
         app.$mount("#app");
     });
 
