@@ -172,7 +172,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item v-if="editTaskFormModel.endAtType == 2" label="销毁时间" prop="endAt">
-                    <el-date-picker v-model="editTaskFormModel.endAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                    <el-date-picker v-model="editTaskFormModel.endAt" type="datetime" value-format="yyyy-MM-dd'T'HH:mm:ss.SSSZ" placeholder="选择日期时间"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="联动任务" prop="linkageRule">
                     <el-input type="textarea" v-model="editTaskFormModel.linkageRule" class="font-code" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入联动任务规则（JSON格式）"></el-input>
