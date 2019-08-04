@@ -9,6 +9,8 @@ import com.bee.scheduler.core.TaskExecutionResult;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.Properties;
  * @author weiwei 用于发送Kafka消息
  */
 public class KafkaProducerTaskModule extends AbstractTaskModule {
+    private Log logger = LogFactory.getLog(KafkaProducerTaskModule.class);
+
     @Override
     public String getId() {
         return "KafkaProducerTaskModule";
@@ -58,7 +62,6 @@ public class KafkaProducerTaskModule extends AbstractTaskModule {
     @Override
     public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
-        TaskExecutionLogger taskLogger = context.getLogger();
 
         String brokerList = taskParam.getString("brokerList");
         JSONArray messageArray = taskParam.getJSONArray("messages");
@@ -81,7 +84,7 @@ public class KafkaProducerTaskModule extends AbstractTaskModule {
         } finally {
             producer.close();
         }
-        taskLogger.info("任务执行成功");
+        logger.info("任务执行成功");
         return TaskExecutionResult.success();
     }
 }

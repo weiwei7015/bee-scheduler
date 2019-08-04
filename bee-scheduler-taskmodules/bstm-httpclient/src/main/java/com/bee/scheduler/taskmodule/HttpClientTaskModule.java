@@ -6,6 +6,8 @@ import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,6 +18,7 @@ import java.net.URL;
  * @author weiwei 用于发起HTTP请求
  */
 public class HttpClientTaskModule extends AbstractTaskModule {
+    private Log logger = LogFactory.getLog(HttpClientTaskModule.class);
 
     public String getId() {
         return "HttpJob";
@@ -53,7 +56,6 @@ public class HttpClientTaskModule extends AbstractTaskModule {
     @Override
     public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
-        TaskExecutionLogger taskLogger = context.getLogger();
 
         String url = taskParam.getString("url");
         int timeout = taskParam.getIntValue("timeout");
@@ -81,7 +83,7 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         }
         bufferedReader.close();
 
-        taskLogger.info("response status: " + responseStatus);
+        logger.info("response status: " + responseStatus);
 
         JSONObject data = new JSONObject();
         data.put("response_status", responseStatus);

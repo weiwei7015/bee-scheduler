@@ -6,6 +6,8 @@ import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -20,6 +22,7 @@ import java.util.Properties;
  * @author weiwei 用于发送邮件
  */
 public class MailTaskModule extends AbstractTaskModule {
+    private Log logger = LogFactory.getLog(MailTaskModule.class);
 
     public String getId() {
         return "MailTask";
@@ -65,8 +68,7 @@ public class MailTaskModule extends AbstractTaskModule {
     @Override
     public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
-        TaskExecutionLogger taskLogger = context.getLogger();
-//        String protocol = taskParam.getString("protocol");
+        //        String protocol = taskParam.getString("protocol");
         String protocol = "smtp";
         String smtpHost = taskParam.getString("smtp_host");
         Integer smtpPort = taskParam.getInteger("smtp_port");

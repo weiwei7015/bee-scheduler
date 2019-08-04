@@ -5,6 +5,8 @@ import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import java.io.InputStreamReader;
  * @author weiwei 该组件提供运行服务端脚本的功能
  */
 public class ShellTaskModule extends AbstractTaskModule {
+    private Log logger = LogFactory.getLog(ShellTaskModule.class);
 
     @Override
     public String getId() {
@@ -50,7 +53,6 @@ public class ShellTaskModule extends AbstractTaskModule {
     @Override
     public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
-        TaskExecutionLogger taskLogger = context.getLogger();
 
         String shell = taskParam.getString("shell");
 
@@ -64,7 +66,7 @@ public class ShellTaskModule extends AbstractTaskModule {
         while ((line = br.readLine()) != null) {
             back.append(line).append("\r");
         }
-        taskLogger.info("任务执行成功 -> " + back.toString());
+        logger.info("任务执行成功 -> " + back.toString());
 
         return TaskExecutionResult.success();
     }

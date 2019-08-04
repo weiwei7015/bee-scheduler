@@ -39,7 +39,6 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
 
     @Override
     public void taskWasExecuted(TaskExecutionContext context, TaskExecutionResult result, Scheduler scheduler, JobExecutionException jobException) {
-        TaskExecutionLogger taskLogger = context.getLogger();
         JSONArray taskLinkageRule = context.getLinkageRule();
 
         if (!result.isSuccess()) {
@@ -53,7 +52,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                 try {
                     if (item instanceof String) {
                         String taskKey = ((String) item);
-                        taskLogger.info("触发联动任务:" + taskKey);
+                        logger.info("触发联动任务:" + taskKey);
                         String[] group$name = StringUtils.split(taskKey, ".");
                         String group = group$name[0], name = group$name[1];
                         JobKey jobKey = new JobKey(name, group);
@@ -79,7 +78,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                         //触发联动任务
                         if (linkageRule.getMode() == ResolvedLinkageRule.Mode.Trigger) {
                             String taskKey = linkageRule.getTaskGroup() + "." + linkageRule.getTaskName();
-                            taskLogger.info("触发联动任务:" + taskKey);
+                            logger.info("触发联动任务:" + taskKey);
 
                             JobKey taskJobKey = new JobKey(linkageRule.getTaskName(), linkageRule.getTaskGroup());
                             Trigger taskTrigger = scheduler.getTrigger(new TriggerKey(taskKey, TaskFiredWay.SCHEDULE.name()));
@@ -87,7 +86,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
 
                             TriggerBuilder triggerBuilder = newTrigger().withIdentity(context.getFireInstanceId() + "_" + (i + 1), TaskFiredWay.LINKAGE.name()).usingJobData(taskTriggerDataMap).forJob(taskJobKey);
                             if (linkageRule.getDelay() != null) {
-                                taskLogger.info("联动任务【" + taskKey + "】将在" + linkageRule.getDelay() + "ms后开始执行");
+                                logger.info("联动任务【" + taskKey + "】将在" + linkageRule.getDelay() + "ms后开始执行");
                                 Calendar startTime = Calendar.getInstance();
                                 startTime.add(Calendar.MILLISECOND, linkageRule.getDelay());
                                 triggerBuilder.startAt(startTime.getTime());
@@ -95,7 +94,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                             scheduler.scheduleJob(triggerBuilder.build());
                         } else {
                             if (!linkageRule.getCondition()) {
-                                taskLogger.info("condition计算结果false，取消联动");
+                                logger.info("condition计算结果false，取消联动");
                                 return;
                             }
 
@@ -120,7 +119,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                     }
                 } catch (Exception e) {
                     logger.error("联动任务执行异常", e);
-                    taskLogger.error("联动任务执行异常", e);
+                    logger.error("联动任务执行异常", e);
                 }
             }
         }

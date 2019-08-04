@@ -4,7 +4,6 @@ package com.bee.scheduler.core;
  * @author weiwei 任务组件接口
  */
 public abstract class AbstractTaskModule {
-
     /**
      * ID
      */

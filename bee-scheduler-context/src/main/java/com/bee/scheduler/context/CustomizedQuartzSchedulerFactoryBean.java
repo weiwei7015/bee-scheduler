@@ -1,8 +1,9 @@
 package com.bee.scheduler.context;
 
 import com.bee.scheduler.context.listener.AbstractTaskListener;
-import com.bee.scheduler.context.listener.TaskEventRecorder;
+import com.bee.scheduler.context.listener.TaskHistoryRecorderListener;
 import com.bee.scheduler.context.listener.TaskLinkageHandleListener;
+import com.bee.scheduler.context.listener.TaskLoggerListener;
 import org.quartz.ListenerManager;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -66,8 +67,9 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
     @Override
     protected Scheduler createScheduler(SchedulerFactory schedulerFactory, String schedulerName) throws SchedulerException {
         Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
+        taskListenerList.add(new TaskLoggerListener());
         taskListenerList.add(new TaskLinkageHandleListener());
-        taskListenerList.add(new TaskEventRecorder());
+        taskListenerList.add(new TaskHistoryRecorderListener());
         ListenerManager listenerManager = scheduler.getListenerManager();
         for (AbstractTaskListener listener : taskListenerList) {
             listenerManager.addJobListener(listener);

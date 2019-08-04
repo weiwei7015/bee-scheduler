@@ -13,6 +13,8 @@ import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,6 +24,8 @@ import java.util.*;
  * @author weiwei Dubbo客户端组件,该组件提供调用dubbo服务的功能
  */
 public class DubboInvokerTaskModule extends AbstractTaskModule {
+    private Log logger = LogFactory.getLog(DubboInvokerTaskModule.class);
+
     private static Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
 
     static {
@@ -158,7 +162,6 @@ public class DubboInvokerTaskModule extends AbstractTaskModule {
     @Override
     public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
-        TaskExecutionLogger taskLogger = context.getLogger();
 
         String url = taskParam.getString("url");
         String registry = taskParam.getString("registry");
@@ -212,7 +215,7 @@ public class DubboInvokerTaskModule extends AbstractTaskModule {
 
         Object result = genericService.$invoke(method, paramTypeStrArray, params);
 
-        taskLogger.info("任务执行成功 -> return:" + result + "");
+        logger.info("任务执行成功 -> return:" + result + "");
 
         return TaskExecutionResult.success();
     }

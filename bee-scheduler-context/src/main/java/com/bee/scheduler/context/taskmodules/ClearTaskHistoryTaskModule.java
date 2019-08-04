@@ -3,10 +3,11 @@ package com.bee.scheduler.context.taskmodules;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.quartz.utils.DBConnectionManager;
 import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
 
@@ -14,12 +15,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author weiwei
  * 用于清除历史任务记录
  */
 public class ClearTaskHistoryTaskModule extends AbstractTaskModule {
+    private Log logger = LogFactory.getLog(ClearTaskHistoryTaskModule.class);
+
     @Override
     public String getId() {
         return "ClearTaskHistory";
@@ -59,16 +63,15 @@ public class ClearTaskHistoryTaskModule extends AbstractTaskModule {
     @Override
     public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
-        TaskExecutionLogger taskLogger = context.getLogger();
 
         // 保留最近几天的任务记录
         Integer keepDays = taskParam.getInteger("keep_days");
         if (keepDays == null) {
-            taskLogger.error("缺少必须参数:keep_days");
+            logger.error("缺少必须参数:keep_days");
             return TaskExecutionResult.fail();
         }
         if (keepDays < 0) {
-            taskLogger.error("任务参数有误:keep_days");
+            logger.error("任务参数有误:keep_days");
             return TaskExecutionResult.fail();
         }
         String taskGroup = taskParam.getString("task_group");
@@ -98,23 +101,25 @@ public class ClearTaskHistoryTaskModule extends AbstractTaskModule {
         if (whereConditions.size() > 0) {
             sqlBuilder.append(" AND ").append(String.join(" AND ", whereConditions));
         }
-        Calendar datePoint = DateUtils.truncate(Calendar.getInstance(), Calendar.DAY_OF_MONTH);
-        datePoint.set(Calendar.DAY_OF_MONTH, datePoint.get(Calendar.DAY_OF_MONTH) - keepDays);
+
+        Date datePoint = new Date();
+        datePoint = DateUtils.truncate(datePoint, Calendar.DATE);
+        datePoint = DateUtils.addDays(datePoint, -keepDays + 1);
 
         JSONObject data = new JSONObject();
         try (
                 Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + context.getSchedulerName());
                 PreparedStatement preparedStatement = connection.prepareStatement(sqlBuilder.toString())
         ) {
-            preparedStatement.setLong(1, datePoint.getTimeInMillis());
+            preparedStatement.setLong(1, datePoint.getTime());
             if (args.size() > 0) {
                 for (int i = 0; i < args.size(); i++) {
                     preparedStatement.setString(i + 2, args.get(i));
                 }
             }
             int result = preparedStatement.executeUpdate();
-            taskLogger.info("任务执行结果：清除历史任务记录完毕，已成功清除 " + result + " 条记录");
             data.put("count", result);
+            logger.info("任务执行结果：清除历史任务记录完毕，已成功清除 " + result + " 条记录");
         }
         return TaskExecutionResult.success(data);
     }

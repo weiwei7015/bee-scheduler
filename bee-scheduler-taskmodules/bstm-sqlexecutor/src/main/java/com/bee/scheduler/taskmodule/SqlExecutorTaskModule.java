@@ -5,6 +5,8 @@ import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +17,8 @@ import java.sql.ResultSet;
  * @author weiwei 该组件提供链接Mysql数据库执行Sql的功能
  */
 public class SqlExecutorTaskModule extends AbstractTaskModule {
+    private Log logger = LogFactory.getLog(SqlExecutorTaskModule.class);
+
     @Override
     public String getId() {
         return "SqlExecutor";
@@ -52,7 +56,6 @@ public class SqlExecutorTaskModule extends AbstractTaskModule {
     @Override
     public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
-        TaskExecutionLogger taskLogger = context.getLogger();
 
         String url = taskParam.getString("url");
         String type = taskParam.getString("type");
@@ -76,11 +79,11 @@ public class SqlExecutorTaskModule extends AbstractTaskModule {
                 while (resultSet.next()) {
                     affectedRowCount = affectedRowCount + 1;
                 }
-                taskLogger.info("任务执行成功 -> 查询到" + affectedRowCount + "条记录");
+                logger.info("任务执行成功 -> 查询到" + affectedRowCount + "条记录");
                 data.put("affected_row_count", affectedRowCount);
             } else if ("update".equalsIgnoreCase(type)) {
                 int affectedRowCount = preparedStatement.executeUpdate();
-                taskLogger.info("任务执行成功 -> 影响记录总数：" + affectedRowCount);
+                logger.info("任务执行成功 -> 影响记录总数：" + affectedRowCount);
                 data.put("affected_row_count", affectedRowCount);
             }
         }

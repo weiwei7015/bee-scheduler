@@ -2,7 +2,6 @@ package com.bee.scheduler.context.listener;
 
 import com.bee.scheduler.context.common.TaskExecState;
 import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
@@ -20,8 +19,8 @@ import java.util.Date;
 /**
  * @author weiwei 任务事件监听， 存储数据库
  */
-public class TaskEventRecorder extends AbstractTaskListener {
-    private Log logger = LogFactory.getLog(TaskEventRecorder.class);
+public class TaskHistoryRecorderListener extends AbstractTaskListener {
+    private Log logger = LogFactory.getLog(TaskHistoryRecorderListener.class);
 
     @Override
     public String getName() {
@@ -37,11 +36,10 @@ public class TaskEventRecorder extends AbstractTaskListener {
         String triggerName = context.getTriggerName();
         String schedulerInstanceId = context.getSchedulerInstanceId();
         String schedulerName = context.getSchedulerName();
-        TaskExecutionLogger taskLogger = context.getLogger();
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        taskLogger.warning("任务[" + taskGroup + "." + taskName + "]已被取消执行！");
+        logger.warn("任务[" + taskGroup + "." + taskName + "]已被取消执行,FireID:" + context.getFireInstanceId());
 
         // 记录执行历史
         try {
@@ -61,7 +59,7 @@ public class TaskEventRecorder extends AbstractTaskListener {
                 preparedStatement.setLong(9, context.getJobRunTime());
                 preparedStatement.setInt(10, context.getRefireCount());
                 preparedStatement.setString(11, TaskExecState.VETOED.name());
-                preparedStatement.setString(12, taskLogger.getLog());
+                preparedStatement.setString(12, context.getLogger().getLog());
                 preparedStatement.execute();
             } catch (Exception e) {
                 logger.error(e);
@@ -79,7 +77,6 @@ public class TaskEventRecorder extends AbstractTaskListener {
         String triggerName = context.getTriggerName();
         String schedulerInstanceId = context.getSchedulerInstanceId();
         String schedulerName = context.getSchedulerName();
-        TaskExecutionLogger taskLogger = context.getLogger();
         Date currentTime = Calendar.getInstance().getTime();
 
         // 记录执行历史
@@ -101,7 +98,7 @@ public class TaskEventRecorder extends AbstractTaskListener {
                 preparedStatement.setLong(9, context.getJobRunTime());
                 preparedStatement.setInt(10, context.getRefireCount());
                 preparedStatement.setString(11, execState.toString());
-                preparedStatement.setString(12, taskLogger.getLog());
+                preparedStatement.setString(12, context.getLogger().getLog());
 
                 preparedStatement.execute();
             } catch (Exception e) {
@@ -114,10 +111,9 @@ public class TaskEventRecorder extends AbstractTaskListener {
 
     @Override
     public boolean vetoTaskExecution(TaskExecutionContext context, Scheduler scheduler) {
-        TaskExecutionLogger taskLogger = context.getLogger();
         int minExecInterval = 3000;
         if (context.getPreviousFireTime() != null && context.getFireTime().getTime() - context.getPreviousFireTime().getTime() <= minExecInterval) {
-            taskLogger.warning("任务最近执行时间：" + DateFormatUtils.format(context.getPreviousFireTime(), "yyyy-MM-dd HH:mm:ss") + "，任务执行间隔不能低于" + minExecInterval + "ms，请调整任务配置");
+            logger.warn("任务最近执行时间：" + DateFormatUtils.format(context.getPreviousFireTime(), "yyyy-MM-dd HH:mm:ss") + "，任务执行间隔不能低于" + minExecInterval + "ms，请调整任务配置");
             return true;
         }
         return false;

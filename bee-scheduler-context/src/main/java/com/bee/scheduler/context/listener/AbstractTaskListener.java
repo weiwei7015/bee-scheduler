@@ -4,16 +4,11 @@ import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.core.TaskExecutionContext;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.quartz.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author weiwei
  */
 public abstract class AbstractTaskListener implements JobListener, TriggerListener {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-
     @Override
     public void jobToBeExecuted(JobExecutionContext context) {
         taskToBeExecuted(TaskExecutionContextUtil.convert(context), context.getScheduler());
