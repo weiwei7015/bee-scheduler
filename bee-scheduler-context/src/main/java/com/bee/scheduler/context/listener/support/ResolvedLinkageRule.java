@@ -15,6 +15,7 @@ public class ResolvedLinkageRule {
     private TaskConfig taskConfig;
     private Integer delay;
     private Boolean condition;
+    private String conditionEl;
     private JSONObject exports;
 
     public Mode getMode() {
@@ -63,6 +64,14 @@ public class ResolvedLinkageRule {
 
     public void setCondition(Boolean condition) {
         this.condition = condition;
+    }
+
+    public String getConditionEl() {
+        return conditionEl;
+    }
+
+    public void setConditionEl(String conditionEl) {
+        this.conditionEl = conditionEl;
     }
 
     public JSONObject getExports() {

@@ -3,6 +3,7 @@ package com.bee.scheduler.context.listener.support;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.model.TaskConfig;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -41,6 +42,8 @@ public class LinkageRuleResolver {
         }
 
         String conditionEl = linkageRule.getString("condition");
+        result.setConditionEl(conditionEl);
+        
         Boolean condition = elParser.parseExpression(conditionEl).getValue(evaluationContext, Boolean.class);
         result.setCondition(condition);
 
@@ -53,9 +56,17 @@ public class LinkageRuleResolver {
     }
 
 
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
+
+        ExpressionParser elParser = new SpelExpressionParser();
+        EvaluationContext context = new StandardEvaluationContext();
+        context.setVariable("content", "hello");
+        Expression expression = elParser.parseExpression("'aa'.length()");
+        Object value = expression.getValue(context);
+        System.out.println("value = " + value);
+
+
 //        LinkageRuleResolver linkageRuleResolver = new LinkageRuleResolver();
-//
 //        JSONObject variables = new JSONObject();
 //        variables.put("content", "helloworld");
 //        String el = "{\n" +
@@ -66,11 +77,8 @@ public class LinkageRuleResolver {
 //                "    \"condition\":\"'#content'.length() > 2\",\n" +
 //                "    \"exports\":\"{'aa':1,'bb':2}\"\n" +
 //                "}";
-//
-//
 //        ResolvedLinkageRule result = linkageRuleResolver.resolve(JSONObject.parseObject(el), variables);
-//
 //        System.out.println("result = " + result);
-//    }
+    }
 
 }
