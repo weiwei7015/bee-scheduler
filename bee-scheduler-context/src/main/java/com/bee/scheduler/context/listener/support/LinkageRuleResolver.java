@@ -20,12 +20,12 @@ public class LinkageRuleResolver {
         Object task = linkageRule.get("task");
         if (result.getMode() == ResolvedLinkageRule.Mode.Create) {
             if (!(task instanceof JSONObject)) {
-                throw new RuntimeException("task must be json object key when mode is create");
+                throw new RuntimeException("task must be json object when mode is create");
             }
             result.setTaskConfig(((JSONObject) task).toJavaObject(TaskConfig.class));
         } else if (result.getMode() == ResolvedLinkageRule.Mode.Trigger) {
             if (!(task instanceof String)) {
-                throw new RuntimeException("task must be task key when mode is trigger");
+                throw new RuntimeException("task must be a task key when mode is trigger");
             }
             String[] taskKey = ((String) task).split(".");
             result.setTaskGroup(taskKey[0]);
