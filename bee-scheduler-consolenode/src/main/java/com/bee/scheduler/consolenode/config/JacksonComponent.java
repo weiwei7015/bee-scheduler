@@ -17,7 +17,7 @@ import java.util.Date;
 @JsonComponent
 public class JacksonComponent {
 
-    public static class Serializer extends JsonSerializer<TimeOfDay> {
+    public static class TimeOfDaySerializer extends JsonSerializer<TimeOfDay> {
         @Override
         public void serialize(TimeOfDay value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
             Calendar cal = Calendar.getInstance();
@@ -28,11 +28,10 @@ public class JacksonComponent {
         }
     }
 
-    public static class Deserializer extends JsonDeserializer<TimeOfDay> {
+    public static class TimeOfDayDeserializer extends JsonDeserializer<TimeOfDay> {
         @Override
         public TimeOfDay deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
             return TimeOfDay.hourAndMinuteAndSecondFromDate(ctxt.readValue(p, Date.class));
         }
     }
-
 }
