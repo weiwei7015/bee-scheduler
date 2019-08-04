@@ -1,4 +1,4 @@
-define(['text!comp/task-history-detail.html'], function (tpl) {
+define(['text!comp/task-history-detail.html', 'css!./task-history-detail.css'], function (tpl) {
     return {
         template: tpl,
         components: {},

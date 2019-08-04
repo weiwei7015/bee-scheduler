@@ -1,15 +1,15 @@
-<div class="content" v-loading="taskHistoryDetailLoading">
-    <div class="content-header">
-        <div class="breadcrumb">
+<div class="page" v-loading="taskHistoryDetailLoading">
+    <div class="page-header">
+        <div class="page-title"><i class="iconfont icon-detail"></i> 历史任务详情</div>
+        <div class="page-breadcrumb">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
                 <el-breadcrumb-item :to="{path:'/task/history/list'}">历史任务</el-breadcrumb-item>
                 <el-breadcrumb-item>历史任务详情</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title"><i class="iconfont icon-detail"></i> 历史任务详情</div>
     </div>
-    <div class="content-body" v-show="!taskHistoryDetailLoading">
+    <div class="page-body" v-show="!taskHistoryDetailLoading">
         <div>
             <h3 class="text-bold no-margin">{{taskHistoryDetail.group}}.{{taskHistoryDetail.name}}</h3>
         </div>

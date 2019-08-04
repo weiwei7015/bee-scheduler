@@ -1,0 +1,15 @@
+pre.log {
+    background-color: #000;
+    color: #fff;
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 20px;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: auto;
+    white-space: pre-wrap;
+    /*border: 1px solid #ccc;*/
+    border-radius: 3px;
+}

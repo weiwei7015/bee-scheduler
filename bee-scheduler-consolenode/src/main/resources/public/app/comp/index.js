@@ -1,10 +1,11 @@
-define(['text!comp/index.html'], function (tpl) {
+define(['text!comp/index.html', 'css!./index.css'], function (tpl) {
     return {
         template: tpl,
         components: {},
         data: function () {
             var vm = this;
             var data = {
+                isMenuFold: false,
                 now: null
             };
             var refreshServerTime = function () {

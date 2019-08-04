@@ -1,22 +1,19 @@
-<div class="content" v-loading="initEditFormModelInProcess">
-    <!--<div class="content-pendant">-->
-    <!--<el-button type="text" @click="$helperDialog.open('CreateTask')"><i class="iconfont icon-tips"></i> 使用帮助</el-button>-->
-    <!--</div>-->
-    <div class="content-header">
-        <div class="breadcrumb">
+<div class="page" v-loading="initEditFormModelInProcess">
+    <div class="page-header">
+        <div class="page-title">
+            <template v-if="editFor==='New'"><i class="iconfont icon-plus"></i> 创建任务</template>
+            <template v-else-if="editFor==='Edit'"><i class="iconfont icon-edit"></i> 编辑任务</template>
+            <template v-else-if="editFor==='Copy'"><i class="iconfont icon-copy"></i> 复制任务</template>
+        </div>
+        <div class="page-breadcrumb">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
                 <el-breadcrumb-item :to="{path:'/task/list'}">任务管理</el-breadcrumb-item>
                 <el-breadcrumb-item>{{editFor==="New"?"创建任务":editFor==="Copy"?"复制任务":"编辑任务"}}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title">
-            <template v-if="editFor==='New'"><i class="iconfont icon-plus"></i> 创建任务</template>
-            <template v-else-if="editFor==='Edit'"><i class="iconfont icon-edit"></i> 编辑任务</template>
-            <template v-else-if="editFor==='Copy'"><i class="iconfont icon-copy"></i> 复制任务</template>
-        </div>
     </div>
-    <div class="content-body" v-show="!initEditFormModelInProcess">
+    <div class="page-body" v-show="!initEditFormModelInProcess">
         <div style="width: 800px">
             <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="100px">
                 <h4 class="no-margin">基本信息</h4>

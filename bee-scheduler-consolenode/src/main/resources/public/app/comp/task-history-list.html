@@ -1,14 +1,14 @@
-<div class="content">
-    <div class="content-header">
-        <div class="breadcrumb">
+<div class="page">
+    <div class="page-header">
+        <div class="page-title"><i class="iconfont icon-history"></i> 历史任务</div>
+        <div class="page-breadcrumb">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
                 <el-breadcrumb-item>历史任务</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title"><i class="iconfont icon-history"></i> 历史任务</div>
     </div>
-    <div class="content-body">
+    <div class="page-body">
         <el-row>
             <el-col :span="12">
                 <el-autocomplete :fetch-suggestions="querySuggestion" style="width:100%" :debounce="0" v-model="queryParams.keyword" placeholder="任务名 id:FireId g:任务组 s:执行状态 f:触发方式 nd:执行节点">

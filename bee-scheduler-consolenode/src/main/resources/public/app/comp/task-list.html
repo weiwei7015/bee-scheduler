@@ -1,21 +1,21 @@
-<div class="content">
-    <div class="content-header">
-        <div class="breadcrumb">
+<div class="page">
+    <div class="page-header">
+        <div class="page-title"><i class="iconfont icon-yy-task"></i> 任务管理</div>
+        <div class="page-breadcrumb">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
                 <el-breadcrumb-item>任务管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="title"><i class="iconfont icon-yy-task"></i> 任务管理</div>
     </div>
-    <div class="content-body">
+    <div class="page-body">
         <el-row>
-            <el-col :span="8">
+            <el-col :span="10">
                 <el-autocomplete :fetch-suggestions="querySuggestion" v-model="queryParams.keyword" style="width:100%" :debounce="0" placeholder="任务名 g:任务组 s:任务状态">
                     <el-button slot="append" icon="el-icon-search" @click="query"></el-button>
                 </el-autocomplete>
             </el-col>
-            <el-col :span="16" class="text-right">
+            <el-col :span="14" class="text-right">
                 <el-button-group v-show="showCommandBtnGroup">
                     <el-button v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-recovery"></i></el-button>
                     <el-button v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
