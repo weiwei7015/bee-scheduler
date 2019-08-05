@@ -2,6 +2,7 @@ package com.bee.scheduler.context.listener.support;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.model.TaskConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -16,6 +17,10 @@ public class LinkageRuleResolver {
         ResolvedLinkageRule result = new ResolvedLinkageRule();
         result.setMode(ResolvedLinkageRule.Mode.valueOf(linkageRule.getString("mode")));
         result.setDelay(linkageRule.getInteger("delay"));
+
+        if (result.getDelay() < 0) {
+            throw new RuntimeException("delay参数有误:" + result.getDelay());
+        }
 
         Object task = linkageRule.get("task");
         if (result.getMode() == ResolvedLinkageRule.Mode.Create) {
@@ -43,14 +48,20 @@ public class LinkageRuleResolver {
 
         String conditionEl = linkageRule.getString("condition");
         result.setConditionEl(conditionEl);
-        
-        Boolean condition = elParser.parseExpression(conditionEl).getValue(evaluationContext, Boolean.class);
-        result.setCondition(condition);
-
+        if (StringUtils.isNotBlank(conditionEl)) {
+            Boolean condition = elParser.parseExpression(conditionEl).getValue(evaluationContext, Boolean.class);
+            result.setCondition(condition);
+        } else {
+            result.setCondition(true);
+        }
 
         String exportsEl = linkageRule.getString("exports");
-        JSONObject exports = elParser.parseExpression(exportsEl).getValue(evaluationContext, JSONObject.class);
-        result.setExports(exports);
+        if (StringUtils.isNotBlank(exportsEl)) {
+            result.setExports(new JSONObject());
+        } else {
+            JSONObject exports = elParser.parseExpression(exportsEl).getValue(evaluationContext, JSONObject.class);
+            result.setExports(exports);
+        }
 
         return result;
     }

@@ -47,32 +47,76 @@
         <div class="spr"></div>
         <h3 class="no-margin">5、联动任务配置</h3>
         <div class="hr"></div>
-        <div>联动任务表示主任务执行完成后，自动触发其他任务的机制，配置采用JSON格式，示例如下：</div>
+        <div>联动任务表示主任务执行完成后，自动触发其他任务的机制，配置采用JSON格式，示例：</div>
         <pre class="bg-dark-white font-code">
-
-    [
-        {task:'group.name',delay:5000,next:[
-                {task:'group.name',delay:5000},
-                {task:'group.name',delay:5000}
-            ]
-        },
-        {...},
-        {...}
-    ]
-    //task：需要联动触发的任务
-    //delay：延迟多久触发，单位是毫秒，可选参数
-    //next：下一级联动任务（如a执行完成后，触发b，b执行完成后，触发c），可选参数
-        </pre>
-        <div>当然，以上是完整的配置示例，大部分场景中，如果不需要配置delay和next，可以使用以下简化的配置：</div>
-        <pre class="bg-dark-white font-code">
-
+    示例1:
     ["Hello.world1","Hello.world2"]
     //表示主任务执行完成后，立即触发Hello.world1和Hello.world2
         </pre>
         <pre class="bg-dark-white font-code">
-
-    ["Hello.world1",{task:'Hello.world2',delay:5000}]
-    //表示主任务执行完成后，立即触发Hello.world1，并在5秒后触发Hello.world2
+    示例2:
+    [
+      {
+        mode: "Trigger",
+        task: "Hello.world1"
+      }
+    ]
+    //表示主任务执行完成后，立即触发Hello.world1,该配置等同于["Hello.world1"]，mode表示联动模式，此处mode:Trigger表示触发一个已经存在的任务
+        </pre>
+        <pre class="bg-dark-white font-code">
+    示例3:
+    [
+      {
+        mode: "Trigger",
+        delay: "3000",
+        task: "hello.world"
+      }
+    ]
+    //表示主任务执行完成后，延迟3000ms触发任务:hello.world
+        </pre>
+        <pre class="bg-dark-white font-code">
+    示例4:
+    [
+      {
+        mode: "Trigger",
+        task: "hello.world",
+        condition: "#time.getTime()<1564995363912"
+      }
+    ]
+    //表示主任务执行完成后，如果condition计算结果为true，则立即触发任务:hello.world。condition中写SpEl表达
+    //式，可用变量包含全局变量、主任务结果，变量详细描述见文章后续
+        </pre>
+        <pre class="bg-dark-white font-code">
+    示例5:
+    [
+      {
+        mode: "Trigger",
+        task: "hello.world",
+        delay: "3000",
+        condition: "#time.getTime()<1564995363912"
+      }
+    ]
+    //表示主任务执行完成后，如果condition计算结果为true，则延迟3000毫秒触发任务:hello.world。condition中写SpEl表达
+    //式，可用变量包含全局变量、主任务结果，变量详细描述见文章后续
+        </pre>
+        <pre class="bg-dark-white font-code">
+    示例6:
+    [
+      {
+        mode: "Create",
+        delay: "3000",
+        task: {
+          taskModule: "JustTestTaskModule",
+          params: "{content:'hello'}"
+        },
+        condition: "#reponse_status==200 and #reponse_content.length()<100",
+        exports:"{aa:11}"
+      }
+    ]
+    //此处mode:'Create'表示联动模式为创建一个后续任务，主任务执行完成后，如果condition计算结果为true，则创建一个临时任务，临时任务配置如下：
+    //taskModule:任务组件ID，可从创建常规任务时选择组件的下拉框获取
+    //params:任务参数，同创建常规任务，可使用全局变量、主任务结果、exports暴露的变量
+    //linkageRule:联动配置，同创建常规任务，可使用全局变量
         </pre>
         <el-alert title="注意：目前并没有对联动任务配置的合理性做严格检查，配置不当可能会造成环形联动（如：a -> b -> c -> a ...），请谨慎配置！" :closable="false" type="warning" show-icon></el-alert>
         <!--<el-collapse v-model="title" accordion>
