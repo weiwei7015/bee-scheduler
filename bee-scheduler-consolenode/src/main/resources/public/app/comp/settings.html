@@ -9,28 +9,30 @@
         </div>
     </div>
     <div class="page-body">
-        <div class="text-center">
-            <span class="text-extra-light-silver" style="font-size: 50px;">敬请期待 : )</span>
+        <div class="page-body-header">
+            <span>BeeScheduler, version: v2.2.0</span>
         </div>
-        <!--<h4 class="no-margin">系统信息</h4>
+        <h4 class="no-margin">管理员账号</h4>
         <div class="hr"></div>
         <el-row>
             <el-col :span="12">
-                <el-form class="no-item-margin" label-width="100px">
-                    <el-form-item label="系统版本"></el-form-item>
-                    <el-form-item label="实例ID"></el-form-item>
-                    <el-form-item label="是否待命模式"></el-form-item>
-                    <el-form-item label="是否集群"></el-form-item>
-                    <el-form-item label="线程池大小"></el-form-item>
+                <el-form class="form-label-muted" label-width="100px">
+                    <el-form-item label="账号">{{passport.account}}</el-form-item>
+                    <el-form-item label="原密码">
+                        <el-input type="password" placeholder="old password" v-model="oldPassword"></el-input>
+                    </el-form-item>
+                    <el-form-item label="新密码">
+                        <el-input type="password" placeholder="new password" v-model="newPassword"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码">
+                        <el-input type="password" placeholder="confirm new password" v-model="reNewPassword"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button @click="updatePassword">更新密码</el-button>
+                        <el-button @click="logout">退出登录</el-button>
+                    </el-form-item>
                 </el-form>
             </el-col>
-            <el-col :span="12">
-                <div class="text-center">
-                    <img src="/public/app/img/logo.png" alt="BeeScheduler" height="120px"/><br/>
-                    BeeScheduler-1.0-Beta<br/><br/>
-                    Build With Quartz-2.3.0
-                </div>
-            </el-col>
-        </el-row>-->
+        </el-row>
     </div>
 </div>

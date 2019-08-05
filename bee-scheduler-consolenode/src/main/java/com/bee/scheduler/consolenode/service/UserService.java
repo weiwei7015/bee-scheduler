@@ -8,4 +8,6 @@ import com.bee.scheduler.consolenode.entity.User;
  */
 public interface UserService {
     User getByAccount$Pwd(String account, String pwd);
+
+    void updatePwdByAccount(String account, String pwd);
 }

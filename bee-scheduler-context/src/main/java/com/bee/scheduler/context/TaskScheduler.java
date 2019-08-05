@@ -317,7 +317,6 @@ public class TaskScheduler {
         }
     }
 
-
     public void unschedule(String group, String name) throws TaskSchedulerException {
         try {
             scheduler.unscheduleJob(getTriggerKeyOfScheduleWay(group, name));

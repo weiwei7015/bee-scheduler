@@ -1,6 +1,7 @@
 package com.bee.scheduler.consolenode.web.controller;
 
 import com.bee.scheduler.consolenode.entity.User;
+import com.bee.scheduler.consolenode.exception.UnauthorizedException;
 import com.bee.scheduler.consolenode.model.UserPassport;
 import com.bee.scheduler.consolenode.service.UserService;
 import com.bee.scheduler.consolenode.util.AESUtil;
@@ -33,15 +34,27 @@ public class PassportController extends AbstractController {
     private UserService userService;
 
     @GetMapping("/status")
-    public ResponseEntity me(HttpServletRequest request) {
+    public ResponseEntity status(HttpServletRequest request) {
         UserPassport passport = null;
         try {
             Cookie ppCookie = WebUtils.getCookie(request, Constants.COOKIE_NAME_PASSPORT);
             passport = objectMapper.readValue(AESUtil.decrypt(ppCookie.getValue()), UserPassport.class);
         } catch (Exception e) {
-            //ignore
+            //ignore...
         }
         return ResponseEntity.ok(passport != null);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity info(HttpServletRequest request) {
+        UserPassport passport = null;
+        try {
+            Cookie ppCookie = WebUtils.getCookie(request, Constants.COOKIE_NAME_PASSPORT);
+            passport = objectMapper.readValue(AESUtil.decrypt(ppCookie.getValue()), UserPassport.class);
+        } catch (Exception e) {
+            throw new UnauthorizedException();
+        }
+        return ResponseEntity.ok(passport);
     }
 
     @PostMapping("/login")

@@ -20,4 +20,11 @@ public class UserServiceImpl implements UserService {
         return userDao.getByAccount$Pwd(account, pwd);
     }
 
+    @Override
+    public void updatePwdByAccount(String account, String pwd) {
+        User user = new User();
+        user.setAccount(account);
+        user.setPwd(pwd);
+        userDao.updateByPrimary(user);
+    }
 }

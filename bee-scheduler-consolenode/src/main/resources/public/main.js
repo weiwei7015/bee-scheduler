@@ -102,8 +102,17 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
     // });
 
     //root comp
+    //root comp
     var app = new Vue({
-        router: router
+        router: router,
+        beforeMount: function () {
+            var vm = this;
+            vm.$http.get("/passport/status").then(function (re) {
+                if (re.body !== true) {
+                    vm.$router.push("/login");
+                }
+            });
+        }
     });
 
     //http interceptors

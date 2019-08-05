@@ -4,20 +4,11 @@ package com.bee.scheduler.consolenode.entity;
 import java.util.Date;
 
 public class User {
-    private Long id;
     private String account;
     private String pwd;
     private String name;
     private Date gmtCreate;
     private Date gmtModified;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getAccount() {
         return account;
