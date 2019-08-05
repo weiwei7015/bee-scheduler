@@ -6,7 +6,6 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,10 +54,10 @@ public class ExpressionPlaceholderHandler {
     }
 
 //    public static void main(String[] args) {
-//        ExpressionPlaceholderHandler handler = new ExpressionPlaceholderHandler();
-//        JSONObject var = new JSONObject();
-//        var.put("time", new Date());
-//        String result = handler.handle("=====<el>#time.getTime()</el>===", var);
+//        ExpressionParser parser = new SpelExpressionParser();
+//        EvaluationContext context = new StandardEvaluationContext();
+//        Expression expression = parser.parseExpression("#Json.parseObject('{a:1,b:2}')");
+//        Object result = expression.getValue(context);
 //        System.out.println("result = " + result);
 //    }
 

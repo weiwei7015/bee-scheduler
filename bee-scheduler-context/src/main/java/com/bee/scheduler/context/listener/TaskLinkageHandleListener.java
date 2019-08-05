@@ -46,7 +46,6 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
 
         if (taskLinkageRule != null) {
             logger.info("解析联动配置: " + taskLinkageRule);
-            Date now = new Date();
             for (int i = 0; i < taskLinkageRule.size(); i++) {
                 Object item = taskLinkageRule.get(i);
                 try {
@@ -69,7 +68,9 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                         if (result.getData() != null) {
                             contextVars.putAll(result.getData());
                         }
-                        contextVars.put("time", now);
+                        contextVars.put("time", new Date());
+                        contextVars.put("jsonObject", new JSONObject());
+                        contextVars.put("jsonArray", new JSONArray());
                         contextVars.putAll(result.getData());
                         ResolvedLinkageRule linkageRule = linkageRuleResolver.resolve((JSONObject) item, contextVars);
 

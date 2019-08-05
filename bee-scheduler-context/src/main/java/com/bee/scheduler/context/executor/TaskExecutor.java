@@ -1,6 +1,7 @@
 package com.bee.scheduler.context.executor;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.ExpressionPlaceholderHandler;
 import com.bee.scheduler.context.TaskExecutionContextUtil;
@@ -38,6 +39,8 @@ public class TaskExecutor implements Job {
                 logger.info("任务参数包含表达式,开始计算表达式");
                 JSONObject contextVars = new JSONObject();
                 contextVars.put("time", new Date());
+                contextVars.put("jsonObject", new JSONObject());
+                contextVars.put("jsonArray", new JSONArray());
                 taskParam = JSON.parseObject(expressionPlaceholderHandler.handle(taskParam.toString(), contextVars));
                 taskExecutionContext.setParam(taskParam);
                 logger.info("解析后的任务参数:" + taskParam.toString());
