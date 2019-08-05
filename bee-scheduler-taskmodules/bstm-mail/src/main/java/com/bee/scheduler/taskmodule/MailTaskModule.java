@@ -21,7 +21,7 @@ import java.util.Properties;
  * @author weiwei 用于发送邮件
  */
 public class MailTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog(MailTaskModule.class);
+    private Log logger = LogFactory.getLog("TaskLogger");
 
     public String getId() {
         return "MailTask";
@@ -81,6 +81,14 @@ public class MailTaskModule extends AbstractTaskModule {
         String account = taskParam.getString("account");
         String password = taskParam.getString("password");
 
+        //参数预处理
+        recipientTo = StringUtils.trimToEmpty(recipientTo);
+        if (StringUtils.isEmpty(recipientTo)) {
+            logger.error("参数有误:recipients_to");
+            TaskExecutionResult.fail();
+        }
+        recipientCc = StringUtils.trimToEmpty(recipientCc);
+
         Properties properties = new Properties();
         properties.put("mail.transport.protocol", protocol);
         properties.put("mail.smtp.host", smtpHost);
@@ -99,11 +107,13 @@ public class MailTaskModule extends AbstractTaskModule {
         }
         message.setRecipients(Message.RecipientType.TO, recipientToList.toArray(new Address[0]));
         //抄送人
-        ArrayList<InternetAddress> recipientCcList = new ArrayList<>();
-        for (String address : StringUtils.split(recipientCc, ",")) {
-            recipientCcList.add(new InternetAddress(address));
+        if (StringUtils.isNotEmpty(recipientCc)) {
+            ArrayList<InternetAddress> recipientCcList = new ArrayList<>();
+            for (String address : StringUtils.split(recipientCc, ",")) {
+                recipientCcList.add(new InternetAddress(address));
+            }
+            message.setRecipients(Message.RecipientType.CC, recipientCcList.toArray(new Address[0]));
         }
-        message.setRecipients(Message.RecipientType.CC, recipientCcList.toArray(new Address[0]));
         // 邮件标题
         message.setSubject(subject);
         // 邮件内容

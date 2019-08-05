@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -24,7 +23,7 @@ import java.util.*;
  * @author weiwei Dubbo客户端组件,该组件提供调用dubbo服务的功能
  */
 public class DubboInvokerTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog(DubboInvokerTaskModule.class);
+    private Log logger = LogFactory.getLog("TaskLogger");
 
     private static Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
 

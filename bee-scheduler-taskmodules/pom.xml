@@ -19,10 +19,8 @@
     </dependencies>
 
     <modules>
-        <module>bstm-httpclient</module>
         <module>bstm-dubbo2_x</module>
         <module>bstm-kafka_0_10</module>
-        <module>bstm-shell</module>
         <module>bstm-sqlexecutor</module>
         <module>bstm-mail</module>
     </modules>

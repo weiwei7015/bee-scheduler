@@ -1,9 +1,8 @@
-package com.bee.scheduler.taskmodule;
+package com.bee.scheduler.context.taskmodule;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,8 +65,8 @@ public class ShellTaskModule extends AbstractTaskModule {
         while ((line = br.readLine()) != null) {
             back.append(line).append("\r");
         }
-        logger.info("任务执行成功 -> " + back.toString());
-
-        return TaskExecutionResult.success();
+        JSONObject data = new JSONObject();
+        data.put("echo", back.toString());
+        return TaskExecutionResult.success(data);
     }
 }

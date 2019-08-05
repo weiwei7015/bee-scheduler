@@ -25,8 +25,12 @@
                     <el-button @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
                 </el-button-group>
                 <el-button-group class="main-tool">
-                    <el-button type="primary" round @click="goCreateTask"><i class="iconfont icon-plus"></i></el-button>
-                    <el-button type="primary" round @click="createQuickTask"><i class="iconfont icon-flash"></i></el-button>
+                    <el-tooltip content="创建任务" placement="bottom" open-delay="500">
+                        <el-button type="primary" round @click="goCreateTask"><i class="iconfont icon-plus"></i></el-button>
+                    </el-tooltip>
+                    <el-tooltip content="临时任务" placement="bottom" open-delay="500">
+                        <el-button type="primary" round @click="createQuickTask"><i class="iconfont icon-flash"></i></el-button>
+                    </el-tooltip>
                 </el-button-group>
             </el-col>
         </el-row>

@@ -3,7 +3,6 @@ package com.bee.scheduler.taskmodule;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,7 +16,7 @@ import java.sql.ResultSet;
  * @author weiwei 该组件提供链接Mysql数据库执行Sql的功能
  */
 public class SqlExecutorTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog(SqlExecutorTaskModule.class);
+    private Log logger = LogFactory.getLog("TaskLogger");
 
     @Override
     public String getId() {
@@ -75,12 +74,29 @@ public class SqlExecutorTaskModule extends AbstractTaskModule {
         ) {
             if ("query".equalsIgnoreCase(type)) {
                 ResultSet resultSet = preparedStatement.executeQuery();
+
+                int columnCount = preparedStatement.getMetaData().getColumnCount();
                 int affectedRowCount = 0;
+
+                StringBuilder resultBuilder = new StringBuilder();
                 while (resultSet.next()) {
                     affectedRowCount = affectedRowCount + 1;
+                    if (resultBuilder.length() > 0) {
+                        resultBuilder.append("\r");
+                    }
+                    for (int i = 1; i <= columnCount; i++) {
+                        resultBuilder.append(resultSet.getString(i));
+                        if (i < columnCount) {
+                            resultBuilder.append(",");
+                        }
+                    }
                 }
+
                 logger.info("任务执行成功 -> 查询到" + affectedRowCount + "条记录");
+                logger.info("result:\r" + resultBuilder.toString());
+
                 data.put("affected_row_count", affectedRowCount);
+                data.put("result", resultBuilder.toString());
             } else if ("update".equalsIgnoreCase(type)) {
                 int affectedRowCount = preparedStatement.executeUpdate();
                 logger.info("任务执行成功 -> 影响记录总数：" + affectedRowCount);

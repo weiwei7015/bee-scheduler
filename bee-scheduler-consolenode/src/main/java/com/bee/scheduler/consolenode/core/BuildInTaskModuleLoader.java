@@ -1,7 +1,9 @@
 package com.bee.scheduler.consolenode.core;
 
 import com.bee.scheduler.context.taskmodule.ClearTaskHistoryTaskModule;
+import com.bee.scheduler.context.taskmodule.HttpClientTaskModule;
 import com.bee.scheduler.context.taskmodule.JustTestTaskModule;
+import com.bee.scheduler.context.taskmodule.ShellTaskModule;
 import com.bee.scheduler.core.AbstractTaskModule;
 
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ public class BuildInTaskModuleLoader implements TaskModuleLoader {
     @Override
     public List<AbstractTaskModule> load() {
         return new ArrayList<AbstractTaskModule>() {{
+            add(new ShellTaskModule());
+            add(new HttpClientTaskModule());
             add(new JustTestTaskModule());
             add(new ClearTaskHistoryTaskModule());
         }};

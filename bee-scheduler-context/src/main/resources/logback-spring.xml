@@ -11,4 +11,7 @@
     <logger name="com.bee.scheduler.context.listener" level="INFO">
         <appender-ref ref="TaskLogger"/>
     </logger>
+    <logger name="TaskLogger" level="INFO">
+        <appender-ref ref="TaskLogger"/>
+    </logger>
 </configuration>

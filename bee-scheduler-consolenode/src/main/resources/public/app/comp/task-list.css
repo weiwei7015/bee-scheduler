@@ -1,3 +1,7 @@
-.main-tool button {
+.main-tool button, .main-tool button:hover {
     color: #ffba01;
+}
+
+.main-tool button:hover {
+    color: #ffa61f;
 }

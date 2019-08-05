@@ -53,19 +53,7 @@
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-httpclient/target</directory>
-                                    <includes>
-                                        <include>*.jar</include>
-                                    </includes>
-                                </resource>
-                                <resource>
                                     <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-kafka_0_10/target</directory>
-                                    <includes>
-                                        <include>*.jar</include>
-                                    </includes>
-                                </resource>
-                                <resource>
-                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-shell/target</directory>
                                     <includes>
                                         <include>*.jar</include>
                                     </includes>

@@ -1,9 +1,8 @@
-package com.bee.scheduler.taskmodule;
+package com.bee.scheduler.context.taskmodule;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -11,8 +10,10 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author weiwei 用于发起HTTP请求
@@ -47,9 +48,11 @@ public class HttpClientTaskModule extends AbstractTaskModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    url:'',\r" +
-                "    method:'get',\r" +
-                "    timeout:5000\r" +
+                "    url:\"\",\r" +
+                "    method:\"get\",\r" +
+                "    timeout:5000,\r" +
+                "    headers:\"{name:'value'}\",\r" +
+                "    body:\"\"\r" +
                 "}";
     }
 
@@ -60,12 +63,33 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         String url = taskParam.getString("url");
         int timeout = taskParam.getIntValue("timeout");
         String method = StringUtils.upperCase(taskParam.getString("method"));
+        String body = taskParam.getString("body");
 
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestProperty("user-agent", "BeeScheduler");
         connection.setRequestMethod(method);
         connection.setConnectTimeout(timeout);
         connection.setReadTimeout(timeout);
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+
+        //请求头
+        Object headers = taskParam.get("headers");
+        if (headers instanceof JSONObject) {
+            ((JSONObject) headers).forEach((k, v) -> {
+                connection.setRequestProperty(k, String.valueOf(v));
+            });
+        }
+
+        //body
+        if (body != null) {
+            try (OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8)) {
+                out.append(body);
+                out.flush();
+            }
+        }
+
+        //建立连接
         connection.connect();
 
         //响应状态码

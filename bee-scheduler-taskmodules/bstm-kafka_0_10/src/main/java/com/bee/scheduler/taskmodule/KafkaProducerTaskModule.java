@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
 import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
 import com.bee.scheduler.core.TaskExecutionResult;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -20,7 +19,7 @@ import java.util.Properties;
  * @author weiwei 用于发送Kafka消息
  */
 public class KafkaProducerTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog(KafkaProducerTaskModule.class);
+    private Log logger = LogFactory.getLog("TaskLogger");
 
     @Override
     public String getId() {
