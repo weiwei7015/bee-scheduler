@@ -1,4 +1,4 @@
-package com.bee.scheduler.consolenode.web;
+package com.bee.scheduler.consolenode.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.bee.scheduler.consolenode.exception.BizzException;

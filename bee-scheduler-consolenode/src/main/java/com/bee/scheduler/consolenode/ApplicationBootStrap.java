@@ -2,6 +2,7 @@ package com.bee.scheduler.consolenode;
 
 import com.bee.scheduler.consolenode.core.BuildInTaskModuleLoader;
 import com.bee.scheduler.consolenode.core.ClassPathJarArchiveTaskModuleLoader;
+import com.bee.scheduler.consolenode.web.PassportInterceptor;
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
 import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
 import com.bee.scheduler.context.executor.TaskModuleRegistry;
@@ -13,14 +14,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
+import java.util.Map;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class ApplicationBootStrap {
@@ -53,6 +60,32 @@ public class ApplicationBootStrap {
                 }
         );
         app.run(args);
+    }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(new PassportInterceptor()).excludePathPatterns("/public/**", "/configs", "/passport/**", "/error", "/", "");
+            }
+        };
+    }
+
+    @Bean
+    public ErrorAttributes errorAttributes() {
+        return new DefaultErrorAttributes() {
+            @Override
+            public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
+                Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, includeStackTrace);
+                errorAttributes.remove("exception");
+                errorAttributes.remove("status");
+                errorAttributes.remove("errors");
+                errorAttributes.remove("trace");
+                errorAttributes.remove("path");
+                return errorAttributes;
+            }
+        };
     }
 
     @Bean

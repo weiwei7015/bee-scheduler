@@ -15,7 +15,7 @@ import java.util.*;
  * @author weiwei
  */
 @Repository
-public class TaskDao extends DaoBase {
+public class TaskDao extends AbstractDao {
 
     public Task get(String schedulerName, String name, String group) {
         String sql = "SELECT t1.JOB_NAME 'name',t1.JOB_GROUP 'group',t2.JOB_CLASS_NAME 'jobComponent',t1.JOB_DATA 'data',t1.DESCRIPTION 'description' FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP where t1.SCHED_NAME = ? and t1.TRIGGER_NAME = ? and t1.TRIGGER_GROUP = ?";
@@ -45,8 +45,8 @@ public class TaskDao extends DaoBase {
         Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());
         // 查询记录
         sqlQueryResult.append(sqlWhere).append(" ORDER BY t1.NEXT_FIRE_TIME ASC LIMIT ?,?");
-        args.add((page - 1) * pageSize);
-        args.add(pageSize);
+        args.add((page - 1) * DEFAULT_PAGE_SIZE);
+        args.add(DEFAULT_PAGE_SIZE);
 
         final List<Task> result = new ArrayList<>();
 
@@ -88,7 +88,7 @@ public class TaskDao extends DaoBase {
             result.add(task);
         }, args.toArray());
 
-        return new Pageable<>(page, pageSize, resultTotal, result);
+        return new Pageable<>(page, DEFAULT_PAGE_SIZE, resultTotal, result);
     }
 
     public int queryCount(String schedulerName, String name, String group, String state) {

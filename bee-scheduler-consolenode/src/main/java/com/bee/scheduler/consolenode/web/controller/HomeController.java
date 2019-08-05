@@ -1,4 +1,4 @@
-package com.bee.scheduler.consolenode.web;
+package com.bee.scheduler.consolenode.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

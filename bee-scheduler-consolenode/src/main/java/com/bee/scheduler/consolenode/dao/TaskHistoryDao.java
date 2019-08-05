@@ -17,7 +17,7 @@ import java.util.List;
  * @author weiwei
  */
 @Repository
-public class TaskHistoryDao extends DaoBase {
+public class TaskHistoryDao extends AbstractDao {
 
     public ExecutedTask query(String fireId) {
         String sql = "SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.FIRED_WAY 'firedWay',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.FIRED_TIME 'firedTime',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t WHERE t.FIRE_ID = ?";
@@ -69,11 +69,11 @@ public class TaskHistoryDao extends DaoBase {
         // 查询记录
         sqlQueryResult.append(sqlWhere).append(" ORDER BY FIRED_TIME DESC LIMIT ?,?");
 
-        args.add((page - 1) * pageSize);
-        args.add(pageSize);
+        args.add((page - 1) * DEFAULT_PAGE_SIZE);
+        args.add(DEFAULT_PAGE_SIZE);
         List<ExecutedTask> result = jdbcTemplate.query(sqlQueryResult.toString(), new BeanPropertyRowMapper<>(ExecutedTask.class), args.toArray());
 
-        return new Pageable<>(page, pageSize, resultTotal, result);
+        return new Pageable<>(page, DEFAULT_PAGE_SIZE, resultTotal, result);
     }
 
     public List<String> getTaskHistoryGroups(String schedulerName) {

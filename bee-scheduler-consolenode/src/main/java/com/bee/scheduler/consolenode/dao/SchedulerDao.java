@@ -11,7 +11,7 @@ import java.util.List;
  * @author weiwei
  */
 @Repository
-public class SchedulerDao extends DaoBase {
+public class SchedulerDao extends AbstractDao {
     public List<ClusterSchedulerNode> getAllClusterScheduler(String schedulerName) {
         StringBuilder sqlQueryResult = new StringBuilder("select t.SCHED_NAME 'name',t.INSTANCE_NAME 'instanceName',t.LAST_CHECKIN_TIME 'lastCheckin',t.CHECKIN_INTERVAL 'checkinInterval' from BS_SCHEDULER_STATE t where t.SCHED_NAME = ?");
 

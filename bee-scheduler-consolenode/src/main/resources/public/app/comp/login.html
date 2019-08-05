@@ -1,8 +1,8 @@
-<div style="display: flex;justify-content: center;align-items:center;height: 100%;background: linear-gradient(0deg, #0b4182 1%, #1e88e5 100%);background-attachment: fixed;">
+<div style="display: flex;justify-content: center;align-items:center;height: 100%;background: linear-gradient(0deg, #000000 1%, #5c5c5c 100%);background-attachment: fixed;">
     <el-card style="width: 450px">
         <div class="text-center" style="padding: 20px 0">
-            <img src="/public/app/img/logo.png" style="width: 40px;height: 40px;vertical-align: bottom;display: inline-block;"/>
-            <h1 style="display: inline-block;margin: 0;">BD Sandbox</h1>
+            <img src="/public/app/img/logo.png" style="width: 60px;height: 60px;vertical-align: bottom;display: inline-block;"/>
+            <span style="display: inline-block;font-weight:bold;font-size: 30px;margin-top: 30px">BeeScheduler</span>
         </div>
         <el-alert v-show="errorMsg" :title="errorMsg" :closable="false" type="error"></el-alert>
         <div class="spr spr-x"></div>
@@ -17,7 +17,5 @@
                 <el-button type="primary" style="width: 100%" @click="login" :loading="loginProcessing">Log In</el-button>
             </el-form-item>
         </el-form>
-        <div class="hr"></div>
-        <div class="text-extra-light-silver text-center">杭州恩牛网络技术有限公司</div>
     </el-card>
 </div>
