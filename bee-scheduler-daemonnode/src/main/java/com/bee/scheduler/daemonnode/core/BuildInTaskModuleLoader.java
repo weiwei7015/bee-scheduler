@@ -1,6 +1,6 @@
 package com.bee.scheduler.daemonnode.core;
 
-import com.bee.scheduler.context.taskmodules.ClearTaskHistoryTaskModule;
+import com.bee.scheduler.context.taskmodule.ClearTaskHistoryTaskModule;
 import com.bee.scheduler.core.AbstractTaskModule;
 
 import java.util.ArrayList;

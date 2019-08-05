@@ -1,4 +1,4 @@
-package com.bee.scheduler.context.taskmodules;
+package com.bee.scheduler.context.taskmodule;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.AbstractTaskModule;
