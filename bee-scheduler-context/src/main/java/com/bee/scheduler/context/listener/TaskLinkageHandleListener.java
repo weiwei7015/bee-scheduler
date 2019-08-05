@@ -72,14 +72,18 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                         contextVars.put("time", now);
                         contextVars.putAll(result.getData());
                         ResolvedLinkageRule linkageRule = linkageRuleResolver.resolve((JSONObject) item, contextVars);
+
+                        //触发联动任务
+                        if (!linkageRule.getCondition()) {
+                            logger.info("condition[ " + linkageRule.getConditionEl() + " ]计算结果false，取消联动");
+                            return;
+                        }
                         if (linkageRule.getExports() != null) {
                             contextVars.putAll(linkageRule.getExports());
                         }
-                        //触发联动任务
+                        String taskKey = linkageRule.getTaskGroup() + "." + linkageRule.getTaskName();
+                        logger.info("触发联动任务: " + taskKey);
                         if (linkageRule.getMode() == ResolvedLinkageRule.Mode.Trigger) {
-                            String taskKey = linkageRule.getTaskGroup() + "." + linkageRule.getTaskName();
-                            logger.info("触发联动任务: " + taskKey);
-
                             JobKey taskJobKey = new JobKey(linkageRule.getTaskName(), linkageRule.getTaskGroup());
                             Trigger taskTrigger = scheduler.getTrigger(new TriggerKey(taskKey, TaskFiredWay.SCHEDULE.name()));
                             JobDataMap taskTriggerDataMap = taskTrigger.getJobDataMap();
@@ -93,11 +97,6 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                             }
                             scheduler.scheduleJob(triggerBuilder.build());
                         } else {
-                            if (!linkageRule.getCondition()) {
-                                logger.info("condition[ " + linkageRule.getConditionEl() + " ]计算结果false，取消联动");
-                                return;
-                            }
-
                             TaskConfig taskConfig = linkageRule.getTaskConfig();
                             String group = TaskSpecialGroup.LINKTMP.name();
                             String name = context.getFireInstanceId() + "_" + (i + 1);
@@ -110,6 +109,7 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                             TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger().withIdentity(group + "." + name, TaskFiredWay.LINKAGE.name()).usingJobData(jobDataMap);
 
                             if (linkageRule.getDelay() != null) {
+                                logger.info("联动任务[ " + taskKey + " ]将在 " + linkageRule.getDelay() + " ms后开始执行");
                                 Calendar startTime = Calendar.getInstance();
                                 startTime.add(Calendar.MILLISECOND, linkageRule.getDelay());
                                 triggerBuilder.startAt(startTime.getTime());
