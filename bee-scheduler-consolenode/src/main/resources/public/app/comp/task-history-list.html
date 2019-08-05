@@ -51,11 +51,9 @@
             </el-table>
             <template v-if="queryResult.result && queryResult.result.length > 0">
                 <div class="spr"></div>
-                <el-row>
-                    <el-col :span="24" class="text-right">
-                        <el-pagination class="no-padding" @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
-                    </el-col>
-                </el-row>
+                <div class="text-center">
+                    <el-pagination @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
+                </div>
             </template>
         </div>
 

@@ -7,7 +7,7 @@
             </el-header>
             <el-main class="side-nav">
                 <el-menu :collapse="isMenuFold" class="menu" unique-opened="true" router="true" ref="nav" :default-active="$route.path">
-                    <el-menu-item index="/dashboard"><i class="iconfont icon-dashboard"></i> <span slot="title">Dashboard</span></el-menu-item>
+<!--                    <el-menu-item index="/dashboard"><i class="iconfont icon-dashboard"></i> <span slot="title">Dashboard</span></el-menu-item>-->
                     <el-menu-item index="/task/list"><i class="iconfont icon-yy-task"></i> <span slot="title">任务管理</span></el-menu-item>
                     <el-menu-item index="/task/history/list"><i class="iconfont icon-history"></i> <span slot="title">历史任务</span></el-menu-item>
                     <el-menu-item index="/cluster" v-if="$AppConfig.clusterMode"><i class="iconfont icon-icons01"></i> <span slot="title">集群节点</span></el-menu-item>
