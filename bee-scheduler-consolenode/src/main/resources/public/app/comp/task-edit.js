@@ -36,7 +36,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
                     group: 'Default',
                     scheduleType: 4,
                     scheduleTypeSimpleOptions: {
-                        interval: 30000,
+                        interval: 30,
                         repeatType: 1,
                         repeatCount: 10,
                         misfireHandlingType: 0

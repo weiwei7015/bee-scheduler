@@ -62,7 +62,7 @@ public class TaskScheduler {
                 TaskConfig.ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
 
                 SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
-                scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval()).withRepeatCount(scheduleOptions.getRepeatType() == TaskConfig.REPEAT_TYPE_INFINITE ? -1 : scheduleOptions.getRepeatCount());
+                scheduleBuilder.withIntervalInSeconds(scheduleOptions.getInterval().intValue()).withRepeatCount(scheduleOptions.getRepeatType() == TaskConfig.REPEAT_TYPE_INFINITE ? -1 : scheduleOptions.getRepeatCount());
                 if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                     scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
                 } else if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW) {
@@ -163,8 +163,7 @@ public class TaskScheduler {
                 TaskConfig.ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
 
                 SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
-                scheduleBuilder.withIntervalInMilliseconds(scheduleOptions.getInterval())
-                        .withRepeatCount(scheduleOptions.getRepeatType() == TaskConfig.REPEAT_TYPE_INFINITE ? -1 : scheduleOptions.getRepeatCount());
+                scheduleBuilder.withIntervalInSeconds(scheduleOptions.getInterval().intValue()).withRepeatCount(scheduleOptions.getRepeatType() == TaskConfig.REPEAT_TYPE_INFINITE ? -1 : scheduleOptions.getRepeatCount());
 
                 if (scheduleOptions.getMisfireHandlingType() == SimpleTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
                     scheduleBuilder.withMisfireHandlingInstructionIgnoreMisfires();
@@ -278,7 +277,7 @@ public class TaskScheduler {
                 taskConfig.setScheduleType(TaskConfig.SCHEDULE_TYPE_SIMPLE_TRIGGER);
 
                 TaskConfig.ScheduleTypeSimpleOptions scheduleOptions = taskConfig.getScheduleTypeSimpleOptions();
-                scheduleOptions.setInterval(trigger.getRepeatInterval());
+                scheduleOptions.setInterval(trigger.getRepeatInterval() / 1000);
                 scheduleOptions.setRepeatType(trigger.getRepeatCount() == -1 ? TaskConfig.REPEAT_TYPE_INFINITE : TaskConfig.REPEAT_TYPE_GIVEN_COUNT);
                 scheduleOptions.setRepeatCount(trigger.getRepeatCount());
                 scheduleOptions.setMisfireHandlingType(trigger.getMisfireInstruction());

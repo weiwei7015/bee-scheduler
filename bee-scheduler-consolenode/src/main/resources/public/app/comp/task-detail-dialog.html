@@ -10,7 +10,7 @@
                     <div class="hr"></div>
                     <el-form-item label="调度方式">{{taskDetail.scheduleType === 1?"SimpleTrigger":taskDetail.scheduleType === 2?"CalendarIntervalTrigger":taskDetail.scheduleType === 3?"DailyTimeIntervalTrigger":taskDetail.scheduleType === 4?"CronTrigger":"unknown"}}</el-form-item>
                     <template v-if="taskDetail.scheduleType == 1"><!--Simple-->
-                        <el-form-item label="执行频率">每隔 {{taskDetail.scheduleTypeSimpleOptions.interval}} 毫秒</el-form-item>
+                        <el-form-item label="执行频率">每隔 {{taskDetail.scheduleTypeSimpleOptions.interval}} 秒</el-form-item>
                         <el-form-item label="重复策略">{{taskDetail.scheduleTypeSimpleOptions.repeatCount === -1?"无限重复":"重复 "+ taskDetail.scheduleTypeSimpleOptions.repeatCount +" 次"}}</el-form-item>
                         <el-form-item label="Misfire策略">{{taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===0?"SmartPolicy":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===-1?"IgnoreMisfires":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===1?"FireNow":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===2?"NowWithExistingCount":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===3?"NowWithRemainingCount":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===4?"NextWithRemainingCount":taskDetail.scheduleTypeSimpleOptions.misfireHandlingType===5?"NextWithExistingCount":"unknown"}}</el-form-item>
                     </template>
