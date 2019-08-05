@@ -1,7 +1,6 @@
 package com.bee.scheduler.context.executor;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.ExpressionPlaceholderHandler;
 import com.bee.scheduler.context.TaskExecutionContextUtil;
@@ -15,8 +14,6 @@ import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import java.util.Date;
 
 /**
  * @author weiwei
@@ -37,11 +34,7 @@ public class TaskExecutor implements Job {
             logger.info("任务参数:" + taskParam.toString());
             if (expressionPlaceholderHandler.containsExpression(taskParam.toString())) {
                 logger.info("任务参数包含表达式,开始计算表达式");
-                JSONObject contextVars = new JSONObject();
-                contextVars.put("time", new Date());
-                contextVars.put("jsonObject", new JSONObject());
-                contextVars.put("jsonArray", new JSONArray());
-                taskParam = JSON.parseObject(expressionPlaceholderHandler.handle(taskParam.toString(), contextVars));
+                taskParam = JSON.parseObject(expressionPlaceholderHandler.handle(taskParam.toString(), null));
                 taskExecutionContext.setParam(taskParam);
                 logger.info("解析后的任务参数:" + taskParam.toString());
             }

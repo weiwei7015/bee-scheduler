@@ -19,7 +19,6 @@ import org.quartz.*;
 import org.quartz.spi.OperableTrigger;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -68,10 +67,6 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
                         if (result.getData() != null) {
                             contextVars.putAll(result.getData());
                         }
-                        contextVars.put("time", new Date());
-                        contextVars.put("jsonObject", new JSONObject());
-                        contextVars.put("jsonArray", new JSONArray());
-                        contextVars.putAll(result.getData());
                         ResolvedLinkageRule linkageRule = linkageRuleResolver.resolve((JSONObject) item, contextVars);
 
                         //触发联动任务

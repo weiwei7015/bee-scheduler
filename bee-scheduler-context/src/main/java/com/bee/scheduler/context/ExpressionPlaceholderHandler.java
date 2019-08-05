@@ -1,11 +1,13 @@
 package com.bee.scheduler.context;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,11 +17,16 @@ import java.util.regex.Pattern;
 public class ExpressionPlaceholderHandler {
     private ExpressionParser elParser = new SpelExpressionParser();
     private Pattern elSegPattern = Pattern.compile("<el>.+?</el>");
-    public static final int EL_PREFIX_LENGTH = 4;
-    public static final int EL_SUFFIX_LENGTH = 5;
+    private static final int EL_PREFIX_LENGTH = 4;
+    private static final int EL_SUFFIX_LENGTH = 5;
 
     public String handle(String originText, JSONObject variables) {
         EvaluationContext evaluationContext = new StandardEvaluationContext();
+        //全局参数
+        evaluationContext.setVariable("time", new Date());
+        evaluationContext.setVariable("jsonObject", new JSONObject());
+        evaluationContext.setVariable("jsonArray", new JSONArray());
+        //上下文参数
         if (variables != null) {
             variables.keySet().forEach(key -> {
                 evaluationContext.setVariable(key, variables.get(key));
