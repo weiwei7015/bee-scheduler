@@ -1,6 +1,8 @@
 package com.bee.scheduler.context.executor;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bee.scheduler.context.ExpressionPlaceholderHandler;
 import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.context.exception.TaskModuleNotFountException;
 import com.bee.scheduler.core.AbstractTaskModule;
@@ -13,11 +15,14 @@ import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import java.util.Date;
+
 /**
  * @author weiwei
  */
 public class TaskExecutor implements Job {
     private Log logger = LogFactory.getLog(TaskExecutor.class);
+    private ExpressionPlaceholderHandler expressionPlaceholderHandler = new ExpressionPlaceholderHandler();
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -29,6 +34,14 @@ public class TaskExecutor implements Job {
         try {
             logger.info("开始执行任务:" + jobDetail.getKey());
             logger.info("任务参数:" + taskParam.toString());
+            if (expressionPlaceholderHandler.containsExpression(taskParam.toString())) {
+                logger.info("任务参数包含表达式,开始计算表达式");
+                JSONObject contextVars = new JSONObject();
+                contextVars.put("time", new Date());
+                taskParam = JSON.parseObject(expressionPlaceholderHandler.handle(taskParam.toString(), contextVars));
+                taskExecutionContext.setParam(taskParam);
+                logger.info("解析后的任务参数:" + taskParam.toString());
+            }
             AbstractTaskModule taskModule = TaskModuleRegistry.get(taskExecutionContext.getTaskModuleId());
             if (taskModule == null) {
                 throw new TaskModuleNotFountException();

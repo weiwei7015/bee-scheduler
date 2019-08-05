@@ -1,4 +1,4 @@
-package com.bee.scheduler.context.listener.support;
+package com.bee.scheduler.context;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.expression.EvaluationContext;
@@ -6,6 +6,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,9 +15,9 @@ import java.util.regex.Pattern;
  */
 public class ExpressionPlaceholderHandler {
     private ExpressionParser elParser = new SpelExpressionParser();
-    private Pattern elSegPattern = Pattern.compile("\\$el\\(.+?\\)");
-    public static final int EL_PREFFIX_LENGTH = 4;
-    public static final int EL_SUFFIX_LENGTH = 1;
+    private Pattern elSegPattern = Pattern.compile("<el>.+?</el>");
+    public static final int EL_PREFIX_LENGTH = 4;
+    public static final int EL_SUFFIX_LENGTH = 5;
 
     public String handle(String originText, JSONObject variables) {
         EvaluationContext evaluationContext = new StandardEvaluationContext();
@@ -33,7 +34,7 @@ public class ExpressionPlaceholderHandler {
         while (matcher.find()) {
             int start = matcher.start(), end = matcher.end();
             String wrapped = matcher.group();
-            String el = wrapped.substring(EL_PREFFIX_LENGTH, wrapped.length() - EL_SUFFIX_LENGTH);
+            String el = wrapped.substring(EL_PREFIX_LENGTH, wrapped.length() - EL_SUFFIX_LENGTH);
             String value = elParser.parseExpression(el).getValue(evaluationContext, String.class);
             if (start > pos) {
                 resolvedText.append(originText, pos, start);
@@ -48,12 +49,17 @@ public class ExpressionPlaceholderHandler {
         return resolvedText.toString();
     }
 
+    public boolean containsExpression(String originText) {
+        Matcher matcher = elSegPattern.matcher(originText);
+        return matcher.find();
+    }
+
 //    public static void main(String[] args) {
 //        ExpressionPlaceholderHandler handler = new ExpressionPlaceholderHandler();
 //        JSONObject var = new JSONObject();
-//        var.put("a", 12);
-//        String result = handler.handle("=====$el( 1 + #a*2 )$el(2+3)asd", var);
-//
+//        var.put("time", new Date());
+//        String result = handler.handle("=====<el>#time.getTime()</el>===", var);
 //        System.out.println("result = " + result);
 //    }
+
 }

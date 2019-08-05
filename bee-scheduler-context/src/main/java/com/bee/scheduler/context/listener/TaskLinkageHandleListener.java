@@ -2,11 +2,11 @@ package com.bee.scheduler.context.listener;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bee.scheduler.context.ExpressionPlaceholderHandler;
 import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.context.common.TaskFiredWay;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.executor.TaskExecutor;
-import com.bee.scheduler.context.listener.support.ExpressionPlaceholderHandler;
 import com.bee.scheduler.context.listener.support.LinkageRuleResolver;
 import com.bee.scheduler.context.listener.support.ResolvedLinkageRule;
 import com.bee.scheduler.context.model.TaskConfig;
@@ -103,7 +103,11 @@ public class TaskLinkageHandleListener extends AbstractTaskListener {
 
                             JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(name, group).build();
 
-                            taskConfig.setParams(expressionPlaceholderHandler.handle(taskConfig.getParams(), contextVars));
+                            if (expressionPlaceholderHandler.containsExpression(taskConfig.getParams())) {
+                                logger.info("任务参数包含表达式,开始计算表达式");
+                                taskConfig.setParams(expressionPlaceholderHandler.handle(taskConfig.getParams(), contextVars));
+                                logger.info("解析后的任务参数:" + taskConfig.getParams());
+                            }
 
                             JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getTaskModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
                             TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger().withIdentity(group + "." + name, TaskFiredWay.LINKAGE.name()).usingJobData(jobDataMap);

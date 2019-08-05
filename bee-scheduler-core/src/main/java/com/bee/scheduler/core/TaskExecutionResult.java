@@ -19,6 +19,9 @@ public class TaskExecutionResult {
     }
 
     public static TaskExecutionResult success(JSONObject data) {
+        if (data == null) {
+            data = new JSONObject();
+        }
         return new TaskExecutionResult(true, data);
     }
 
@@ -27,6 +30,9 @@ public class TaskExecutionResult {
     }
 
     public static TaskExecutionResult fail(JSONObject data) {
+        if (data == null) {
+            data = new JSONObject();
+        }
         return new TaskExecutionResult(false, data);
     }
 
@@ -43,6 +49,9 @@ public class TaskExecutionResult {
     }
 
     public void setData(JSONObject data) {
+        if (data == null) {
+            data = new JSONObject();
+        }
         this.data = data;
     }
 }
