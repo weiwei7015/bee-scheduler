@@ -3,6 +3,7 @@ package com.bee.scheduler.taskmodule;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.BasicExecutionResult;
 import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutionException;
 import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.logging.Log;
 
@@ -61,7 +62,7 @@ public class SqlExecutorTaskModule implements ExecutorModule {
         if (url.startsWith("jdbc:mysql")) {
             Class.forName("com.mysql.jdbc.Driver");
         } else {
-            throw new RuntimeException("暂不支持该数据库[" + url + "]");
+            throw new ExecutionException("暂不支持该数据库[" + url + "]");
         }
 
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.executor.TaskExecutionContext;
 import com.bee.scheduler.core.BasicExecutionResult;
 import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutionException;
 import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -70,12 +71,10 @@ public class ClearTaskHistoryTaskModule implements ExecutorModule {
         // 保留最近几天的任务记录
         Integer keepDays = taskParam.getInteger("keep_days");
         if (keepDays == null) {
-            logger.error("缺少必须参数:keep_days");
-            return BasicExecutionResult.fail();
+            throw new ExecutionException("必须参数:keep_days");
         }
         if (keepDays < 0) {
-            logger.error("任务参数有误:keep_days");
-            return BasicExecutionResult.fail();
+            throw new ExecutionException("参数有误:keep_days");
         }
         String taskGroup = taskParam.getString("task_group");
         String taskName = taskParam.getString("task_name");

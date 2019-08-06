@@ -93,7 +93,7 @@ public class HttpExcutorModule implements ExecutorModule {
         //响应状态码
         int responseStatus = connection.getResponseCode();
         //响应内容
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
         StringBuilder result = new StringBuilder();
         String temp;
         while ((temp = bufferedReader.readLine()) != null) {

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.ExpressionPlaceholderHandler;
 import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.context.common.Constants;
+import com.bee.scheduler.core.ExecutionException;
 import com.bee.scheduler.context.exception.ExecutorModuleNotFountException;
 import com.bee.scheduler.core.BasicExecutionResult;
 import com.bee.scheduler.core.ExecutorModule;
@@ -45,8 +46,12 @@ public class TaskExecutorProxy implements Job {
             logger.error("未找到组件: " + e.getExecutorModuleId());
             TaskExecutionContextUtil.setModuleExecutionResult(context, BasicExecutionResult.fail());
             throw new JobExecutionException("未找到组件:" + e.getExecutorModuleId());
+        } catch (ExecutionException e) {
+            logger.error("任务执行失败:" + e.getMessage());
+            TaskExecutionContextUtil.setModuleExecutionResult(context, BasicExecutionResult.fail());
+            throw new JobExecutionException(e);
         } catch (Throwable e) {
-            logger.error("执行任务异常", e);
+            logger.error("任务执行异常", e);
             TaskExecutionContextUtil.setModuleExecutionResult(context, BasicExecutionResult.fail());
             throw new JobExecutionException(e);
         }

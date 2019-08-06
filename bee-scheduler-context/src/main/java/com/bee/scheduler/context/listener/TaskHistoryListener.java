@@ -71,7 +71,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
             String schedulerName = scheduler.getSchedulerName();
             Date now = Calendar.getInstance().getTime();
 
-            logger.warn("任务[" + taskGroup + "." + taskName + "]已被取消执行,FireID:" + context.getFireInstanceId());
+            logger.warn("任务[" + taskGroup + "." + taskName + "]已被取消执行,FireId:" + context.getFireInstanceId());
 
             // 记录执行历史
             TaskHistory taskHistory = new TaskHistory();

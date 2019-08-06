@@ -3,6 +3,7 @@ package com.bee.scheduler.taskmodule;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.core.BasicExecutionResult;
 import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutionException;
 import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -84,8 +85,7 @@ public class MailTaskModule implements ExecutorModule {
         //参数预处理
         recipientTo = StringUtils.trimToEmpty(recipientTo);
         if (StringUtils.isEmpty(recipientTo)) {
-            logger.error("参数有误:recipients_to");
-            BasicExecutionResult.fail();
+            throw new ExecutionException("参数有误:recipients_to");
         }
         recipientCc = StringUtils.trimToEmpty(recipientCc);
 
