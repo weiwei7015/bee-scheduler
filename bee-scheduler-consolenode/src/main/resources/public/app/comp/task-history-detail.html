@@ -11,10 +11,12 @@
     </div>
     <div class="page-body" v-show="!taskHistoryDetailLoading">
         <div>
-            <h3 class="text-bold no-margin">{{taskHistoryDetail.group}}.{{taskHistoryDetail.name}}</h3>
+            <h1 class="text-bold no-margin">{{taskHistoryDetail.group}}.{{taskHistoryDetail.name}}</h1>
         </div>
         <div class="spr"></div>
-        <div>FireId：{{taskHistoryDetail.fireId}} | 执行状态：<el-tag size="mini" disable-transitions :type="taskHistoryDetail.execState === 'SUCCESS'?'success':taskHistoryDetail.execState === 'FAIL'?'danger':taskHistoryDetail.execState === 'VETOED'?'warning':'gray'">{{taskHistoryDetail.execState}}</el-tag></div>
+        <div>FireId：{{taskHistoryDetail.fireId}} | 执行状态：
+            <el-tag size="mini" disable-transitions :type="taskHistoryDetail.execState === 'SUCCESS'?'success':taskHistoryDetail.execState === 'FAIL'?'danger':taskHistoryDetail.execState === 'VETOED'?'warning':'gray'">{{taskHistoryDetail.execState}}</el-tag>
+        </div>
         <div>时间：{{$moment(taskHistoryDetail.firedTime).format("YYYY-MM-DD HH:mm:ss")}} | 触发方式：{{taskHistoryDetail.firedWay}} | 执行节点：{{taskHistoryDetail.instanceId}} | 耗时：<span :class="{'text-danger text-bold':taskHistoryDetail.expendTime > 500}">{{taskHistoryDetail.expendTime}}ms</span></div>
         <div class="spr"></div>
         <div>

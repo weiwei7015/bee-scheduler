@@ -2,9 +2,9 @@ package com.bee.scheduler.context.executor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.task.TaskExecutionContext;
-import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutionContext;
 import com.bee.scheduler.core.ExecutionException;
+import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -121,7 +121,7 @@ public class ClearTaskHistoryTaskModule implements ExecutorModule {
             }
             int result = preparedStatement.executeUpdate();
             data.put("count", result);
-            logger.info("任务执行结果：清除历史任务记录完毕，已成功清除 " + result + " 条记录");
+            logger.info("清除历史任务记录完毕，已成功清除 " + result + " 条记录");
         }
         return ExecutionResult.success(data);
     }
