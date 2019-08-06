@@ -3,22 +3,12 @@ package com.bee.scheduler.context.listener;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * @author weiwei
  */
-public abstract class TaskListenerSupport implements JobListener, TriggerListener, ApplicationContextAware {
-    protected ApplicationContext applicationContext;
+public abstract class TaskListenerSupport implements JobListener, TriggerListener {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 
     @Override
     public void jobToBeExecuted(JobExecutionContext context) {

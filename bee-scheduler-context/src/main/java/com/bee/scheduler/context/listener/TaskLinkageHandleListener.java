@@ -7,15 +7,14 @@ import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.context.common.Constants;
 import com.bee.scheduler.context.common.TaskFiredWay;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
-import com.bee.scheduler.context.task.TaskExecutorProxy;
 import com.bee.scheduler.context.listener.support.LinkageRuleResolver;
 import com.bee.scheduler.context.listener.support.ResolvedLinkageRule;
+import com.bee.scheduler.context.task.TaskExecutorProxy;
 import com.bee.scheduler.core.ExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
-import org.springframework.context.ApplicationContextAware;
 
 import java.util.Calendar;
 
@@ -24,7 +23,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 /**
  * @author weiwei
  */
-public class TaskLinkageHandleListener extends TaskListenerSupport implements ApplicationContextAware {
+public class TaskLinkageHandleListener extends TaskListenerSupport {
     private Log logger = LogFactory.getLog(TaskLinkageHandleListener.class);
     private ExpressionPlaceholderHandler expressionPlaceholderHandler = new ExpressionPlaceholderHandler();
     private LinkageRuleResolver linkageRuleResolver = new LinkageRuleResolver();
