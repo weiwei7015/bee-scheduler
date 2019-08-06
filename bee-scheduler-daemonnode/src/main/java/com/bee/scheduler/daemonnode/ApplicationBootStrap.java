@@ -2,7 +2,7 @@ package com.bee.scheduler.daemonnode;
 
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
 import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
-import com.bee.scheduler.context.executor.TaskModuleRegistry;
+import com.bee.scheduler.context.task.TaskModuleRegistry;
 import com.bee.scheduler.daemonnode.core.BuildInTaskModuleLoader;
 import com.bee.scheduler.daemonnode.core.ClassPathJarArchiveTaskModuleLoader;
 import org.apache.commons.logging.Log;

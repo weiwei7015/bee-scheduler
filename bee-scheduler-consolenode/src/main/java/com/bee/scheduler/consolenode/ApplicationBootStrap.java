@@ -5,7 +5,7 @@ import com.bee.scheduler.consolenode.core.ClassPathJarArchiveTaskModuleLoader;
 import com.bee.scheduler.consolenode.web.PassportInterceptor;
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
 import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
-import com.bee.scheduler.context.executor.TaskModuleRegistry;
+import com.bee.scheduler.context.task.TaskModuleRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.Scheduler;

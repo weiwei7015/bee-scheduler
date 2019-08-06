@@ -47,25 +47,25 @@
                             <outputDirectory>${project.build.outputDirectory}/task_modules</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-dubbo2_x/target</directory>
+                                    <directory>${project.parent.basedir}/bee-scheduler-executors/bstm-dubbo2_x/target</directory>
                                     <includes>
                                         <include>*.jar</include>
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-kafka_0_10/target</directory>
+                                    <directory>${project.parent.basedir}/bee-scheduler-executors/bstm-kafka_0_10/target</directory>
                                     <includes>
                                         <include>*.jar</include>
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-sqlexecutor/target</directory>
+                                    <directory>${project.parent.basedir}/bee-scheduler-executors/bstm-sqlexecutor/target</directory>
                                     <includes>
                                         <include>*.jar</include>
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>${project.parent.basedir}/bee-scheduler-taskmodules/bstm-mail/target</directory>
+                                    <directory>${project.parent.basedir}/bee-scheduler-executors/bstm-mail/target</directory>
                                     <includes>
                                         <include>*.jar</include>
                                     </includes>

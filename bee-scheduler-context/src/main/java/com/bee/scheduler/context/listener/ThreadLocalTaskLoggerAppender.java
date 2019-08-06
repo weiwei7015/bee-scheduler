@@ -4,7 +4,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.util.CachingDateFormatter;
-import com.bee.scheduler.context.executor.TaskExecutionLogger;
+import com.bee.scheduler.context.task.TaskExecutionLogger;
 
 /**
  * @author weiwei

@@ -3,7 +3,7 @@ package com.bee.scheduler.context;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.common.Constants;
-import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutionResult;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -20,12 +20,12 @@ public class TaskExecutionContextUtil {
         return dataMap;
     }
 
-    public static void setModuleExecutionResult(JobExecutionContext context, BasicExecutionResult result) {
+    public static void setModuleExecutionResult(JobExecutionContext context, ExecutionResult result) {
         context.setResult(result);
     }
 
-    public static BasicExecutionResult getModuleExecutionResult(JobExecutionContext context) {
-        return (BasicExecutionResult) context.getResult();
+    public static ExecutionResult getModuleExecutionResult(JobExecutionContext context) {
+        return (ExecutionResult) context.getResult();
     }
 
     public static JSONObject getTaskParam(JobExecutionContext context) {

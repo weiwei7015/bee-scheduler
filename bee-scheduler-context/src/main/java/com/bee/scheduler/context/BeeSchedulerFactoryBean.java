@@ -1,5 +1,6 @@
 package com.bee.scheduler.context;
 
+import com.bee.scheduler.context.task.TaskScheduler;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;

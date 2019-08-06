@@ -5,7 +5,7 @@
     <logger name="com.bee.scheduler.context.executor" level="INFO">
         <appender-ref ref="TaskLogger"/>
     </logger>
-    <logger name="com.bee.scheduler.context.taskmodule" level="INFO">
+    <logger name="com.bee.scheduler.executor" level="INFO">
         <appender-ref ref="TaskLogger"/>
     </logger>
     <logger name="com.bee.scheduler.context.listener" level="INFO">

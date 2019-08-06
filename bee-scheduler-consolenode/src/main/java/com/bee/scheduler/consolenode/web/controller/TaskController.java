@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.bee.scheduler.consolenode.exception.BizzException;
 import com.bee.scheduler.consolenode.model.*;
 import com.bee.scheduler.consolenode.service.TaskService;
-import com.bee.scheduler.context.TaskScheduler;
+import com.bee.scheduler.context.task.TaskScheduler;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.model.QuickTaskConfig;
 import com.bee.scheduler.context.model.TaskConfig;

@@ -1,7 +1,7 @@
 package com.bee.scheduler.daemonnode.core;
 
-import com.bee.scheduler.context.executor.module.ClearTaskHistoryTaskModule;
-import com.bee.scheduler.context.executor.module.JustTestTaskModule;
+import com.bee.scheduler.context.executor.ClearTaskHistoryTaskModule;
+import com.bee.scheduler.context.executor.JustTestTaskModule;
 import com.bee.scheduler.core.ExecutorModule;
 
 import java.util.ArrayList;

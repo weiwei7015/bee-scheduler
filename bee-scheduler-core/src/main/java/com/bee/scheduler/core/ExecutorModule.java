@@ -16,5 +16,5 @@ public interface ExecutorModule {
 
     String getAuthor();
 
-    BasicExecutionResult exec(ExecutionContext context) throws Exception;
+    ExecutionResult exec(ExecutionContext context) throws Exception;
 }

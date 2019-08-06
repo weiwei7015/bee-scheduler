@@ -1,9 +1,9 @@
 package com.bee.scheduler.consolenode.core;
 
-import com.bee.scheduler.context.executor.module.ClearTaskHistoryTaskModule;
-import com.bee.scheduler.context.executor.module.HttpExcutorModule;
-import com.bee.scheduler.context.executor.module.JustTestTaskModule;
-import com.bee.scheduler.context.executor.module.ShellTaskModule;
+import com.bee.scheduler.context.executor.ClearTaskHistoryTaskModule;
+import com.bee.scheduler.context.executor.HttpExcutorModule;
+import com.bee.scheduler.context.executor.JustTestTaskModule;
+import com.bee.scheduler.context.executor.ShellTaskModule;
 import com.bee.scheduler.core.ExecutorModule;
 
 import java.util.ArrayList;

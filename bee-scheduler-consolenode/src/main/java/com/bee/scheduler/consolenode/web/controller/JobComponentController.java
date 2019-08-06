@@ -2,7 +2,7 @@ package com.bee.scheduler.consolenode.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.consolenode.model.HttpResponseBodyWrapper;
-import com.bee.scheduler.context.executor.TaskModuleRegistry;
+import com.bee.scheduler.context.task.TaskModuleRegistry;
 import com.bee.scheduler.core.ExecutorModule;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
