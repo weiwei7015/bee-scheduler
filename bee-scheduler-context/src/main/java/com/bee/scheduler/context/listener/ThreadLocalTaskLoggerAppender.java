@@ -5,7 +5,6 @@ import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.util.CachingDateFormatter;
 import com.bee.scheduler.core.TaskExecutionLogger;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author weiwei
@@ -21,7 +20,7 @@ public class ThreadLocalTaskLoggerAppender extends UnsynchronizedAppenderBase<IL
         if (taskExecutionLogger != null) {
             taskExecutionLogger.appendLine("[" + eventObject.getLevel() + "] " + "[" + cachingDateFormatter.format(eventObject.getTimeStamp()) + "] " + eventObject.getMessage());
             if (eventObject.getThrowableProxy() != null) {
-                taskExecutionLogger.appendLine(StringUtils.substring(ThrowableProxyUtil.asString(eventObject.getThrowableProxy()), 0, 600));
+                taskExecutionLogger.appendLine(ThrowableProxyUtil.asString(eventObject.getThrowableProxy()));
             }
         }
     }
