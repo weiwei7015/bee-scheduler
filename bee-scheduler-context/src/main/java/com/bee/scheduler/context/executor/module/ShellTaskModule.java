@@ -1,11 +1,9 @@
-package com.bee.scheduler.context.taskmodule;
+package com.bee.scheduler.context.executor.module;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.AbstractTaskModule;
-import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutorModule;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,9 +12,7 @@ import java.io.InputStreamReader;
 /**
  * @author weiwei 该组件提供运行服务端脚本的功能
  */
-public class ShellTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog(ShellTaskModule.class);
-
+public class ShellTaskModule implements ExecutorModule {
     @Override
     public String getId() {
         return "ShellTaskModule";
@@ -50,7 +46,7 @@ public class ShellTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
+    public BasicExecutionResult exec(ExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
 
         String shell = taskParam.getString("shell");
@@ -67,6 +63,6 @@ public class ShellTaskModule extends AbstractTaskModule {
         }
         JSONObject data = new JSONObject();
         data.put("echo", back.toString());
-        return TaskExecutionResult.success(data);
+        return BasicExecutionResult.success(data);
     }
 }

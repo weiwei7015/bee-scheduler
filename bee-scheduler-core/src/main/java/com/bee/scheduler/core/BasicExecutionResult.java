@@ -5,35 +5,35 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * @author weiwei
  */
-public class TaskExecutionResult {
+public class BasicExecutionResult {
     private boolean success;
     private JSONObject data;
 
-    public TaskExecutionResult(boolean success, JSONObject data) {
+    public BasicExecutionResult(boolean success, JSONObject data) {
         this.success = success;
         this.data = data;
     }
 
-    public static TaskExecutionResult success() {
+    public static BasicExecutionResult success() {
         return success(new JSONObject());
     }
 
-    public static TaskExecutionResult success(JSONObject data) {
+    public static BasicExecutionResult success(JSONObject data) {
         if (data == null) {
             data = new JSONObject();
         }
-        return new TaskExecutionResult(true, data);
+        return new BasicExecutionResult(true, data);
     }
 
-    public static TaskExecutionResult fail() {
+    public static BasicExecutionResult fail() {
         return fail(new JSONObject());
     }
 
-    public static TaskExecutionResult fail(JSONObject data) {
+    public static BasicExecutionResult fail(JSONObject data) {
         if (data == null) {
             data = new JSONObject();
         }
-        return new TaskExecutionResult(false, data);
+        return new BasicExecutionResult(false, data);
     }
 
     public boolean isSuccess() {

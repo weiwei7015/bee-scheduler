@@ -2,14 +2,13 @@ package com.bee.scheduler.taskmodule;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.AbstractTaskModule;
-import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionResult;
+import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutorModule;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +17,7 @@ import java.util.Properties;
 /**
  * @author weiwei 用于发送Kafka消息
  */
-public class KafkaProducerTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog("TaskLogger");
-
+public class KafkaProducerTaskModule implements ExecutorModule {
     @Override
     public String getId() {
         return "KafkaProducerTaskModule";
@@ -59,8 +56,9 @@ public class KafkaProducerTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
+    public BasicExecutionResult exec(ExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
+        Log logger = context.getLogger();
 
         String brokerList = taskParam.getString("brokerList");
         JSONArray messageArray = taskParam.getJSONArray("messages");
@@ -84,6 +82,6 @@ public class KafkaProducerTaskModule extends AbstractTaskModule {
             producer.close();
         }
         logger.info("任务执行成功");
-        return TaskExecutionResult.success();
+        return BasicExecutionResult.success();
     }
 }

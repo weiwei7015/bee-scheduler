@@ -1,0 +1,91 @@
+package com.bee.scheduler.context.executor;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.bee.scheduler.context.ExpressionPlaceholderHandler;
+import com.bee.scheduler.context.TaskExecutionContextUtil;
+import com.bee.scheduler.context.common.Constants;
+import com.bee.scheduler.context.exception.ExecutorModuleNotFountException;
+import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutorModule;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.quartz.Job;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+
+import java.util.Date;
+
+/**
+ * @author weiwei
+ */
+public class TaskExecutorProxy implements Job {
+    private Log logger = LogFactory.getLog(TaskExecutorProxy.class);
+    private ExpressionPlaceholderHandler expressionPlaceholderHandler = new ExpressionPlaceholderHandler();
+
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        logger.info("开始执行任务:" + context.getJobDetail().getKey());
+        try {
+            TaskExecutionContext taskExecutionContext = prepareExecutionContext(context);
+
+            logger.info("任务参数:" + taskExecutionContext.getParam().toString());
+
+            ExecutorModule taskModule = TaskModuleRegistry.get(taskExecutionContext.getExecutorModuleId());
+            if (taskModule == null) {
+                throw new ExecutorModuleNotFountException(taskExecutionContext.getExecutorModuleId());
+            }
+            BasicExecutionResult result = taskModule.exec(taskExecutionContext);
+            logger.info("任务结果:" + result.getData().toJSONString());
+            logger.info("执行任务" + (result.isSuccess() ? "成功" : "失败"));
+            TaskExecutionContextUtil.setModuleExecutionResult(context, result);
+        } catch (ExecutorModuleNotFountException e) {
+            logger.error("未找到组件: " + e.getExecutorModuleId());
+            TaskExecutionContextUtil.setModuleExecutionResult(context, BasicExecutionResult.fail());
+            throw new JobExecutionException("未找到组件:" + e.getExecutorModuleId());
+        } catch (Throwable e) {
+            logger.error("执行任务异常", e);
+            TaskExecutionContextUtil.setModuleExecutionResult(context, BasicExecutionResult.fail());
+            throw new JobExecutionException(e);
+        }
+    }
+
+    private TaskExecutionContext prepareExecutionContext(JobExecutionContext context) {
+        JobDataMap mergedJobDataMap = context.getMergedJobDataMap();
+        //ModuleId
+        String executorModuleId = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID);
+        //任务参数
+        String paramString = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM);
+        JSONObject param = null;
+        if (StringUtils.isNotBlank(paramString)) {
+            if (expressionPlaceholderHandler.containsExpression(paramString)) {
+                logger.info("任务参数包含表达式,开始计算表达式");
+                JSONObject variables = new JSONObject();
+                variables.put("time", new Date());
+                variables.put("jsonObject", new JSONObject());
+                variables.put("jsonArray", new JSONArray());
+                paramString = expressionPlaceholderHandler.handle(paramString, variables);
+                logger.info("解析后的任务参数:" + paramString);
+            }
+            param = JSONObject.parseObject(paramString);
+        }
+        //联动规则
+        String linkageRuleString = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE);
+        JSONArray linkageRule = null;
+        if (StringUtils.isNotBlank(linkageRuleString)) {
+            if (expressionPlaceholderHandler.containsExpression(linkageRuleString)) {
+                logger.info("任务参数包含表达式,开始计算表达式");
+                JSONObject variables = new JSONObject();
+                variables.put("time", new Date());
+                variables.put("jsonObject", new JSONObject());
+                variables.put("jsonArray", new JSONArray());
+                linkageRuleString = expressionPlaceholderHandler.handle(linkageRuleString, variables);
+                logger.info("解析后的任务参数:" + linkageRuleString);
+            }
+            linkageRule = JSONObject.parseArray(linkageRuleString);
+        }
+        return new TaskExecutionContext(context, executorModuleId, param, linkageRule);
+    }
+}

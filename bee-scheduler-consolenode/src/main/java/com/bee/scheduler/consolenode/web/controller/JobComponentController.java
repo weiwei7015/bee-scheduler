@@ -3,7 +3,7 @@ package com.bee.scheduler.consolenode.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.consolenode.model.HttpResponseBodyWrapper;
 import com.bee.scheduler.context.executor.TaskModuleRegistry;
-import com.bee.scheduler.core.AbstractTaskModule;
+import com.bee.scheduler.core.ExecutorModule;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class JobComponentController {
         JSONObject jobComponents = new JSONObject();
 
         for (String taskModuleId : TaskModuleRegistry.TaskModuleMap.keySet()) {
-            AbstractTaskModule taskModule = TaskModuleRegistry.TaskModuleMap.get(taskModuleId);
+            ExecutorModule taskModule = TaskModuleRegistry.TaskModuleMap.get(taskModuleId);
 //            if (taskModule instanceof BuildInJobComponent) {
 //                continue;
 //            }

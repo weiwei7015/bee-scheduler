@@ -1,13 +1,14 @@
-package com.bee.scheduler.context.taskmodule;
+package com.bee.scheduler.context.executor.module;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.AbstractTaskModule;
-import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionResult;
+import com.bee.scheduler.context.executor.TaskExecutionContext;
+import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.quartz.JobExecutionContext;
 import org.quartz.utils.DBConnectionManager;
 import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
 
@@ -21,9 +22,7 @@ import java.util.Date;
  * @author weiwei
  * 用于清除历史任务记录
  */
-public class ClearTaskHistoryTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog(ClearTaskHistoryTaskModule.class);
-
+public class ClearTaskHistoryTaskModule implements ExecutorModule {
     @Override
     public String getId() {
         return "ClearTaskHistory";
@@ -61,18 +60,22 @@ public class ClearTaskHistoryTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
-        JSONObject taskParam = context.getParam();
+    public BasicExecutionResult exec(ExecutionContext context) throws Exception {
+        TaskExecutionContext taskExecutionContext = (TaskExecutionContext) context;
+
+        JobExecutionContext jobExecutionContext = taskExecutionContext.getJobExecutionContext();
+        JSONObject taskParam = taskExecutionContext.getParam();
+        Log logger = taskExecutionContext.getLogger();
 
         // 保留最近几天的任务记录
         Integer keepDays = taskParam.getInteger("keep_days");
         if (keepDays == null) {
             logger.error("缺少必须参数:keep_days");
-            return TaskExecutionResult.fail();
+            return BasicExecutionResult.fail();
         }
         if (keepDays < 0) {
             logger.error("任务参数有误:keep_days");
-            return TaskExecutionResult.fail();
+            return BasicExecutionResult.fail();
         }
         String taskGroup = taskParam.getString("task_group");
         String taskName = taskParam.getString("task_name");
@@ -108,7 +111,7 @@ public class ClearTaskHistoryTaskModule extends AbstractTaskModule {
 
         JSONObject data = new JSONObject();
         try (
-                Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + context.getSchedulerName());
+                Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + jobExecutionContext.getScheduler().getSchedulerName());
                 PreparedStatement preparedStatement = connection.prepareStatement(sqlBuilder.toString())
         ) {
             preparedStatement.setLong(1, datePoint.getTime());
@@ -121,6 +124,6 @@ public class ClearTaskHistoryTaskModule extends AbstractTaskModule {
             data.put("count", result);
             logger.info("任务执行结果：清除历史任务记录完毕，已成功清除 " + result + " 条记录");
         }
-        return TaskExecutionResult.success(data);
+        return BasicExecutionResult.success(data);
     }
 }

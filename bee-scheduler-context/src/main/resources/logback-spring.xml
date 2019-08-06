@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <appender name="TaskLogger" class="com.bee.scheduler.context.TaskLoggerAppender"/>
+    <appender name="TaskLogger" class="com.bee.scheduler.context.listener.ThreadLocalTaskLoggerAppender"/>
     <logger name="com.bee.scheduler.context.executor" level="INFO">
         <appender-ref ref="TaskLogger"/>
     </logger>

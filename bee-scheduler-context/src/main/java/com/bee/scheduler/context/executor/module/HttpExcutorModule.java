@@ -1,12 +1,11 @@
-package com.bee.scheduler.context.taskmodule;
+package com.bee.scheduler.context.executor.module;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.AbstractTaskModule;
-import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionResult;
+import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,9 +17,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author weiwei 用于发起HTTP请求
  */
-public class HttpClientTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog(HttpClientTaskModule.class);
-
+public class HttpExcutorModule implements ExecutorModule {
     public String getId() {
         return "HttpJob";
     }
@@ -57,8 +54,9 @@ public class HttpClientTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
+    public BasicExecutionResult exec(ExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
+        Log logger = context.getLogger();
 
         String url = taskParam.getString("url");
         int timeout = taskParam.getIntValue("timeout");
@@ -113,9 +111,9 @@ public class HttpClientTaskModule extends AbstractTaskModule {
         data.put("response_status", responseStatus);
         data.put("response_content", result.toString());
         if (responseStatus == 200) {
-            return TaskExecutionResult.success(data);
+            return BasicExecutionResult.success(data);
         } else {
-            return TaskExecutionResult.fail(data);
+            return BasicExecutionResult.fail(data);
         }
     }
 }

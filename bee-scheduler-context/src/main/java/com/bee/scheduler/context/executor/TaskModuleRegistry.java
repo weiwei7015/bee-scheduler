@@ -1,6 +1,6 @@
 package com.bee.scheduler.context.executor;
 
-import com.bee.scheduler.core.AbstractTaskModule;
+import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -12,14 +12,14 @@ import java.util.Map;
  */
 public class TaskModuleRegistry {
     private static Log logger = LogFactory.getLog(TaskModuleRegistry.class);
-    public static final Map<String, AbstractTaskModule> TaskModuleMap = new HashMap<>();
+    public static final Map<String, ExecutorModule> TaskModuleMap = new HashMap<>();
 
-    public static void register(AbstractTaskModule taskModule) {
+    public static void register(ExecutorModule taskModule) {
         logger.info("loaded module : " + taskModule.getId());
         TaskModuleMap.put(taskModule.getId(), taskModule);
     }
 
-    public static AbstractTaskModule get(String taskModuleId) {
+    public static ExecutorModule get(String taskModuleId) {
         return TaskModuleMap.get(taskModuleId);
     }
 

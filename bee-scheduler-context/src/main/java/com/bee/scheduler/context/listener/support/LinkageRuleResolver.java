@@ -1,7 +1,6 @@
 package com.bee.scheduler.context.listener.support;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.context.model.TaskConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -27,7 +26,7 @@ public class LinkageRuleResolver {
             if (!(task instanceof JSONObject)) {
                 throw new RuntimeException("task must be json object when mode is create");
             }
-            result.setTaskConfig(((JSONObject) task).toJavaObject(TaskConfig.class));
+            result.setLinkageTaskConfig(((JSONObject) task).toJavaObject(ResolvedLinkageRule.LinkageTaskConfig.class));
         } else if (result.getMode() == ResolvedLinkageRule.Mode.Trigger) {
             if (!(task instanceof String)) {
                 throw new RuntimeException("task must be a task key when mode is trigger");

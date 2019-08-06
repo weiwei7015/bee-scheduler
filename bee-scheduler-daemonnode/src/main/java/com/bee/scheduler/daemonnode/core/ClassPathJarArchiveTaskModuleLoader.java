@@ -1,6 +1,6 @@
 package com.bee.scheduler.daemonnode.core;
 
-import com.bee.scheduler.core.AbstractTaskModule;
+import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.loader.LaunchedURLClassLoader;
@@ -22,7 +22,7 @@ public class ClassPathJarArchiveTaskModuleLoader implements TaskModuleLoader {
     private Log logger = LogFactory.getLog(ClassPathJarArchiveTaskModuleLoader.class);
 
     @Override
-    public List<AbstractTaskModule> load() throws Exception {
+    public List<ExecutorModule> load() throws Exception {
         JarFile.registerUrlProtocolHandler();
         Archive sourceCodeArchive = createArchive();
         List<Archive> taskModulesArchive = sourceCodeArchive.getNestedArchives(entry -> {
@@ -33,7 +33,7 @@ public class ClassPathJarArchiveTaskModuleLoader implements TaskModuleLoader {
             }
         });
 
-        ArrayList<AbstractTaskModule> taskModules = new ArrayList<>();
+        ArrayList<ExecutorModule> taskModules = new ArrayList<>();
         for (Archive archive : taskModulesArchive) {
             ArrayList<URL> urls = new ArrayList<>();
             urls.add(archive.getUrl());
@@ -44,7 +44,7 @@ public class ClassPathJarArchiveTaskModuleLoader implements TaskModuleLoader {
             String moduleClass = archive.getManifest().getMainAttributes().getValue("TaskModuleClass");
             ClassLoader classLoader = new LaunchedURLClassLoader(urls.toArray(new URL[0]), ClassUtils.getDefaultClassLoader());
 
-            AbstractTaskModule module = (AbstractTaskModule) classLoader.loadClass(moduleClass).newInstance();
+            ExecutorModule module = (ExecutorModule) classLoader.loadClass(moduleClass).newInstance();
 
             taskModules.add(module);
         }

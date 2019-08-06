@@ -1,7 +1,7 @@
 package com.bee.scheduler.context.listener.support;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.context.model.TaskConfig;
 
 /**
  * @author weiwei
@@ -12,7 +12,7 @@ public class ResolvedLinkageRule {
     private Mode mode;
     private String taskGroup;
     private String taskName;
-    private TaskConfig taskConfig;
+    private LinkageTaskConfig linkageTaskConfig;
     private Integer delay;
     private Boolean condition;
     private String conditionEl;
@@ -42,12 +42,12 @@ public class ResolvedLinkageRule {
         this.taskName = taskName;
     }
 
-    public TaskConfig getTaskConfig() {
-        return taskConfig;
+    public LinkageTaskConfig getLinkageTaskConfig() {
+        return linkageTaskConfig;
     }
 
-    public void setTaskConfig(TaskConfig taskConfig) {
-        this.taskConfig = taskConfig;
+    public void setLinkageTaskConfig(LinkageTaskConfig linkageTaskConfig) {
+        this.linkageTaskConfig = linkageTaskConfig;
     }
 
     public Integer getDelay() {
@@ -82,4 +82,36 @@ public class ResolvedLinkageRule {
         this.exports = exports;
     }
 
+
+    public static class LinkageTaskConfig {
+        private String taskModule;
+        private JSONObject params;
+        private JSONArray linkageRule;
+
+        public String getTaskModule() {
+            return taskModule;
+        }
+
+        public void setTaskModule(String taskModule) {
+            this.taskModule = taskModule;
+        }
+
+        public JSONObject getParams() {
+            return params;
+        }
+
+        public void setParams(JSONObject params) {
+            this.params = params;
+        }
+
+        public JSONArray getLinkageRule() {
+            return linkageRule;
+        }
+
+        public void setLinkageRule(JSONArray linkageRule) {
+            this.linkageRule = linkageRule;
+        }
+    }
+
 }
+

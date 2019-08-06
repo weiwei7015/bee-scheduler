@@ -1,9 +1,9 @@
 package com.bee.scheduler.context;
 
-import com.bee.scheduler.context.listener.AbstractTaskListener;
-import com.bee.scheduler.context.listener.TaskHistoryRecorderListener;
-import com.bee.scheduler.context.listener.TaskLinkageHandleListener;
-import com.bee.scheduler.context.listener.TaskLoggerListener;
+import com.bee.scheduler.context.listener.BindingTaskLoggerOnThreadLocalListener;
+import com.bee.scheduler.context.listener.TaskHistoryListener;
+import com.bee.scheduler.context.listener.TaskListenerSupport;
+import com.bee.scheduler.context.listener.VetoDangerousTaskListener;
 import org.quartz.ListenerManager;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -24,7 +24,7 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
     private String instanceId;
     private boolean clusterMode = false;
     private int threadPoolSize = 10;
-    private List<AbstractTaskListener> taskListenerList = new ArrayList<>();
+    private List<TaskListenerSupport> taskListenerList = new ArrayList<>();
 
     public CustomizedQuartzSchedulerFactoryBean(String name, String instanceId, DataSource dataSource) {
         this.instanceId = instanceId;
@@ -60,18 +60,20 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
         super.afterPropertiesSet();
     }
 
-    public void addListener(AbstractTaskListener listener) {
+    public void addListener(TaskListenerSupport listener) {
         this.taskListenerList.add(listener);
     }
 
     @Override
     protected Scheduler createScheduler(SchedulerFactory schedulerFactory, String schedulerName) throws SchedulerException {
         Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
-        taskListenerList.add(new TaskLoggerListener());
-        taskListenerList.add(new TaskLinkageHandleListener());
-        taskListenerList.add(new TaskHistoryRecorderListener());
+        taskListenerList.add(new BindingTaskLoggerOnThreadLocalListener());
+        taskListenerList.add(new VetoDangerousTaskListener());
+//        taskListenerList.add(new TaskLinkageHandleListener());
+        taskListenerList.add(new TaskHistoryListener());
+
         ListenerManager listenerManager = scheduler.getListenerManager();
-        for (AbstractTaskListener listener : taskListenerList) {
+        for (TaskListenerSupport listener : taskListenerList) {
             listenerManager.addJobListener(listener);
             listenerManager.addTriggerListener(listener);
         }

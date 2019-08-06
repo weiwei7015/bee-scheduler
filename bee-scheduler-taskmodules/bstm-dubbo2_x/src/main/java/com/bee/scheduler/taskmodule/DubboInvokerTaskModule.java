@@ -8,12 +8,11 @@ import com.alibaba.dubbo.config.utils.ReferenceConfigCache.KeyGenerator;
 import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.AbstractTaskModule;
-import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionResult;
+import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,8 +21,7 @@ import java.util.*;
 /**
  * @author weiwei Dubbo客户端组件,该组件提供调用dubbo服务的功能
  */
-public class DubboInvokerTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog("TaskLogger");
+public class DubboInvokerTaskModule implements ExecutorModule {
 
     private static Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
 
@@ -159,8 +157,9 @@ public class DubboInvokerTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
+    public BasicExecutionResult exec(ExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
+        Log logger = context.getLogger();
 
         String url = taskParam.getString("url");
         String registry = taskParam.getString("registry");
@@ -216,6 +215,6 @@ public class DubboInvokerTaskModule extends AbstractTaskModule {
 
         logger.info("任务执行成功 -> return:" + result + "");
 
-        return TaskExecutionResult.success();
+        return BasicExecutionResult.success();
     }
 }

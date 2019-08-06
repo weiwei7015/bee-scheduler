@@ -3,19 +3,14 @@ package com.bee.scheduler.context;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.common.Constants;
-import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionLogger;
-import com.bee.scheduler.core.TaskExecutionResult;
+import com.bee.scheduler.core.BasicExecutionResult;
 import org.apache.commons.lang3.StringUtils;
-import org.quartz.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
 
 /**
- * @author weiwei Job执行上下文辅助类
+ * @author weiwei Task执行上下文辅助类
  */
-@SuppressWarnings("unchecked")
 public class TaskExecutionContextUtil {
     public static JobDataMap buildJobDataMapForTask(String taskModuleId, String taskParam, String linkageRule) {
         JobDataMap dataMap = new JobDataMap();
@@ -25,82 +20,31 @@ public class TaskExecutionContextUtil {
         return dataMap;
     }
 
-    public static TaskExecutionContext convert(JobExecutionContext context) {
-        try {
-            JobKey jobKey = context.getJobDetail().getKey();
-            Trigger trigger = context.getTrigger();
-            Scheduler scheduler = context.getScheduler();
-
-            TaskExecutionContext taskExecutionContext = new TaskExecutionContext();
-            taskExecutionContext.setTaskModuleId(getTaskModuleId(context));
-            taskExecutionContext.setParam(getTaskParam(context));
-            taskExecutionContext.setLinkageRule(getTaskLinkageRule(context));
-            taskExecutionContext.setSchedulerName(scheduler.getSchedulerName());
-            try {
-                taskExecutionContext.setSchedulerInstanceId(scheduler.getSchedulerInstanceId());
-            } catch (SchedulerException e) {
-                taskExecutionContext.setSchedulerInstanceId("unknown");
-            }
-            taskExecutionContext.setJobGroup(jobKey.getGroup());
-            taskExecutionContext.setJobName(jobKey.getName());
-            taskExecutionContext.setTriggerGroup(trigger.getKey().getGroup());
-            taskExecutionContext.setTriggerName(trigger.getKey().getName());
-            taskExecutionContext.setFireInstanceId(context.getFireInstanceId());
-            taskExecutionContext.setFireTime(context.getFireTime());
-            taskExecutionContext.setJobRunTime(context.getJobRunTime());
-            taskExecutionContext.setRefireCount(context.getRefireCount());
-            taskExecutionContext.setPreviousFireTime(context.getPreviousFireTime());
-            taskExecutionContext.setLogger(getLogger(context));
-            return taskExecutionContext;
-        } catch (SchedulerException e) {
-            throw new RuntimeException(e);
-        }
+    public static void setModuleExecutionResult(JobExecutionContext context, BasicExecutionResult result) {
+        context.setResult(result);
     }
 
-    public static void setTaskExecutionResult(JobExecutionContext context, TaskExecutionResult result) {
-        Map<String, Object> contextResultMap = getContextResultMap(context);
-        contextResultMap.put(Constants.JOB_EXEC_CONTEXT_RESULT_MAP_KEY_TASK_RESULT, result);
+    public static BasicExecutionResult getModuleExecutionResult(JobExecutionContext context) {
+        return (BasicExecutionResult) context.getResult();
     }
 
-    public static TaskExecutionResult getTaskExecutionResult(JobExecutionContext context) {
-        Map<String, Object> contextResultMap = getContextResultMap(context);
-        return (TaskExecutionResult) contextResultMap.get(Constants.JOB_EXEC_CONTEXT_RESULT_MAP_KEY_TASK_RESULT);
-    }
-
-    //获取任务参数
-    private static JSONObject getTaskParam(JobExecutionContext context) {
+    public static JSONObject getTaskParam(JobExecutionContext context) {
         JobDataMap mergedJobDataMap = context.getMergedJobDataMap();
         if (mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM) == null) {
-            return new JSONObject();
+            return null;
         }
         return JSONObject.parseObject(mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM));
     }
 
-    //获取任务组件ID
-    private static String getTaskModuleId(JobExecutionContext context) {
+    public static String getExecutorModuleId(JobExecutionContext context) {
         return context.getMergedJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID);
     }
 
-    //获取任务联动规则
-    private static JSONArray getTaskLinkageRule(JobExecutionContext context) {
-        JobDataMap mergedJobDataMap = context.getMergedJobDataMap();
-        if (StringUtils.isBlank(mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE))) {
+    public static JSONArray getLinkageRule(JobExecutionContext context) {
+        String linkageRuleString = context.getMergedJobDataMap().getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE);
+        if (StringUtils.isBlank(linkageRuleString)) {
             return null;
         }
-        return JSONObject.parseArray(mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE));
-    }
-
-    private static TaskExecutionLogger getLogger(JobExecutionContext context) {
-        Map<String, Object> contextResultMap = getContextResultMap(context);
-        return (TaskExecutionLogger) contextResultMap.computeIfAbsent(Constants.JOB_EXEC_CONTEXT_RESULT_MAP_KEY_TASK_LOG, k -> new TaskExecutionLogger());
-    }
-
-    private static Map<String, Object> getContextResultMap(JobExecutionContext context) {
-        Map<String, Object> result = (Map<String, Object>) context.getResult();
-        if (result == null) {
-            result = new HashMap<>();
-            context.setResult(result);
-        }
-        return result;
+        return JSONObject.parseArray(linkageRuleString);
     }
 }

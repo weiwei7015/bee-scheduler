@@ -1,11 +1,10 @@
 package com.bee.scheduler.taskmodule;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.AbstractTaskModule;
-import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionResult;
+import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,9 +14,7 @@ import java.sql.ResultSet;
 /**
  * @author weiwei 该组件提供链接Mysql数据库执行Sql的功能
  */
-public class SqlExecutorTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog("TaskLogger");
-
+public class SqlExecutorTaskModule implements ExecutorModule {
     @Override
     public String getId() {
         return "SqlExecutor";
@@ -53,8 +50,9 @@ public class SqlExecutorTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
+    public BasicExecutionResult exec(ExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
+        Log logger = context.getLogger();
 
         String url = taskParam.getString("url");
         String type = taskParam.getString("type");
@@ -104,7 +102,7 @@ public class SqlExecutorTaskModule extends AbstractTaskModule {
             }
         }
 
-        return TaskExecutionResult.success(data);
+        return BasicExecutionResult.success(data);
     }
 
 }

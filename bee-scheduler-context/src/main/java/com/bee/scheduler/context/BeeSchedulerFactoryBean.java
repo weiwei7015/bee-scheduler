@@ -17,7 +17,7 @@ public class BeeSchedulerFactoryBean implements FactoryBean<TaskScheduler>, Init
     }
 
     @Override
-    public TaskScheduler getObject() throws Exception {
+    public TaskScheduler getObject() {
         return this.scheduler;
     }
 

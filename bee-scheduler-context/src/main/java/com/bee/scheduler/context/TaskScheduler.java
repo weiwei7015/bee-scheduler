@@ -4,7 +4,8 @@ import com.bee.scheduler.context.common.Constants;
 import com.bee.scheduler.context.common.TaskFiredWay;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.exception.TaskSchedulerException;
-import com.bee.scheduler.context.executor.TaskExecutor;
+import com.bee.scheduler.context.executor.TaskExecutorProxy;
+import com.bee.scheduler.context.listener.support.ResolvedLinkageRule;
 import com.bee.scheduler.context.model.QuickTaskConfig;
 import com.bee.scheduler.context.model.TaskConfig;
 import org.apache.commons.lang3.ArrayUtils;
@@ -42,9 +43,14 @@ public class TaskScheduler {
         }
     }
 
+
+    public void scheduleLinkageTask(ResolvedLinkageRule.LinkageTaskConfig linkageTaskConfig) throws TaskSchedulerException {
+
+    }
+
     public void schedule(TaskConfig taskConfig) throws TaskSchedulerException {
         try {
-            JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(getJobKey(taskConfig.getGroup(), taskConfig.getName())).build();
+            JobDetail jobDetail = JobBuilder.newJob(TaskExecutorProxy.class).withIdentity(getJobKey(taskConfig.getGroup(), taskConfig.getName())).build();
 
             JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(taskConfig.getTaskModule(), taskConfig.getParams(), taskConfig.getLinkageRule());
             TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(getTriggerKeyOfScheduleWay(taskConfig.getGroup(), taskConfig.getName())).withDescription(taskConfig.getDescription()).usingJobData(jobDataMap);
@@ -394,7 +400,7 @@ public class TaskScheduler {
             String name = quickTaskConfig.getName();
             String group = TaskSpecialGroup.TMP.name();
 
-            JobDetail jobDetail = JobBuilder.newJob(TaskExecutor.class).withIdentity(name, group).build();
+            JobDetail jobDetail = JobBuilder.newJob(TaskExecutorProxy.class).withIdentity(name, group).build();
 
             JobDataMap jobDataMap = TaskExecutionContextUtil.buildJobDataMapForTask(quickTaskConfig.getTaskModule(), quickTaskConfig.getParams(), quickTaskConfig.getLinkageRule());
             OperableTrigger operableTrigger = (OperableTrigger) newTrigger().withIdentity(group + "." + name, TaskFiredWay.TMP.name()).usingJobData(jobDataMap).build();

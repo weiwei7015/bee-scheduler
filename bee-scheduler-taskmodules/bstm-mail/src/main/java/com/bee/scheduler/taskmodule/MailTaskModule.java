@@ -1,12 +1,11 @@
 package com.bee.scheduler.taskmodule;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.AbstractTaskModule;
-import com.bee.scheduler.core.TaskExecutionContext;
-import com.bee.scheduler.core.TaskExecutionResult;
+import com.bee.scheduler.core.BasicExecutionResult;
+import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -20,9 +19,8 @@ import java.util.Properties;
 /**
  * @author weiwei 用于发送邮件
  */
-public class MailTaskModule extends AbstractTaskModule {
-    private Log logger = LogFactory.getLog("TaskLogger");
-
+public class MailTaskModule implements ExecutorModule {
+    @Override
     public String getId() {
         return "MailTask";
     }
@@ -65,8 +63,10 @@ public class MailTaskModule extends AbstractTaskModule {
     }
 
     @Override
-    public TaskExecutionResult run(TaskExecutionContext context) throws Exception {
+    public BasicExecutionResult exec(ExecutionContext context) throws Exception {
         JSONObject taskParam = context.getParam();
+        Log logger = context.getLogger();
+
         //        String protocol = taskParam.getString("protocol");
         String protocol = "smtp";
         String smtpHost = taskParam.getString("smtp_host");
@@ -85,7 +85,7 @@ public class MailTaskModule extends AbstractTaskModule {
         recipientTo = StringUtils.trimToEmpty(recipientTo);
         if (StringUtils.isEmpty(recipientTo)) {
             logger.error("参数有误:recipients_to");
-            TaskExecutionResult.fail();
+            BasicExecutionResult.fail();
         }
         recipientCc = StringUtils.trimToEmpty(recipientCc);
 
@@ -126,6 +126,6 @@ public class MailTaskModule extends AbstractTaskModule {
         transport.sendMessage(message, message.getAllRecipients());
         transport.close();
 
-        return TaskExecutionResult.success();
+        return BasicExecutionResult.success();
     }
 }
