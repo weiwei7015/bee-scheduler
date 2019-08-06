@@ -3,7 +3,7 @@ package com.bee.scheduler.context.exception;
 /**
  * @author weiwei
  */
-public class ExecutorModuleNotFountException extends TaskSchedulerException {
+public class ExecutorModuleNotFountException extends RuntimeException {
     private final String executorModuleId;
 
     public ExecutorModuleNotFountException(String executorModuleId) {
