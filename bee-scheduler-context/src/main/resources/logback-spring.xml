@@ -2,13 +2,10 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <appender name="TaskLogger" class="com.bee.scheduler.context.listener.ThreadLocalTaskLoggerAppender"/>
-    <logger name="com.bee.scheduler.context.executor" level="INFO">
+    <logger name="com.bee.scheduler.context" level="INFO">
         <appender-ref ref="TaskLogger"/>
     </logger>
     <logger name="com.bee.scheduler.executor" level="INFO">
-        <appender-ref ref="TaskLogger"/>
-    </logger>
-    <logger name="com.bee.scheduler.context.listener" level="INFO">
         <appender-ref ref="TaskLogger"/>
     </logger>
     <logger name="TaskLogger" level="INFO">
