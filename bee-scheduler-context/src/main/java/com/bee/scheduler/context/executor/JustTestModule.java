@@ -1,8 +1,8 @@
 package com.bee.scheduler.context.executor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.logging.Log;
 
@@ -10,15 +10,15 @@ import org.apache.commons.logging.Log;
  * @author weiwei
  * 仅用于测试目的组件，简单地将content参数输出到日志
  */
-public class JustTestTaskModule implements ExecutorModule {
+public class JustTestModule implements ExecutorModule {
     @Override
     public String getId() {
-        return "JustTestTaskModule";
+        return "JustTestModule";
     }
 
     @Override
     public String getName() {
-        return "JustTestTaskModule";
+        return "JustTestModule";
     }
 
     @Override
