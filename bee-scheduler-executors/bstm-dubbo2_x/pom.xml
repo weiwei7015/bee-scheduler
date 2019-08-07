@@ -29,7 +29,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <TaskModuleClass>com.bee.scheduler.executor.DubboInvokerTaskModule</TaskModuleClass>
+                            <TaskModuleClass>com.bee.scheduler.executor.DubboGenericInvoker</TaskModuleClass>
                         </manifestEntries>
                         <compress>false</compress>
                     </archive>

@@ -1,9 +1,9 @@
 package com.bee.scheduler.executor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutionContext;
 import com.bee.scheduler.core.ExecutionException;
+import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.logging.Log;
 
@@ -15,15 +15,15 @@ import java.sql.ResultSet;
 /**
  * @author weiwei 该组件提供链接Mysql数据库执行Sql的功能
  */
-public class SqlExecutorTaskModule implements ExecutorModule {
+public class SqlExecutorModule implements ExecutorModule {
     @Override
     public String getId() {
-        return "SqlExecutor";
+        return "SqlExecutorModule";
     }
 
     @Override
     public String getName() {
-        return "SqlExecutor";
+        return "SqlExecutorModule";
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.bee.scheduler.executor;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutionContext;
+import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutorModule;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -17,15 +17,15 @@ import java.util.Properties;
 /**
  * @author weiwei 用于发送Kafka消息
  */
-public class KafkaProducerTaskModule implements ExecutorModule {
+public class KafkaProducerModule implements ExecutorModule {
     @Override
     public String getId() {
-        return "KafkaProducerTaskModule";
+        return "KafkaProducerModule";
     }
 
     @Override
     public String getName() {
-        return "KafkaProducerTaskModule";
+        return "KafkaProducerModule";
     }
 
     @Override

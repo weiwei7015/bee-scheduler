@@ -23,7 +23,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <TaskModuleClass>com.bee.scheduler.executor.MailTaskModule</TaskModuleClass>
+                            <TaskModuleClass>com.bee.scheduler.executor.MailModule</TaskModuleClass>
                         </manifestEntries>
                         <compress>false</compress>
                     </archive>

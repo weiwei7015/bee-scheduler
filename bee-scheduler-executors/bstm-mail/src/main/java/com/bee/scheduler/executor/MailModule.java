@@ -20,15 +20,15 @@ import java.util.Properties;
 /**
  * @author weiwei 用于发送邮件
  */
-public class MailTaskModule implements ExecutorModule {
+public class MailModule implements ExecutorModule {
     @Override
     public String getId() {
-        return "MailTask";
+        return "MailModule";
     }
 
     @Override
     public String getName() {
-        return "MailTask";
+        return "MailModule";
     }
 
     @Override

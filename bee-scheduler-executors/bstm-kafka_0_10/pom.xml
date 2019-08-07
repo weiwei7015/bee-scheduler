@@ -37,7 +37,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <TaskModuleClass>com.bee.scheduler.executor.KafkaProducerTaskModule</TaskModuleClass>
+                            <TaskModuleClass>com.bee.scheduler.executor.KafkaProducerModule</TaskModuleClass>
                         </manifestEntries>
                         <compress>false</compress>
                     </archive>
