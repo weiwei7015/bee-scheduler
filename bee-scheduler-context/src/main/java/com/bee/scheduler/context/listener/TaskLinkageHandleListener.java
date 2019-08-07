@@ -8,7 +8,6 @@ import com.bee.scheduler.context.common.Constants;
 import com.bee.scheduler.context.common.TaskFiredWay;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.listener.support.LinkageRuleResolver;
-import com.bee.scheduler.context.listener.support.ResolvedLinkageRule;
 import com.bee.scheduler.context.task.TaskExecutorProxy;
 import com.bee.scheduler.core.ExecutionResult;
 import org.apache.commons.lang3.StringUtils;
@@ -17,8 +16,6 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
 
 import java.util.Calendar;
-
-import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * @author weiwei
@@ -52,80 +49,49 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
             logger.info("解析联动配置: " + taskLinkageRule);
             for (int i = 0; i < taskLinkageRule.size(); i++) {
                 Object item = taskLinkageRule.get(i);
-                logger.info("处理联动配置" + (i + 1) + ": " + item.toString());
+                logger.info("处理联动配置" + (i + 1));
                 if (item instanceof String) {
                     String[] group$name = StringUtils.split(((String) item), ".");
-                    String group = group$name[0], name = group$name[1];
-
-                    JobKey nextJobKey = new JobKey(name, group);
-                    TriggerKey nextTriggerKey = new TriggerKey(group + "." + name, TaskFiredWay.SCHEDULE.name());
-                    Trigger nextTrigger = scheduler.getTrigger(nextTriggerKey);
-                    JobDataMap nextJobDataMap = nextTrigger.getJobDataMap();
-
-                    TriggerKey linkageTriggerKey = new TriggerKey(context.getFireInstanceId() + "_" + (i + 1), TaskFiredWay.LINKAGE.name());
-                    TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger().withIdentity(linkageTriggerKey).usingJobData(nextJobDataMap).forJob(nextJobKey);
-                    scheduler.scheduleJob(triggerBuilder.build());
-
-                    logger.info("已触发联动任务: " + group + "." + name);
+                    String taskGroup = group$name[0], taskName = group$name[1];
+                    TriggerKey fireTriggerKey = new TriggerKey(context.getFireInstanceId() + "_" + (i + 1), TaskFiredWay.LINKAGE.name());
+                    fireExistTask(context, fireTriggerKey, taskGroup, taskName, null);
                 } else if (item instanceof JSONObject) {
-                    //联动规则解析
-                    JSONObject contextVars = new JSONObject();
-                    if (taskModuleExecutionResult.getData() != null) {
-                        contextVars.putAll(taskModuleExecutionResult.getData());
-                    }
-                    ResolvedLinkageRule linkageRule = linkageRuleResolver.resolve((JSONObject) item, contextVars);
-                    if (!linkageRule.getCondition()) {
-                        logger.info("condition[ " + linkageRule.getConditionEl() + " ]计算结果false，取消联动");
-                        return;
-                    }
-                    if (linkageRule.getExports() != null) {
-                        contextVars.putAll(linkageRule.getExports());
-                    }
-                    String taskKey = linkageRule.getTaskGroup() + "." + linkageRule.getTaskName();
-
-                    if (linkageRule.getMode() == ResolvedLinkageRule.Mode.Trigger) {
-                        JobKey nextTaskJobKey = new JobKey(linkageRule.getTaskName(), linkageRule.getTaskGroup());
-                        Trigger nextTaskTrigger = scheduler.getTrigger(new TriggerKey(taskKey, TaskFiredWay.SCHEDULE.name()));
-                        JobDataMap nextTaskJobDataMap = nextTaskTrigger.getJobDataMap();
-
-                        TriggerBuilder triggerBuilder = newTrigger().withIdentity(context.getFireInstanceId() + "_" + (i + 1), TaskFiredWay.LINKAGE.name()).usingJobData(nextTaskJobDataMap).forJob(nextTaskJobKey);
-                        if (linkageRule.getDelay() != null) {
-                            Calendar startTime = Calendar.getInstance();
-                            startTime.add(Calendar.MILLISECOND, linkageRule.getDelay());
-                            triggerBuilder.startAt(startTime.getTime());
-                            scheduler.scheduleJob(triggerBuilder.build());
-                            logger.info("联动任务[ " + taskKey + " ]将在 " + linkageRule.getDelay() + " ms后开始执行");
-                        } else {
-                            scheduler.scheduleJob(triggerBuilder.build());
-                            logger.info("联动任务[ " + taskKey + " ]已触发");
+                    JSONObject linkageRule = (JSONObject) item;
+                    if (expressionPlaceholderHandler.containsExpression(linkageRule.toString())) {
+                        logger.info("联动包含表达式,开始计算表达式");
+                        //联动规则解析
+                        JSONObject contextVars = new JSONObject();
+                        if (taskModuleExecutionResult.getData() != null) {
+                            contextVars.putAll(taskModuleExecutionResult.getData());
                         }
+                        linkageRule = JSONObject.parseObject(expressionPlaceholderHandler.handle(linkageRule.toString(), contextVars));
+                        logger.info("解析后的任务参数:" + linkageRule);
+                    }
+
+                    Long delay = linkageRule.getLong("delay");
+                    Object task = linkageRule.get("task");
+                    Boolean condition = linkageRule.getBoolean("condition");
+
+                    if (condition == null || !condition) {
+                        logger.info("condition结算结果为false，取消执行联动任务：" + task);
+                        continue;
+                    }
+
+                    if (task instanceof String) {
+                        String[] group$name = StringUtils.split(((String) task), ".");
+                        String taskGroup = group$name[0], taskName = group$name[1];
+                        TriggerKey fireTriggerKey = new TriggerKey(context.getFireInstanceId() + "_" + (i + 1), TaskFiredWay.LINKAGE.name());
+                        fireExistTask(context, fireTriggerKey, taskGroup, taskName, delay);
+                    } else if (task instanceof JSONObject) {
+                        JSONObject taskConfig = (JSONObject) task;
+                        String nextTaskGroup = TaskSpecialGroup.LINKTMP.name();
+                        String nextTaskName = context.getFireInstanceId() + "_" + (i + 1);
+                        scheduleNewTask(context, taskConfig, nextTaskGroup, nextTaskName, delay);
                     } else {
-                        ResolvedLinkageRule.LinkageTaskConfig linkageTaskConfig = linkageRule.getLinkageTaskConfig();
-
-                        if (expressionPlaceholderHandler.containsExpression(linkageTaskConfig.getParams().toString())) {
-                            logger.info("任务参数包含表达式,开始计算表达式");
-                            String resolveParams = expressionPlaceholderHandler.handle(linkageTaskConfig.getParams().toString(), contextVars);
-                            linkageTaskConfig.setParams(JSONObject.parseObject(resolveParams));
-                            logger.info("解析后的任务参数:" + linkageTaskConfig.getParams());
-                        }
-
-                        String group = TaskSpecialGroup.LINKTMP.name();
-                        String name = context.getFireInstanceId() + "_" + (i + 1);
-                        JobDetail jobDetail = JobBuilder.newJob(TaskExecutorProxy.class).withIdentity(name, group).build();
-                        JobDataMap jobDataMap = new JobDataMap();
-                        jobDataMap.put(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID, linkageTaskConfig.getTaskModule());
-                        jobDataMap.put(Constants.TRIGGER_DATA_KEY_TASK_PARAM, linkageTaskConfig.getParams());
-                        jobDataMap.put(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE, linkageTaskConfig.getLinkageRule());
-
-                        TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger().withIdentity(group + "." + name, TaskFiredWay.LINKAGE.name()).usingJobData(jobDataMap);
-                        if (linkageRule.getDelay() != null) {
-                            Calendar startTime = Calendar.getInstance();
-                            startTime.add(Calendar.MILLISECOND, linkageRule.getDelay());
-                            triggerBuilder.startAt(startTime.getTime());
-                        }
-                        scheduler.scheduleJob(jobDetail, triggerBuilder.build());
-                        logger.info("联动任务[ " + taskKey + " ]将在 " + linkageRule.getDelay() + " ms后开始执行");
+                        logger.error("无效的联动配置:" + task);
                     }
+                } else {
+                    logger.error("无效的联动配置:" + item);
                 }
             }
             logger.info("联动任务处理完成");
@@ -134,5 +100,48 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
         }
     }
 
+    private void scheduleNewTask(JobExecutionContext context, JSONObject taskConfig, String taskGroup, String taskName, Long delay) throws SchedulerException {
+        Scheduler scheduler = context.getScheduler();
 
+        String executorModule = taskConfig.getString("taskModule");
+        String taskParams = taskConfig.getString("params");
+        String linkageRule = taskConfig.getString("linkageRule");
+
+        JobDetail jobDetail = JobBuilder.newJob(TaskExecutorProxy.class).withIdentity(taskName, taskGroup).build();
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID, executorModule);
+        jobDataMap.put(Constants.TRIGGER_DATA_KEY_TASK_PARAM, taskParams);
+        jobDataMap.put(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE, linkageRule);
+
+        TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskGroup + "." + taskName, TaskFiredWay.LINKAGE.name()).usingJobData(jobDataMap);
+        if (delay != null) {
+            Calendar startTime = Calendar.getInstance();
+            startTime.add(Calendar.MILLISECOND, delay.intValue());
+            triggerBuilder.startAt(startTime.getTime());
+            scheduler.scheduleJob(jobDetail, triggerBuilder.build());
+            logger.info("联动任务[ " + taskGroup + "." + taskName + " ]将在 " + delay + " ms后开始执行");
+        } else {
+            scheduler.scheduleJob(jobDetail, triggerBuilder.build());
+            logger.info("已触发任务: " + taskGroup + "." + taskName);
+        }
+    }
+
+    private void fireExistTask(JobExecutionContext context, TriggerKey fireTriggerKey, String taskGroup, String taskName, Long delay) throws SchedulerException {
+        Scheduler scheduler = context.getScheduler();
+        JobKey targetTaskJobKey = new JobKey(taskName, taskGroup);
+        TriggerKey targetTaskTriggerKey = new TriggerKey(taskGroup + "." + taskName, TaskFiredWay.SCHEDULE.name());
+        Trigger targetTaskTrigger = scheduler.getTrigger(targetTaskTriggerKey);
+        JobDataMap targetTaskTriggerDataMap = targetTaskTrigger.getJobDataMap();
+        TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger().withIdentity(fireTriggerKey).usingJobData(targetTaskTriggerDataMap).forJob(targetTaskJobKey);
+        if (delay != null) {
+            Calendar startTime = Calendar.getInstance();
+            startTime.add(Calendar.MILLISECOND, delay.intValue());
+            triggerBuilder.startAt(startTime.getTime());
+            scheduler.scheduleJob(triggerBuilder.build());
+            logger.info("联动任务[ " + taskGroup + "." + taskName + " ]将在 " + delay + " ms后开始执行");
+        } else {
+            scheduler.scheduleJob(triggerBuilder.build());
+            logger.info("已触发任务: " + taskGroup + "." + taskName);
+        }
+    }
 }

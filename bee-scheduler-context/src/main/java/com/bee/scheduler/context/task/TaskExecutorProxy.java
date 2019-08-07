@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.ExpressionPlaceholderHandler;
 import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.context.common.Constants;
-import com.bee.scheduler.core.ExecutionException;
 import com.bee.scheduler.context.exception.ExecutorModuleNotFountException;
+import com.bee.scheduler.core.ExecutionException;
 import com.bee.scheduler.core.ExecutionResult;
 import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
@@ -67,11 +67,7 @@ public class TaskExecutorProxy implements Job {
         if (StringUtils.isNotBlank(paramString)) {
             if (expressionPlaceholderHandler.containsExpression(paramString)) {
                 logger.info("任务参数包含表达式,开始计算表达式");
-                JSONObject variables = new JSONObject();
-                variables.put("time", new Date());
-                variables.put("jsonObject", new JSONObject());
-                variables.put("jsonArray", new JSONArray());
-                paramString = expressionPlaceholderHandler.handle(paramString, variables);
+                paramString = expressionPlaceholderHandler.handle(paramString, null);
                 logger.info("解析后的任务参数:" + paramString);
             }
             param = JSONObject.parseObject(paramString);

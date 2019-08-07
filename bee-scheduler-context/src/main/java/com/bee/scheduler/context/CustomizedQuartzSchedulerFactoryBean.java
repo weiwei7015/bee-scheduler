@@ -1,9 +1,6 @@
 package com.bee.scheduler.context;
 
-import com.bee.scheduler.context.listener.BindingTaskLoggerOnThreadLocalListener;
-import com.bee.scheduler.context.listener.TaskHistoryListener;
-import com.bee.scheduler.context.listener.TaskListenerSupport;
-import com.bee.scheduler.context.listener.VetoDangerousTaskListener;
+import com.bee.scheduler.context.listener.*;
 import org.quartz.ListenerManager;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -69,7 +66,7 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
         Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
         taskListenerList.add(new BindingTaskLoggerOnThreadLocalListener());
         taskListenerList.add(new VetoDangerousTaskListener());
-//        taskListenerList.add(new TaskLinkageHandleListener());
+        taskListenerList.add(new TaskLinkageHandleListener());
         taskListenerList.add(new TaskHistoryListener());
 
         ListenerManager listenerManager = scheduler.getListenerManager();
