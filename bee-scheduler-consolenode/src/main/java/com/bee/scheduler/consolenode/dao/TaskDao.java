@@ -30,11 +30,11 @@ public class TaskDao extends AbstractDao {
         StringBuilder sqlWhere = new StringBuilder(" WHERE t1.SCHED_NAME = ?");
         args.add(schedulerName);
         if (name != null) {
-            sqlWhere.append(" AND t1.TRIGGER_NAME LIKE ?");
+            sqlWhere.append(" AND t1.JOB_NAME LIKE ?");
             args.add("%" + name + "%");
         }
         if (group != null) {
-            sqlWhere.append(" AND t1.TRIGGER_GROUP = ?");
+            sqlWhere.append(" AND t1.JOB_GROUP = ?");
             args.add(group);
         }
         if (state != null) {
