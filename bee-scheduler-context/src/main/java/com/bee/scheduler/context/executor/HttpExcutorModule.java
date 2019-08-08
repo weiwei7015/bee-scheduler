@@ -49,7 +49,7 @@ public class HttpExcutorModule implements ExecutorModule {
                 "    url:\"\",\r" +
                 "    method:\"get\",\r" +
                 "    timeout:5000,\r" +
-                "    headers:\"{name:'value'}\",\r" +
+                "    headers:{name:\"value\"},\r" +
                 "    body:\"\"\r" +
                 "}";
     }

@@ -10,7 +10,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <revision>2.2.0-RELEASE</revision>
+        <revision>2.3.0-RELEASE</revision>
     </properties>
 
     <groupId>com.bee.scheduler</groupId>
