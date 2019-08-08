@@ -111,10 +111,6 @@ public class HttpExcutorModule implements ExecutorModule {
         JSONObject data = new JSONObject();
         data.put("response_status", responseStatus);
         data.put("response_content", result.toString());
-        if (responseStatus == 200) {
-            return ExecutionResult.success(data);
-        } else {
-            return ExecutionResult.fail(data);
-        }
+        return ExecutionResult.success(data);
     }
 }

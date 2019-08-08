@@ -41,12 +41,13 @@ public class TaskHistoryListener extends TaskListenerSupport {
 
             ExecutionResult moduleExecutionResult = TaskExecutionContextUtil.getModuleExecutionResult(context);
 
-            String execState;
-            if (jobException != null) {
-                execState = TaskExecState.FAIL.name();
-            } else {
-                execState = moduleExecutionResult == null ? "UNKNOWN" : moduleExecutionResult.isSuccess() ? TaskExecState.SUCCESS.name() : TaskExecState.FAIL.name();
-            }
+            String execState = jobException != null ? TaskExecState.SUCCESS.name() : TaskExecState.FAIL.name();
+//            if (jobException != null) {
+//                execState = TaskExecState.FAIL.name();
+//            } else {
+//                execState = moduleExecutionResult == null ? "UNKNOWN" : moduleExecutionResult.isSuccess() ? TaskExecState.SUCCESS.name() : TaskExecState.FAIL.name();
+//            }
+
 
             // 记录执行历史
             TaskHistory taskHistory = new TaskHistory();
