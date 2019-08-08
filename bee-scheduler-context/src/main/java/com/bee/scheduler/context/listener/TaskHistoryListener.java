@@ -1,6 +1,8 @@
 package com.bee.scheduler.context.listener;
 
+import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.context.common.TaskExecState;
+import com.bee.scheduler.core.ExecutionResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
@@ -37,6 +39,15 @@ public class TaskHistoryListener extends TaskListenerSupport {
             String schedulerName = scheduler.getSchedulerName();
             Date now = Calendar.getInstance().getTime();
 
+            ExecutionResult moduleExecutionResult = TaskExecutionContextUtil.getModuleExecutionResult(context);
+
+            String execState;
+            if (jobException != null) {
+                execState = TaskExecState.FAIL.name();
+            } else {
+                execState = moduleExecutionResult == null ? "UNKNOWN" : moduleExecutionResult.isSuccess() ? TaskExecState.SUCCESS.name() : TaskExecState.FAIL.name();
+            }
+
             // 记录执行历史
             TaskHistory taskHistory = new TaskHistory();
             taskHistory.setSchedName(schedulerName);
@@ -49,7 +60,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
             taskHistory.setCompleteTime(now.getTime());
             taskHistory.setExpendTime(context.getJobRunTime());
             taskHistory.setRefired(context.getRefireCount());
-            taskHistory.setExecState(jobException == null ? TaskExecState.SUCCESS.name() : TaskExecState.FAIL.name());
+            taskHistory.setExecState(execState);
             taskHistory.setLog(getTaskLog());
 
             save(taskHistory);
