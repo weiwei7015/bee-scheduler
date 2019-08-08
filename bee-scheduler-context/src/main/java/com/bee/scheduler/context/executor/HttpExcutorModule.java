@@ -93,24 +93,28 @@ public class HttpExcutorModule implements ExecutorModule {
 
         //响应状态码
         int responseStatus = connection.getResponseCode();
-        //响应内容
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-        StringBuilder result = new StringBuilder();
-        String temp;
-        while ((temp = bufferedReader.readLine()) != null) {
-            if (result.length() >= 600) {
-                result.append("...").append("\r");
-                break;
-            }
-            result.append(temp).append("\r");
-        }
-        bufferedReader.close();
+        StringBuilder responseContent = new StringBuilder();
 
+
+        //响应内容
+        if (responseStatus == 200) {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+            String temp;
+            while ((temp = bufferedReader.readLine()) != null) {
+                if (responseContent.length() >= 600) {
+                    responseContent.append("...").append("\r");
+                    break;
+                }
+                responseContent.append(temp).append("\r");
+            }
+            bufferedReader.close();
+        }
+        
         logger.info("response status: " + responseStatus);
 
         JSONObject data = new JSONObject();
         data.put("response_status", responseStatus);
-        data.put("response_content", result.toString());
+        data.put("response_content", responseContent.toString());
         return ExecutionResult.success(data);
     }
 }
