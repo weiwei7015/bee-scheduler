@@ -13,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 /**
  * @author weiwei 用于发起HTTP请求
@@ -72,15 +73,15 @@ public class HttpExcutorModule implements ExecutorModule {
         connection.setDoInput(true);
 
         //请求头
-        Object headers = taskParam.get("headers");
-        if (headers instanceof JSONObject) {
-            ((JSONObject) headers).forEach((k, v) -> {
+        JSONObject headers = taskParam.getJSONObject("headers");
+        Optional.ofNullable(headers).ifPresent(value -> {
+            value.forEach((k, v) -> {
                 connection.setRequestProperty(k, String.valueOf(v));
             });
-        }
+        });
 
         //body
-        if (body != null) {
+        if (StringUtils.isNotBlank(body)) {
             try (OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8)) {
                 out.append(body);
                 out.flush();
