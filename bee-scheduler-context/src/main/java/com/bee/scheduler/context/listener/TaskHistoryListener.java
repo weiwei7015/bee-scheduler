@@ -41,7 +41,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
 
             ExecutionResult moduleExecutionResult = TaskExecutionContextUtil.getModuleExecutionResult(context);
 
-            String execState = jobException != null ? TaskExecState.SUCCESS.name() : TaskExecState.FAIL.name();
+            String execState = jobException != null ? TaskExecState.FAIL.name() : TaskExecState.SUCCESS.name();
 //            if (jobException != null) {
 //                execState = TaskExecState.FAIL.name();
 //            } else {
