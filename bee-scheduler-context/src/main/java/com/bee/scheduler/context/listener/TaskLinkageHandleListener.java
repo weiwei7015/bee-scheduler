@@ -78,7 +78,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                     Object task = linkageRule.get("task");
                     Boolean condition = linkageRule.getBoolean("condition");
 
-                    if (condition == null || !condition) {
+                    if (condition != null && !condition) {
                         logger.info("condition结算结果为false，取消执行联动任务：" + (i + 1));
                         continue;
                     }
