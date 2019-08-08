@@ -27,7 +27,7 @@ public class TaskDao extends AbstractDao {
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
         StringBuilder sqlQueryResult = new StringBuilder("SELECT t1.JOB_NAME 'name',t1.JOB_GROUP 'group',t1.TRIGGER_TYPE 'triggerType',t2.JOB_CLASS_NAME 'jobComponent',t1.JOB_DATA 'data',t1.TRIGGER_STATE 'state',t1.PREV_FIRE_TIME 'prevFireTime',t1.NEXT_FIRE_TIME 'nextFireTime',t1.START_TIME 'startTime',t1.END_TIME 'endTime',t1.MISFIRE_INSTR 'misfireInstr',t1.DESCRIPTION 'description' FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.SCHED_NAME = t2.SCHED_NAME AND t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
 
-        StringBuilder sqlWhere = new StringBuilder(" WHERE t1.SCHED_NAME = ?");
+        StringBuilder sqlWhere = new StringBuilder(" WHERE t1.SCHED_NAME = ? AND t1.TRIGGER_GROUP NOT IN('TMP','LINKAGE')");
         args.add(schedulerName);
         if (name != null) {
             sqlWhere.append(" AND t1.JOB_NAME LIKE ?");
