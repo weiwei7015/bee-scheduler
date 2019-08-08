@@ -28,10 +28,10 @@
                 <div class="hr"></div>
                 <el-form-item label="调度方式" prop="scheduleType">
                     <el-radio-group v-model="editTaskFormModel.scheduleType">
-                        <el-radio :label="1">SimpleTrigger</el-radio>
-                        <el-radio :label="2">CalendarIntervalTrigger</el-radio>
-                        <el-radio :label="3">DailyTimeIntervalTrigger</el-radio>
-                        <el-radio :label="4">CronTrigger</el-radio>
+                        <el-radio :label="1">Simple</el-radio>
+                        <el-radio :label="2">CalendarInterval</el-radio>
+                        <el-radio :label="3">DailyTimeInterval</el-radio>
+                        <el-radio :label="4">Cron</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <template v-if="editTaskFormModel.scheduleType == 1"><!--Simple-->
