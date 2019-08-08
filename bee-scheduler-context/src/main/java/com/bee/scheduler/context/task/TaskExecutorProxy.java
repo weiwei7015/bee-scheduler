@@ -12,10 +12,7 @@ import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.quartz.Job;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.*;
 
 import java.util.Date;
 
@@ -66,7 +63,15 @@ public class TaskExecutorProxy implements Job {
         if (StringUtils.isNotBlank(paramString)) {
             if (expressionPlaceholderHandler.containsExpression(paramString)) {
                 logger.info("任务参数包含表达式,开始计算表达式");
-                paramString = expressionPlaceholderHandler.handle(paramString, null);
+                JobKey jobKey = context.getJobDetail().getKey();
+                //全局参数
+                JSONObject variables = new JSONObject();
+                variables.put("taskGroup", jobKey.getGroup());
+                variables.put("taskName", jobKey.getName());
+                variables.put("time", new Date());
+                variables.put("jsonObject", new JSONObject());
+                variables.put("jsonArray", new JSONArray());
+                paramString = expressionPlaceholderHandler.handle(paramString, variables);
                 logger.info("解析后的任务参数:" + paramString);
             }
             param = JSONObject.parseObject(paramString);
@@ -75,15 +80,15 @@ public class TaskExecutorProxy implements Job {
         String linkageRuleString = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE);
         JSONArray linkageRule = null;
         if (StringUtils.isNotBlank(linkageRuleString)) {
-            if (expressionPlaceholderHandler.containsExpression(linkageRuleString)) {
-                logger.info("任务参数包含表达式,开始计算表达式");
-                JSONObject variables = new JSONObject();
-                variables.put("time", new Date());
-                variables.put("jsonObject", new JSONObject());
-                variables.put("jsonArray", new JSONArray());
-                linkageRuleString = expressionPlaceholderHandler.handle(linkageRuleString, variables);
-                logger.info("解析后的任务参数:" + linkageRuleString);
-            }
+//            if (expressionPlaceholderHandler.containsExpression(linkageRuleString)) {
+//                logger.info("任务参数包含表达式,开始计算表达式");
+//                JSONObject variables = new JSONObject();
+//                variables.put("time", new Date());
+//                variables.put("jsonObject", new JSONObject());
+//                variables.put("jsonArray", new JSONArray());
+//                linkageRuleString = expressionPlaceholderHandler.handle(linkageRuleString, variables);
+//                logger.info("解析后的任务参数:" + linkageRuleString);
+//            }
             linkageRule = JSONObject.parseArray(linkageRuleString);
         }
         return new TaskExecutionContext(context, executorModuleId, param, linkageRule);

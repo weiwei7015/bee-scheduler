@@ -22,11 +22,6 @@ public class ExpressionPlaceholderHandler {
 
     public String handle(String originText, JSONObject variables) {
         EvaluationContext evaluationContext = new StandardEvaluationContext();
-        //全局参数
-        evaluationContext.setVariable("time", new Date());
-        evaluationContext.setVariable("jsonObject", new JSONObject());
-        evaluationContext.setVariable("jsonArray", new JSONArray());
-        //上下文参数
         if (variables != null) {
             variables.keySet().forEach(key -> {
                 evaluationContext.setVariable(key, variables.get(key));

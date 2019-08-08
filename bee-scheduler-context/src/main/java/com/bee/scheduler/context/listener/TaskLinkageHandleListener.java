@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author weiwei
@@ -48,7 +49,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
             logger.info("解析联动配置: " + taskLinkageRule);
             for (int i = 0; i < taskLinkageRule.size(); i++) {
                 Object item = taskLinkageRule.get(i);
-                logger.info("处理联动配置" + (i + 1));
+                logger.info("处理联动配置: " + (i + 1));
                 if (item instanceof String) {
                     String[] group$name = StringUtils.split(((String) item), ".");
                     String taskGroup = group$name[0], taskName = group$name[1];
@@ -59,7 +60,13 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                     if (expressionPlaceholderHandler.containsExpression(linkageRule.toString())) {
                         logger.info("联动包含表达式,开始计算表达式");
                         //联动规则解析
+                        JobKey mainJobKey = context.getJobDetail().getKey();
                         JSONObject contextVars = new JSONObject();
+                        contextVars.put("taskGroup", mainJobKey.getGroup());
+                        contextVars.put("taskName", mainJobKey.getName());
+                        contextVars.put("time", new Date());
+                        contextVars.put("jsonObject", new JSONObject());
+                        contextVars.put("jsonArray", new JSONArray());
                         if (taskModuleExecutionResult.getData() != null) {
                             contextVars.putAll(taskModuleExecutionResult.getData());
                         }
@@ -72,7 +79,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                     Boolean condition = linkageRule.getBoolean("condition");
 
                     if (condition == null || !condition) {
-                        logger.info("condition结算结果为false，取消执行联动任务：" + task);
+                        logger.info("condition结算结果为false，取消执行联动任务：" + (i + 1));
                         continue;
                     }
 
