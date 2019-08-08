@@ -164,7 +164,7 @@ div.spr {
 }
 
 .font-code, .font-code textarea, .font-code input {
-    font-family: "InputMono", "Consolas", "Monaco", "Menlo", sans-serif !important;
+    font-family: "generic-font", "InputMono", "Consolas", "Monaco", "Menlo", sans-serif !important;
 }
 
 .text-bold {

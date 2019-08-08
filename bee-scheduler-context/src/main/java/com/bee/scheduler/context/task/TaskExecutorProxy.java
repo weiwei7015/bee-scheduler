@@ -32,8 +32,6 @@ public class TaskExecutorProxy implements Job {
         try {
             TaskExecutionContext taskExecutionContext = prepareExecutionContext(context);
 
-            logger.info("任务参数:" + taskExecutionContext.getParam().toString());
-
             ExecutorModule taskModule = TaskModuleRegistry.get(taskExecutionContext.getExecutorModuleId());
             if (taskModule == null) {
                 throw new ExecutorModuleNotFountException(taskExecutionContext.getExecutorModuleId());
@@ -63,6 +61,7 @@ public class TaskExecutorProxy implements Job {
         String executorModuleId = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID);
         //任务参数
         String paramString = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM);
+        logger.info("任务参数:" + paramString);
         JSONObject param = null;
         if (StringUtils.isNotBlank(paramString)) {
             if (expressionPlaceholderHandler.containsExpression(paramString)) {

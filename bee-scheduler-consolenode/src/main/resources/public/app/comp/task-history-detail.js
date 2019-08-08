@@ -19,7 +19,7 @@ define(['text!comp/task-history-detail.html', 'css!./task-history-detail.css'], 
         },
         methods: {
             formatLogContent: function (logContent) {
-                return String(logContent).replace(/\r/g, "\n").replace(/(^\[WARN.*)/g, "<span class='text-warning'>$1</span>").replace(/(\[ERROR.*)/g, "<span class='text-danger'>$1</span>");
+                return String(logContent).replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r/g, "\n").replace(/(^\[WARN.*)/g, "<span class='text-warning'>$1</span>").replace(/(\[ERROR.*)/g, "<span class='text-danger'>$1</span>");
             }
         }
     };

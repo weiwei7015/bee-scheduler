@@ -20,6 +20,7 @@
         <div>时间：{{$moment(taskHistoryDetail.firedTime).format("YYYY-MM-DD HH:mm:ss")}} | 触发方式：{{taskHistoryDetail.firedWay}} | 执行节点：{{taskHistoryDetail.instanceId}} | 耗时：<span :class="{'text-danger text-bold':taskHistoryDetail.expendTime > 500}">{{taskHistoryDetail.expendTime}}ms</span></div>
         <div class="spr"></div>
         <div>
+            <!--            <textarea readonly class="log">{{formatLogContent(taskHistoryDetail.log)}}</textarea>-->
             <pre class="log" v-html="formatLogContent(taskHistoryDetail.log)"></pre>
         </div>
     </div>

@@ -2,7 +2,7 @@ pre.log {
     background-color: #000;
     color: #fff;
     display: block;
-    padding: 9.5px;
+    padding: 10px;
     margin: 0 0 10px;
     font-size: 13px;
     line-height: 20px;
@@ -12,4 +12,5 @@ pre.log {
     white-space: pre-wrap;
     /*border: 1px solid #ccc;*/
     border-radius: 3px;
+    font-family: "generic-font";
 }
