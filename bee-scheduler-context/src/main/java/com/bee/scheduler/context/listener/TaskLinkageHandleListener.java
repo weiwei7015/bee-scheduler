@@ -33,7 +33,6 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
-        Scheduler scheduler = context.getScheduler();
         JSONArray taskLinkageRule = TaskExecutionContextUtil.getLinkageRule(context);
         ExecutionResult taskModuleExecutionResult = TaskExecutionContextUtil.getModuleExecutionResult(context);
 

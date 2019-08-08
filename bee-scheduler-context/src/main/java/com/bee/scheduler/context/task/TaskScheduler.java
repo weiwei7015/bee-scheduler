@@ -5,7 +5,6 @@ import com.bee.scheduler.context.common.Constants;
 import com.bee.scheduler.context.common.TaskFiredWay;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.exception.TaskSchedulerException;
-import com.bee.scheduler.context.task.TaskExecutorProxy;
 import com.bee.scheduler.context.listener.support.ResolvedLinkageRule;
 import com.bee.scheduler.context.model.QuickTaskConfig;
 import com.bee.scheduler.context.model.TaskConfig;

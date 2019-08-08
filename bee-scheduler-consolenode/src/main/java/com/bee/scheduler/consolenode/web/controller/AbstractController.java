@@ -1,6 +1,5 @@
 package com.bee.scheduler.consolenode.web.controller;
 
-import com.bee.scheduler.consolenode.model.UserLoginSession;
 import com.bee.scheduler.consolenode.model.UserPassport;
 import com.bee.scheduler.consolenode.util.Constants;
 import org.apache.commons.logging.Log;
