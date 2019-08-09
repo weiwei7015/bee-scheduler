@@ -25,30 +25,34 @@ public class TaskExecutorProxy implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("开始执行任务:" + context.getJobDetail().getKey());
+        logger.info("开始执行任务 -> " + context.getJobDetail().getKey());
+        logger.info("任务参数 -> " + TaskExecutionContextUtil.getTaskParam(context));
+        ExecutionResult result = null;
         try {
             TaskExecutionContext taskExecutionContext = prepareExecutionContext(context);
-
             ExecutorModule taskModule = TaskModuleRegistry.get(taskExecutionContext.getExecutorModuleId());
             if (taskModule == null) {
                 throw new ExecutorModuleNotFountException(taskExecutionContext.getExecutorModuleId());
             }
-            ExecutionResult result = taskModule.exec(taskExecutionContext);
-            logger.info("任务结果:" + result.getData().toJSONString());
+            result = taskModule.exec(taskExecutionContext);
             logger.info("执行任务" + (result.isSuccess() ? "成功" : "失败"));
             TaskExecutionContextUtil.setModuleExecutionResult(context, result);
         } catch (ExecutorModuleNotFountException e) {
             logger.error("未找到组件: " + e.getExecutorModuleId());
-            TaskExecutionContextUtil.setModuleExecutionResult(context, ExecutionResult.fail());
+            TaskExecutionContextUtil.setModuleExecutionResult(context, result = ExecutionResult.fail());
             throw new JobExecutionException("未找到组件:" + e.getExecutorModuleId());
         } catch (ExecutionException e) {
             logger.error("任务执行失败:" + e.getMessage());
-            TaskExecutionContextUtil.setModuleExecutionResult(context, ExecutionResult.fail());
+            TaskExecutionContextUtil.setModuleExecutionResult(context, result = ExecutionResult.fail());
             throw new JobExecutionException(e);
         } catch (Throwable e) {
             logger.error("任务执行异常", e);
-            TaskExecutionContextUtil.setModuleExecutionResult(context, ExecutionResult.fail());
+            TaskExecutionContextUtil.setModuleExecutionResult(context, result = ExecutionResult.fail());
             throw new JobExecutionException(e);
+        } finally {
+            if (result != null) {
+                logger.info("任务结果 -> isSuccess:" + result.isSuccess() + ", data:" + result.getData().toJSONString());
+            }
         }
     }
 
@@ -58,7 +62,6 @@ public class TaskExecutorProxy implements Job {
         String executorModuleId = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_MODULE_ID);
         //任务参数
         String paramString = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_PARAM);
-        logger.info("任务参数:" + paramString);
         JSONObject param = null;
         if (StringUtils.isNotBlank(paramString)) {
             if (expressionPlaceholderHandler.containsExpression(paramString)) {
@@ -78,19 +81,7 @@ public class TaskExecutorProxy implements Job {
         }
         //联动规则
         String linkageRuleString = mergedJobDataMap.getString(Constants.TRIGGER_DATA_KEY_TASK_LINKAGE_RULE);
-        JSONArray linkageRule = null;
-        if (StringUtils.isNotBlank(linkageRuleString)) {
-//            if (expressionPlaceholderHandler.containsExpression(linkageRuleString)) {
-//                logger.info("任务参数包含表达式,开始计算表达式");
-//                JSONObject variables = new JSONObject();
-//                variables.put("time", new Date());
-//                variables.put("jsonObject", new JSONObject());
-//                variables.put("jsonArray", new JSONArray());
-//                linkageRuleString = expressionPlaceholderHandler.handle(linkageRuleString, variables);
-//                logger.info("解析后的任务参数:" + linkageRuleString);
-//            }
-            linkageRule = JSONObject.parseArray(linkageRuleString);
-        }
+        JSONArray linkageRule = StringUtils.isBlank(linkageRuleString) ? null : JSONObject.parseArray(linkageRuleString);
         return new TaskExecutionContext(context, executorModuleId, param, linkageRule);
     }
 }

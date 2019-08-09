@@ -44,7 +44,7 @@ public class TaskDao extends AbstractDao {
         // 查询记录总数
         Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());
         // 查询记录
-        sqlQueryResult.append(sqlWhere).append(" ORDER BY t1.NEXT_FIRE_TIME ASC LIMIT ?,?");
+        sqlQueryResult.append(sqlWhere).append(" ORDER BY t1.JOB_GROUP,t1.JOB_NAME ASC LIMIT ?,?");
         args.add((page - 1) * DEFAULT_PAGE_SIZE);
         args.add(DEFAULT_PAGE_SIZE);
 

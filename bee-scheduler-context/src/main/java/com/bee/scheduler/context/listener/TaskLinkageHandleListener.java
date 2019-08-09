@@ -60,13 +60,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                     if (expressionPlaceholderHandler.containsExpression(linkageRule.toString())) {
                         logger.info("联动包含表达式,开始计算表达式");
                         //联动规则解析
-                        JobKey mainJobKey = context.getJobDetail().getKey();
-                        JSONObject contextVars = new JSONObject();
-                        contextVars.put("taskGroup", mainJobKey.getGroup());
-                        contextVars.put("taskName", mainJobKey.getName());
-                        contextVars.put("time", new Date());
-                        contextVars.put("jsonObject", new JSONObject());
-                        contextVars.put("jsonArray", new JSONArray());
+                        JSONObject contextVars = prepareVariables(context, jobException);
                         if (taskModuleExecutionResult.getData() != null) {
                             contextVars.putAll(taskModuleExecutionResult.getData());
                         }
@@ -104,6 +98,20 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
         } catch (Exception e) {
             logger.error("处理联动任务异常", e);
         }
+    }
+
+    private JSONObject prepareVariables(JobExecutionContext context, JobExecutionException jobException) {
+        JobKey mainJobKey = context.getJobDetail().getKey();
+        ExecutionResult taskModuleExecutionResult = TaskExecutionContextUtil.getModuleExecutionResult(context);
+        JSONObject vars = new JSONObject();
+        vars.put("mainTaskFireId", mainJobKey.getName());
+        vars.put("mainTaskGroup", mainJobKey.getGroup());
+        vars.put("mainTaskName", mainJobKey.getName());
+        vars.put("mainTaskFailed", !taskModuleExecutionResult.isSuccess());
+        vars.put("time", new Date());
+        vars.put("jsonObject", new JSONObject());
+        vars.put("jsonArray", new JSONArray());
+        return vars;
     }
 
     private void scheduleNewTask(JobExecutionContext context, JSONObject taskConfig, String taskGroup, String taskName, Long delay) throws SchedulerException {

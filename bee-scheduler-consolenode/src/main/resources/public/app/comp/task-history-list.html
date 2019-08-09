@@ -52,7 +52,7 @@
             <template v-if="queryResult.result && queryResult.result.length > 0">
                 <div class="spr"></div>
                 <div class="text-center">
-                    <el-pagination @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
+                    <el-pagination background @current-change="changePage" :current-page="queryResult.page" :page-size="queryResult.pageSize" layout="total, prev, pager, next" :total="queryResult.resultTotal"></el-pagination>
                 </div>
             </template>
         </div>

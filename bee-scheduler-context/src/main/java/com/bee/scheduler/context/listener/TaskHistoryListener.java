@@ -39,15 +39,14 @@ public class TaskHistoryListener extends TaskListenerSupport {
             String schedulerName = scheduler.getSchedulerName();
             Date now = Calendar.getInstance().getTime();
 
+            //判断执行状态
+            String execState;
             ExecutionResult moduleExecutionResult = TaskExecutionContextUtil.getModuleExecutionResult(context);
-
-            String execState = jobException != null ? TaskExecState.FAIL.name() : TaskExecState.SUCCESS.name();
-//            if (jobException != null) {
-//                execState = TaskExecState.FAIL.name();
-//            } else {
-//                execState = moduleExecutionResult == null ? "UNKNOWN" : moduleExecutionResult.isSuccess() ? TaskExecState.SUCCESS.name() : TaskExecState.FAIL.name();
-//            }
-
+            if (moduleExecutionResult != null) {
+                execState = moduleExecutionResult.isSuccess() ? TaskExecState.SUCCESS.name() : TaskExecState.FAIL.name();
+            } else {
+                execState = jobException != null ? TaskExecState.FAIL.name() : TaskExecState.SUCCESS.name();
+            }
 
             // 记录执行历史
             TaskHistory taskHistory = new TaskHistory();
@@ -65,7 +64,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
             taskHistory.setLog(getTaskLog());
 
             save(taskHistory);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             logger.error("记录任务历史异常", e);
         }
     }
@@ -101,7 +100,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
             taskHistory.setLog(getTaskLog());
 
             save(taskHistory);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             logger.error("记录任务历史异常", e);
         }
     }
