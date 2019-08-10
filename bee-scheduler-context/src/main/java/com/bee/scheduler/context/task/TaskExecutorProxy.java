@@ -68,13 +68,14 @@ public class TaskExecutorProxy implements Job {
                 logger.info("任务参数包含表达式,开始计算表达式");
                 JobKey jobKey = context.getJobDetail().getKey();
                 //全局参数
-                JSONObject variables = new JSONObject();
-                variables.put("taskGroup", jobKey.getGroup());
-                variables.put("taskName", jobKey.getName());
-                variables.put("time", new Date());
-                variables.put("jsonObject", new JSONObject());
-                variables.put("jsonArray", new JSONArray());
-                paramString = expressionPlaceholderHandler.handle(paramString, variables);
+                JSONObject vars = new JSONObject();
+                vars.put("taskGroup", jobKey.getGroup());
+                vars.put("taskName", jobKey.getName());
+                vars.put("taskFireId", context.getFireInstanceId());
+                vars.put("time", new Date());
+                vars.put("jsonObject", new JSONObject());
+                vars.put("jsonArray", new JSONArray());
+                paramString = expressionPlaceholderHandler.handle(paramString, vars);
                 logger.info("解析后的任务参数:" + paramString);
             }
             param = JSONObject.parseObject(paramString);

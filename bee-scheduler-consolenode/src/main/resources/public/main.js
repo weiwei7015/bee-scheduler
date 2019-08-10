@@ -92,16 +92,6 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
     Vue.prototype.$helperDialog = helperDialog;
     Vue.prototype.$taskDetailDialog = taskDetailDialog;
 
-    // //自适应高度指令
-    // Vue.directive('auto-height', {
-    //     // 当绑定元素插入到 DOM 中。
-    //     inserted: function (el) {
-    //         // 聚焦元素
-    //         el.style.height = window.document.body.clientHeight;
-    //     }
-    // });
-
-    //root comp
     //root comp
     var app = new Vue({
         router: router,

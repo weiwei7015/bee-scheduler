@@ -57,15 +57,14 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                     fireExistTask(context, fireTriggerKey, taskGroup, taskName, null);
                 } else if (item instanceof JSONObject) {
                     JSONObject linkageRule = (JSONObject) item;
-                    if (expressionPlaceholderHandler.containsExpression(linkageRule.toString())) {
-                        logger.info("联动包含表达式,开始计算表达式");
-                        //联动规则解析
+
+                    //计算condition
+                    String conditionEl = linkageRule.getString("condition");
+                    if (StringUtils.isNotBlank(conditionEl)) {
                         JSONObject contextVars = prepareVariables(context, jobException);
-                        if (taskModuleExecutionResult.getData() != null) {
-                            contextVars.putAll(taskModuleExecutionResult.getData());
-                        }
-                        linkageRule = JSONObject.parseObject(expressionPlaceholderHandler.handle(linkageRule.toString(), contextVars));
-                        logger.info("解析后的任务参数:" + linkageRule);
+                        Boolean conditionResult = expressionPlaceholderHandler.compute(conditionEl, contextVars, Boolean.class);
+                        linkageRule.put("condition", conditionResult);
+                        logger.info("Condition: (" + conditionEl + ") -> " + conditionResult);
                     }
 
                     Long delay = linkageRule.getLong("delay");
@@ -84,6 +83,17 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                         fireExistTask(context, fireTriggerKey, taskGroup, taskName, delay);
                     } else if (task instanceof JSONObject) {
                         JSONObject taskConfig = (JSONObject) task;
+
+                        String taskConfigParams = taskConfig.getString("params");
+                        if (expressionPlaceholderHandler.containsExpression(taskConfigParams)) {
+                            logger.info("联动任务参数包含表达式,开始计算表达式...");
+                            //联动规则解析
+                            JSONObject contextVars = prepareVariables(context, jobException);
+                            taskConfigParams = expressionPlaceholderHandler.handle(taskConfigParams, contextVars);
+                            taskConfig.put("params", taskConfigParams);
+                            logger.info("解析后的任务参数:" + taskConfigParams);
+                        }
+
                         String nextTaskGroup = TaskSpecialGroup.LINKTMP.name();
                         String nextTaskName = context.getFireInstanceId() + "_" + (i + 1);
                         scheduleNewTask(context, taskConfig, nextTaskGroup, nextTaskName, delay);
@@ -111,6 +121,9 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
         vars.put("time", new Date());
         vars.put("jsonObject", new JSONObject());
         vars.put("jsonArray", new JSONArray());
+        if (taskModuleExecutionResult.getData() != null) {
+            vars.putAll(taskModuleExecutionResult.getData());
+        }
         return vars;
     }
 
