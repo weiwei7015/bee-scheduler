@@ -101,7 +101,7 @@ public class HttpExcutorModule implements ExecutorModule {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             String temp;
             while ((temp = bufferedReader.readLine()) != null) {
-                if (responseContent.length() >= 600) {
+                if (responseContent.length() >= 2000) {
                     responseContent.append("...").append("\r");
                     break;
                 }
