@@ -30,13 +30,13 @@ java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.
 ### 集群运行模式：
 #### 1、运行管理节点:console-node，并使用--cluster开启集群：
 ```shell
-java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false" --cluster
+java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai" --cluster
 ```
 启动完成后浏览器访问管理节点：http://ip:port **（注意：管理节点本身也是一个调度节点，参与任务执行）**，请使用IE9+、Chrome、Safari、Firefox等现代浏览器 
 
 #### 2、运行扩展节点:daemon-node
 ```shell
-java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false"
+java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai"
 ```
 启动完成后，访问管理节点能看到集群信息
 >扩展节点的数量可以随时增减，新增的节点启动完成后，会自动加入集群，停止的扩展节点会自动退出集群
@@ -51,12 +51,13 @@ java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler
 |--cluster| - |否|是否开启集群模式|无需参数值|
 
 ### 管理界面截图
-![BeeScheduler](readme/1.png "BeeScheduler")
-![BeeScheduler](readme/2.png "BeeScheduler")
-![BeeScheduler](readme/3.png "BeeScheduler")
-![BeeScheduler](readme/4.png "BeeScheduler")
-![BeeScheduler](readme/5.png "BeeScheduler")
-![BeeScheduler](readme/6.png "BeeScheduler")
+![BeeScheduler](readme/main.png "BeeScheduler")
+![BeeScheduler](readme/edit3.png "BeeScheduler")
+![BeeScheduler](readme/edit2.png "BeeScheduler")
+![BeeScheduler](readme/tmp_task.png "BeeScheduler")
+![BeeScheduler](readme/history.png "BeeScheduler")
+![BeeScheduler](readme/history_detail.png "BeeScheduler")
+![BeeScheduler](readme/cluster.png "BeeScheduler")
   
 ### 开源协议
 [MIT](http://opensource.org/licenses/MIT)

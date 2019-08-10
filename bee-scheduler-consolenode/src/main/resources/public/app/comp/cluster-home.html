@@ -1,16 +1,16 @@
 <div class="page" v-loading="clusterInfoLoading">
     <div class="page-header">
-        <div class="page-title"><i class="iconfont icon-icons01"></i> 集群节点</div>
+        <div class="page-title"><i class="iconfont icon-icons01"></i> 集群实例</div>
         <div class="page-breadcrumb">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{path:'/dashboard'}">Home</el-breadcrumb-item>
-                <el-breadcrumb-item>集群节点</el-breadcrumb-item>
+                <el-breadcrumb-item>集群实例</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
     </div>
     <div class="page-body">
         <div style="float: left;width: 240px">
-            <h4 class="no-margin">节点数量：</h4>
+            <h4 class="no-margin">实例数量：</h4>
             <div class="hr"></div>
             <div class="text-extra-light-silver text-center" style="line-height: 150px;font-size: 80px">{{nodes.length}}</div>
             <div class="spr"></div>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div style="margin-left: 260px;">
-            <h4 class="no-margin">节点列表：</h4>
+            <h4 class="no-margin">实例列表：</h4>
             <div class="hr"></div>
             <el-table :data="nodes" style="width: 100%">
                 <el-table-column prop="instanceName" label="实例ID"></el-table-column>
