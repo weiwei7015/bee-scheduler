@@ -8,7 +8,7 @@
                     <div class="hr"></div>
                     <el-form-item label="任务组件">{{taskDetail.taskModule}}</el-form-item>
                     <el-form-item label="任务参数">{{taskDetail.params}}</el-form-item>
-                    <el-form-item label="任务描述">{{taskDetail.description||"- -"}}</el-form-item>
+                    <el-form-item label="任务描述">{{taskDetail.description||"--"}}</el-form-item>
 
                     <div class="spr spr-x"></div>
                     <h4 class="no-margin">执行计划</h4>
@@ -42,7 +42,7 @@
                     <el-form-item v-if="taskDetail.startAtType == 2" label="激活时间">{{$moment(taskDetail.startAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
                     <el-form-item label="销毁选项">{{taskDetail.endAtType === 1?"永不销毁":taskDetail.endAtType === 2?"指定时间销毁":"unknown"}}</el-form-item>
                     <el-form-item v-if="taskDetail.endAtType == 2" label="销毁时间">{{$moment(taskDetail.endAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
-                    <el-form-item label="联动任务">{{taskDetail.linkageRule||"- -"}}</el-form-item>
+                    <el-form-item label="联动任务">{{taskDetail.linkageRule||"--"}}</el-form-item>
                 </el-form>
             </template>
             <template v-else>
