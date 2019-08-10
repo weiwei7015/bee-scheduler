@@ -12,7 +12,7 @@ require.config({
         text: 'lib/text-2.0.15',
         css: 'lib/require-css-0.1.10.min'
     },
-    urlArgs: 'v=2019080901'
+    urlArgs: 'v=2019081001'
 });
 
 require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-dialog', 'comp/task-detail-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog, taskDetailDialog) {
