@@ -5,6 +5,7 @@ define(['text!comp/settings.html'], function (tpl, ace) {
         data: function () {
             var vm = this;
             var data = {
+                tab: 'first',
                 oldPassword: '',
                 newPassword: '',
                 reNewPassword: '',

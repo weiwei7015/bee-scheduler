@@ -51,7 +51,7 @@ public class TaskExecutorProxy implements Job {
             throw new JobExecutionException(e);
         } finally {
             if (result != null) {
-                logger.info("任务结果 -> isSuccess:" + result.isSuccess() + ", data:" + result.getData().toJSONString());
+                logger.info("任务结果 -> isSuccess: " + result.isSuccess() + ", data: " + result.getData().toJSONString());
             }
         }
     }

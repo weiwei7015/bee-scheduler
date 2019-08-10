@@ -32,7 +32,9 @@
                 </el-table-column>
                 <el-table-column label="执行节点" prop="instanceId" show-overflow-tooltip></el-table-column>
                 <el-table-column label="执行状态" width="120">
-                    <template scope="scope">{{scope.row.execState}}</template>
+                    <template scope="scope">
+                        <span :class="{'text-success':scope.row.execState == 'SUCCESS','text-warning text-bold':scope.row.execState == 'VETOED','text-danger text-bold':scope.row.execState == 'FAIL'}">{{scope.row.execState}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column label="触发方式" width="100">
                     <!--<template scope="scope">{{scope.row.firedWay === "SCHEDULE"?"调度":scope.row.firedWay === "MANUAL"?"手动":scope.row.firedWay === "TMP"?"临时":scope.row.firedWay === "LINKAGE"?"联动":"未知"}}</template>-->
