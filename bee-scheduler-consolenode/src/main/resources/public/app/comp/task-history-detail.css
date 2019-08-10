@@ -14,3 +14,18 @@ pre.log {
     border-radius: 3px;
     font-family: "generic-font";
 }
+
+.info-item {
+    margin: 10px 0;
+}
+
+.info-item .info-item-label, .info-item-content {
+    display: inline-block;
+}
+
+.info-item .info-item-label {
+    color: #8492A6;
+    width: 70px;
+    text-align: right;
+    margin-right: 10px;
+}
