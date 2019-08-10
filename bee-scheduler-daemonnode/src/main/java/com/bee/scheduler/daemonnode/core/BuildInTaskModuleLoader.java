@@ -1,5 +1,6 @@
 package com.bee.scheduler.daemonnode.core;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bee.scheduler.context.executor.ClearTaskHistoryTaskModule;
 import com.bee.scheduler.context.executor.HttpExcutorModule;
 import com.bee.scheduler.context.executor.JustTestModule;

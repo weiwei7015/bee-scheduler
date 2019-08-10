@@ -17,6 +17,7 @@ import org.quartz.*;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author weiwei
@@ -34,10 +35,9 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
-        JSONArray taskLinkageRule = TaskExecutionContextUtil.getLinkageRule(context);
-        ExecutionResult taskModuleExecutionResult = TaskExecutionContextUtil.getModuleExecutionResult(context);
+        JSONArray taskLinkageRules = TaskExecutionContextUtil.getLinkageRule(context);
 
-        if (taskLinkageRule == null) {
+        if (taskLinkageRules == null) {
             return;
         }
         if (jobException != null) {
@@ -46,9 +46,9 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
         }
 
         try {
-            logger.info("解析联动配置: " + taskLinkageRule);
-            for (int i = 0; i < taskLinkageRule.size(); i++) {
-                Object item = taskLinkageRule.get(i);
+            logger.info("解析联动配置: " + taskLinkageRules);
+            for (int i = 0; i < taskLinkageRules.size(); i++) {
+                Object item = taskLinkageRules.get(i);
                 logger.info("处理联动配置: " + (i + 1));
                 if (item instanceof String) {
                     String[] group$name = StringUtils.split(((String) item), ".");
@@ -61,20 +61,28 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                     //计算condition
                     String conditionEl = linkageRule.getString("condition");
                     if (StringUtils.isNotBlank(conditionEl)) {
-                        JSONObject contextVars = prepareVariables(context, jobException);
+                        JSONObject contextVars = prepareVariables(context);
                         Boolean conditionResult = expressionPlaceholderHandler.compute(conditionEl, contextVars, Boolean.class);
                         linkageRule.put("condition", conditionResult);
-                        logger.info("Condition: (" + conditionEl + ") -> " + conditionResult);
+                        logger.info("condition:[" + conditionEl + "] -> " + conditionResult);
+                        if (!conditionResult) {
+                            logger.info("condition结算结果为false，取消执行联动任务：" + (i + 1));
+                            continue;
+                        }
+                    }
+
+                    //计算export
+                    String exportEl = linkageRule.getString("export");
+                    if (StringUtils.isNotBlank(exportEl)) {
+                        JSONObject contextVars = prepareVariables(context);
+                        Map exportResult = expressionPlaceholderHandler.compute(exportEl, contextVars, Map.class);
+                        linkageRule.put("export", exportResult);
+                        logger.info("export:[ " + exportEl + " ] -> " + exportResult);
                     }
 
                     Long delay = linkageRule.getLong("delay");
                     Object task = linkageRule.get("task");
-                    Boolean condition = linkageRule.getBoolean("condition");
-
-                    if (condition != null && !condition) {
-                        logger.info("condition结算结果为false，取消执行联动任务：" + (i + 1));
-                        continue;
-                    }
+                    JSONObject export = linkageRule.getJSONObject("export");
 
                     if (task instanceof String) {
                         String[] group$name = StringUtils.split(((String) task), ".");
@@ -88,7 +96,10 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
                         if (expressionPlaceholderHandler.containsExpression(taskConfigParams)) {
                             logger.info("联动任务参数包含表达式,开始计算表达式...");
                             //联动规则解析
-                            JSONObject contextVars = prepareVariables(context, jobException);
+                            JSONObject contextVars = prepareVariables(context);
+                            if (export != null) {
+                                contextVars.putAll(export);
+                            }
                             taskConfigParams = expressionPlaceholderHandler.handle(taskConfigParams, contextVars);
                             taskConfig.put("params", taskConfigParams);
                             logger.info("解析后的任务参数:" + taskConfigParams);
@@ -110,7 +121,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
         }
     }
 
-    private JSONObject prepareVariables(JobExecutionContext context, JobExecutionException jobException) {
+    private JSONObject prepareVariables(JobExecutionContext context) {
         JobKey mainJobKey = context.getJobDetail().getKey();
         ExecutionResult taskModuleExecutionResult = TaskExecutionContextUtil.getModuleExecutionResult(context);
         JSONObject vars = new JSONObject();
