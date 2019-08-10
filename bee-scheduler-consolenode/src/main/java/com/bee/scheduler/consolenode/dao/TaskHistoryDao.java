@@ -20,7 +20,7 @@ import java.util.List;
 public class TaskHistoryDao extends AbstractDao {
 
     public ExecutedTask query(String fireId) {
-        String sql = "SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.FIRED_WAY 'firedWay',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.FIRED_TIME 'firedTime',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t WHERE t.FIRE_ID = ?";
+        String sql = "SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.FIRED_WAY 'firedWay',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.EXEC_MODULE 'execModule',t.FIRED_TIME 'firedTime',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t WHERE t.FIRE_ID = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExecutedTask.class), fireId);
     }
 
@@ -28,7 +28,7 @@ public class TaskHistoryDao extends AbstractDao {
         List<Object> args = new ArrayList<>();
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TASK_HISTORY");
 //        StringBuilder sqlQueryResult = new StringBuilder("SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.FIRED_TIME 'firedTime',t.FIRED_WAY 'firedWay',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t");
-        StringBuilder sqlQueryResult = new StringBuilder("SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.FIRED_TIME 'firedTime',t.FIRED_WAY 'firedWay',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState' FROM BS_TASK_HISTORY t");
+        StringBuilder sqlQueryResult = new StringBuilder("SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.EXEC_MODULE 'execModule',t.FIRED_TIME 'firedTime',t.FIRED_WAY 'firedWay',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState' FROM BS_TASK_HISTORY t");
 
         StringBuilder sqlWhere = new StringBuilder(" WHERE SCHED_NAME = ?");
         args.add(schedulerName);
@@ -82,7 +82,7 @@ public class TaskHistoryDao extends AbstractDao {
     }
 
     public int insert(final List<ExecutedTask> executedTaskList) {
-        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, EXEC_MODULE, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         int[] results = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -92,13 +92,14 @@ public class TaskHistoryDao extends AbstractDao {
                 ps.setString(3, executedTask.getFireId());
                 ps.setString(4, executedTask.getName());
                 ps.setString(5, executedTask.getGroup());
-                ps.setLong(6, executedTask.getFiredTime());
-                ps.setString(7, executedTask.getFiredWay().toString());
-                ps.setLong(8, executedTask.getCompleteTime());
-                ps.setLong(9, executedTask.getExpendTime());
-                ps.setInt(10, executedTask.getRefired());
-                ps.setString(11, executedTask.getExecState().toString());
-                ps.setString(12, executedTask.getLog());
+                ps.setString(6, executedTask.getExecModule());
+                ps.setLong(7, executedTask.getFiredTime());
+                ps.setString(8, executedTask.getFiredWay().toString());
+                ps.setLong(9, executedTask.getCompleteTime());
+                ps.setLong(10, executedTask.getExpendTime());
+                ps.setInt(11, executedTask.getRefired());
+                ps.setString(12, executedTask.getExecState().toString());
+                ps.setString(13, executedTask.getLog());
             }
 
             @Override

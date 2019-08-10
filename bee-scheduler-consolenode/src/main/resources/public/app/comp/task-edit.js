@@ -81,7 +81,7 @@ define(['text!comp/task-edit.html'], function (tpl) {
 
 
             data.initEditFormModelInProcess = true;
-            vm.$http.get("/job-component/list").then(function (re) {
+            vm.$http.get("/task-module/list").then(function (re) {
                 data.taskModuleList = re.body.data;
                 if (editFor === "Edit" || editFor === "Copy") {
                     var name = vm.$route.params.name;

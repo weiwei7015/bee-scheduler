@@ -14,6 +14,7 @@
         <div class="hr"></div>
         <el-row>
             <el-col :span="7">
+                <div class="info-item"><span class="info-item-label">组件: </span><span class="info-item-content"><span :class="{'text-success':taskHistoryDetail.execState == 'SUCCESS','text-warning text-bold':taskHistoryDetail.execState == 'VETOED','text-danger text-bold':taskHistoryDetail.execState == 'FAIL'}">{{taskHistoryDetail.execModule}}</span></span></div>
                 <div class="info-item"><span class="info-item-label">执行状态: </span><span class="info-item-content"><span :class="{'text-success':taskHistoryDetail.execState == 'SUCCESS','text-warning text-bold':taskHistoryDetail.execState == 'VETOED','text-danger text-bold':taskHistoryDetail.execState == 'FAIL'}">{{taskHistoryDetail.execState}}</span></span></div>
                 <div class="info-item"><span class="info-item-label">触发方式: </span><span class="info-item-content">{{taskHistoryDetail.firedWay}}</span></div>
                 <div class="info-item"><span class="info-item-label">触发时间: </span><span class="info-item-content">{{$moment(taskHistoryDetail.firedTime).format("YYYY-MM-DD HH:mm:ss")}}</span></div>

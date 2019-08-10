@@ -10,7 +10,7 @@ public class Task {
     private String name;
     private String group;
     private String triggerType;
-    private String jobComponent;
+    private String execModule;
     private Integer priority;
     private Map<Object, Object> data;
     private String state;
@@ -25,11 +25,11 @@ public class Task {
 
     }
 
-    public Task(String schedulerName, String name, String group, String jobComponent) {
+    public Task(String schedulerName, String name, String group, String execModule) {
         this.schedulerName = schedulerName;
         this.name = name;
         this.group = group;
-        this.jobComponent = jobComponent;
+        this.execModule = execModule;
     }
 
     public String getSchedulerName() {
@@ -64,12 +64,12 @@ public class Task {
         this.triggerType = triggerType;
     }
 
-    public String getJobComponent() {
-        return jobComponent;
+    public String getExecModule() {
+        return execModule;
     }
 
-    public void setJobComponent(String jobComponent) {
-        this.jobComponent = jobComponent;
+    public void setExecModule(String execModule) {
+        this.execModule = execModule;
     }
 
     public Integer getPriority() {

@@ -55,6 +55,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
             taskHistory.setFireId(context.getFireInstanceId());
             taskHistory.setTaskName(taskName);
             taskHistory.setTaskGroup(taskGroup);
+            taskHistory.setExecModule(TaskExecutionContextUtil.getExecutorModuleId(context));
             taskHistory.setFiredTime(context.getFireTime().getTime());
             taskHistory.setFiredWay(triggerGroup);
             taskHistory.setCompleteTime(now.getTime());
@@ -91,6 +92,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
             taskHistory.setFireId(context.getFireInstanceId());
             taskHistory.setTaskName(taskName);
             taskHistory.setTaskGroup(taskGroup);
+            taskHistory.setExecModule(TaskExecutionContextUtil.getExecutorModuleId(context));
             taskHistory.setFiredTime(context.getFireTime().getTime());
             taskHistory.setFiredWay(triggerGroup);
             taskHistory.setCompleteTime(now.getTime());
@@ -106,7 +108,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
     }
 
     private void save(TaskHistory taskHistory) throws SQLException {
-        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO BS_TASK_HISTORY(SCHED_NAME,INSTANCE_ID,FIRE_ID, TASK_NAME, TASK_GROUP, EXEC_MODULE, FIRED_TIME, FIRED_WAY, COMPLETE_TIME, EXPEND_TIME, REFIRED, EXEC_STATE, LOG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try (
                 Connection connection = DBConnectionManager.getInstance().getConnection(LocalDataSourceJobStore.TX_DATA_SOURCE_PREFIX + taskHistory.getSchedName());
                 PreparedStatement preparedStatement = connection.prepareStatement(sql)
@@ -116,13 +118,14 @@ public class TaskHistoryListener extends TaskListenerSupport {
             preparedStatement.setString(3, taskHistory.getFireId());
             preparedStatement.setString(4, taskHistory.getTaskName());
             preparedStatement.setString(5, taskHistory.getTaskGroup());
-            preparedStatement.setLong(6, taskHistory.getFiredTime());
-            preparedStatement.setString(7, taskHistory.getFiredWay());
-            preparedStatement.setLong(8, taskHistory.getCompleteTime());
-            preparedStatement.setLong(9, taskHistory.getExpendTime());
-            preparedStatement.setInt(10, taskHistory.getRefired());
-            preparedStatement.setString(11, taskHistory.getExecState());
-            preparedStatement.setString(12, taskHistory.getLog());
+            preparedStatement.setString(6, taskHistory.getExecModule());
+            preparedStatement.setLong(7, taskHistory.getFiredTime());
+            preparedStatement.setString(8, taskHistory.getFiredWay());
+            preparedStatement.setLong(9, taskHistory.getCompleteTime());
+            preparedStatement.setLong(10, taskHistory.getExpendTime());
+            preparedStatement.setInt(11, taskHistory.getRefired());
+            preparedStatement.setString(12, taskHistory.getExecState());
+            preparedStatement.setString(13, taskHistory.getLog());
             preparedStatement.execute();
         }
     }
@@ -133,6 +136,7 @@ public class TaskHistoryListener extends TaskListenerSupport {
         private String fireId;
         private String taskName;
         private String taskGroup;
+        private String execModule;
         private Long firedTime;
         private String firedWay;
         private Long completeTime;
@@ -179,6 +183,14 @@ public class TaskHistoryListener extends TaskListenerSupport {
 
         void setTaskGroup(String taskGroup) {
             this.taskGroup = taskGroup;
+        }
+
+        public String getExecModule() {
+            return execModule;
+        }
+
+        public void setExecModule(String execModule) {
+            this.execModule = execModule;
         }
 
         Long getFiredTime() {

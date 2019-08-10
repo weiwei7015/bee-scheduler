@@ -29,7 +29,7 @@ define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
             };
 
             data.initializing = true;
-            vm.$http.get("/job-component/list").then(function (re) {
+            vm.$http.get("/task-module/list").then(function (re) {
                 data.taskModuleList = re.body.data;
                 data.initializing = false;
             });

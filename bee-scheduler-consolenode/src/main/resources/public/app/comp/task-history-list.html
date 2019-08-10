@@ -30,7 +30,7 @@
                         <el-button type="text" class="no-padding" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)">{{scope.row.group}}.{{scope.row.name}}</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="执行节点" prop="instanceId" show-overflow-tooltip></el-table-column>
+                <el-table-column label="组件" prop="execModule" show-overflow-tooltip></el-table-column>
                 <el-table-column label="执行状态" width="120">
                     <template scope="scope">
                         <span :class="{'text-success':scope.row.execState == 'SUCCESS','text-warning text-bold':scope.row.execState == 'VETOED','text-danger text-bold':scope.row.execState == 'FAIL'}">{{scope.row.execState}}</span>
