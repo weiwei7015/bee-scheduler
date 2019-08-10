@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="page-body" v-show="!taskHistoryDetailLoading">
-        <h3 class="no-margin">{{taskHistoryDetail.group}}.{{taskHistoryDetail.name}}</h3>
+        <h4 class="no-margin">{{taskHistoryDetail.group}}.{{taskHistoryDetail.name}}</h4>
         <div class="hr"></div>
         <el-row>
             <el-col :span="7">
@@ -27,7 +27,7 @@
 
         <div class="spr spr-x"></div>
 
-        <h3 class="no-margin">任务日志</h3>
+        <h4 class="no-margin">任务日志</h4>
         <div class="hr"></div>
         <pre class="log" v-html="formatLogContent(taskHistoryDetail.log)"></pre>
     </div>

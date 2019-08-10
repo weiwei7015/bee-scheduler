@@ -16,7 +16,7 @@
     <div class="page-body" v-show="!initEditFormModelInProcess">
         <div style="width: 800px">
             <el-form :model="editTaskFormModel" ref="editTaskForm" label-width="100px">
-                <h3 class="no-margin">基本信息</h3>
+                <h4 class="no-margin">基本信息</h4>
                 <div class="hr"></div>
                 <el-form-item label="任务名称" prop="name" :rules="validators.taskName">
                     <el-input v-model="editTaskFormModel.name" :disabled="editFor==='Edit'"></el-input>
@@ -25,7 +25,7 @@
                     <el-autocomplete v-model="editTaskFormModel.group" :fetch-suggestions="queryTaskGroup" placeholder="" :trigger-on-focus="false" :disabled="editFor==='Edit'" style="width: 100%"></el-autocomplete>
                 </el-form-item>
 
-                <h3 class="no-margin">任务内容</h3>
+                <h4 class="no-margin">任务内容</h4>
                 <div class="hr"></div>
                 <el-form-item label="任务组件" prop="taskModule" :rules="validators.taskModule">
                     <el-select v-model="editTaskFormModel.taskModule" :disabled="editFor==='Edit'" placeholder="请选择任务组件" style="width: 100%">
@@ -41,7 +41,7 @@
                     <el-input type="textarea" v-model="editTaskFormModel.description" :autosize="{minRows: 2, maxRows: 5}" placeholder="请详细描述该任务"></el-input>
                 </el-form-item>
 
-                <h3 class="no-margin">执行计划</h3>
+                <h4 class="no-margin">执行计划</h4>
                 <div class="hr"></div>
                 <el-form-item label="调度方式" prop="scheduleType">
                     <el-radio-group v-model="editTaskFormModel.scheduleType">
@@ -154,7 +154,7 @@
                     </el-form-item>
                 </template>
 
-                <h3 class="no-margin">高级选项</h3>
+                <h4 class="no-margin">高级选项</h4>
                 <div class="hr"></div>
                 <el-form-item label="激活选项" prop="startAtType">
                     <el-radio-group v-model="editTaskFormModel.startAtType">

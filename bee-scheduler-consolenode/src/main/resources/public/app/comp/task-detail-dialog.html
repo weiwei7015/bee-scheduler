@@ -1,10 +1,15 @@
 <el-dialog :visible.sync="dialogVisible">
-    <span slot="title" class="el-dialog__title"><i class="iconfont icon-detail"></i> 任务详情</span>
+    <span slot="title" class="el-dialog__title"><i class="iconfont icon-detail"></i> {{taskDetail.group}}.{{taskDetail.name}}</span>
     <div v-loading="loading" style="height: 400px;overflow: auto">
         <div v-show="!loading">
             <template v-if="taskDetail">
                 <el-form label-width="100px" class="no-item-margin form-label-muted">
-                    <h2 class="no-margin">{{taskDetail.group}}.{{taskDetail.name}}</h2>
+                    <h4 class="no-margin">任务内容</h4>
+                    <div class="hr"></div>
+                    <el-form-item label="任务组件">{{taskDetail.taskModule}}</el-form-item>
+                    <el-form-item label="任务参数">{{taskDetail.params}}</el-form-item>
+                    <el-form-item label="任务描述">{{taskDetail.description||"- -"}}</el-form-item>
+
                     <div class="spr spr-x"></div>
                     <h4 class="no-margin">执行计划</h4>
                     <div class="hr"></div>
@@ -29,11 +34,8 @@
                         <el-form-item label="Cron表达式">{{taskDetail.scheduleTypeCronOptions.cron}}</el-form-item>
                         <el-form-item label="Misfire策略">{{taskDetail.scheduleTypeCronOptions.misfireHandlingType===0?"SmartPolicy":taskDetail.scheduleTypeCronOptions.misfireHandlingType===-1?"IgnoreMisfires":taskDetail.scheduleTypeCronOptions.misfireHandlingType===1?"FireAndProceed":taskDetail.scheduleTypeCronOptions.misfireHandlingType===2?"DoNothing":"unknown"}}</el-form-item>
                     </template>
-                    <h4 class="no-margin">任务内容</h4>
-                    <div class="hr"></div>
-                    <el-form-item label="任务组件">{{taskDetail.taskModule}}</el-form-item>
-                    <el-form-item label="任务参数">{{taskDetail.params}}</el-form-item>
-                    <el-form-item label="任务描述">{{taskDetail.description||"- -"}}</el-form-item>
+
+                    <div class="spr spr-x"></div>
                     <h4 class="no-margin">高级选项</h4>
                     <div class="hr"></div>
                     <!--<el-form-item label="激活选项">{{taskDetail.startAtType === 1?"立即激活":taskDetail.startAtType === 2?"指定时间激活":"unknown"}}</el-form-item>-->
