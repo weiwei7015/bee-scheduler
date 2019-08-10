@@ -25,14 +25,15 @@
 ```shell
 java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false"
 ```
-启动完成后浏览器访问：http://ip:port  ，请使用IE9+、Chrome、Safari、Firefox等现代浏览器  
+启动完成后浏览器访问：http://ip:port  ，默认账号admin/admin ，请使用IE9+、Chrome、Safari、Firefox等现代浏览器  
   
 ### 集群运行模式：
 #### 1、运行管理节点:console-node，并使用--cluster开启集群：
 ```shell
 java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai" --cluster
 ```
-启动完成后浏览器访问管理节点：http://ip:port **（注意：管理节点本身也是一个调度节点，参与任务执行）**，请使用IE9+、Chrome、Safari、Firefox等现代浏览器 
+启动完成后浏览器访问管理节点：http://ip:port ，默认账号admin/admin  
+ **（注意：管理节点本身也是一个调度节点，参与任务执行）**，请使用IE9+、Chrome、Safari、Firefox等现代浏览器 
 
 #### 2、运行扩展节点:daemon-node
 ```shell
