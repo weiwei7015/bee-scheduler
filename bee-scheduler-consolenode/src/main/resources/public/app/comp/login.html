@@ -6,9 +6,9 @@
         </div>
         <el-alert v-show="errorMsg" :title="errorMsg" :closable="false" type="error"></el-alert>
         <div class="spr spr-x"></div>
-        <el-form>
+        <el-form @keyup.enter.native="login">
             <el-form-item>
-                <el-input placeholder="Account" v-model="account"></el-input>
+                <el-input autofocus="true" placeholder="Account" v-model="account"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-input type="password" placeholder="Password" v-model="password"></el-input>
