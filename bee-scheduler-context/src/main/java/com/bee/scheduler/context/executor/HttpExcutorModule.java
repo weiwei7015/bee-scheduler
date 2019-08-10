@@ -109,7 +109,7 @@ public class HttpExcutorModule implements ExecutorModule {
             }
             bufferedReader.close();
         }
-        
+
         logger.info("response status: " + responseStatus);
 
         JSONObject data = new JSONObject();

@@ -17,18 +17,30 @@
             </el-col>
             <el-col :span="14" class="text-right">
                 <el-button-group v-show="showCommandBtnGroup">
-                    <el-button v-if="showResumeBtn" @click="resumeTask"><i class="iconfont icon-recovery"></i></el-button>
-                    <el-button v-if="showPauseBtn" @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
-                    <el-button @click="executeTask"><i class="iconfont icon-play"></i></el-button>
-                    <el-button @click="goEditTask"><i class="iconfont icon-edit"></i></el-button>
-                    <el-button @click="goCopyTask"><i class="iconfont icon-copy"></i></el-button>
-                    <el-button @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
+                    <el-tooltip content="恢复" v-if="showResumeBtn" placement="bottom" open-delay="500">
+                        <el-button @click="resumeTask"><i class="iconfont icon-recovery"></i></el-button>
+                    </el-tooltip>
+                    <el-tooltip content="暂停" v-if="showPauseBtn" placement="bottom" open-delay="500">
+                        <el-button @click="pauseTask"><i class="iconfont icon-pause"></i></el-button>
+                    </el-tooltip>
+                    <el-tooltip content="立即执行" placement="bottom" open-delay="500">
+                        <el-button @click="executeTask"><i class="iconfont icon-play"></i></el-button>
+                    </el-tooltip>
+                    <el-tooltip content="编辑" placement="bottom" open-delay="500">
+                        <el-button @click="goEditTask"><i class="iconfont icon-edit"></i></el-button>
+                    </el-tooltip>
+                    <el-tooltip content="复制" placement="bottom" open-delay="500">
+                        <el-button @click="goCopyTask"><i class="iconfont icon-copy"></i></el-button>
+                    </el-tooltip>
+                    <el-tooltip content="删除" placement="bottom" open-delay="500">
+                        <el-button @click="deleteTask"><i class="iconfont icon-trash"></i></el-button>
+                    </el-tooltip>
                 </el-button-group>
                 <el-button-group class="main-tool">
                     <el-tooltip content="创建任务" placement="bottom" open-delay="500">
                         <el-button type="primary" round @click="goCreateTask"><i class="iconfont icon-plus"></i></el-button>
                     </el-tooltip>
-                    <el-tooltip content="临时任务" placement="bottom" open-delay="500">
+                    <el-tooltip content="创建临时任务" placement="bottom" open-delay="500">
                         <el-button type="primary" round @click="createQuickTask"><i class="iconfont icon-flash"></i></el-button>
                     </el-tooltip>
                 </el-button-group>
@@ -40,12 +52,22 @@
             <el-table :data="queryResult.result" :show-header="true" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="40"></el-table-column>
                 <el-table-column label="状态" width="150">
-                    <template scope="scope">{{scope.row.state}}</template>
+                    <template scope="scope">
+                        <span v-if="scope.row.state=='WAITING'" class="text-silver">{{scope.row.state}}</span>
+                        <span v-else-if="scope.row.state=='ACQUIRED'" class="text-info">{{scope.row.state}}</span>
+                        <span v-else-if="scope.row.state=='COMPLETE'" class="text-success">{{scope.row.state}}</span>
+                        <span v-else-if="scope.row.state=='PAUSED'" class="text-warning">{{scope.row.state}}</span>
+                        <span v-else-if="scope.row.state=='ERROR'" class="text-danger">{{scope.row.state}}</span>
+                        <span v-else>{{scope.row.state}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column label="任务" show-overflow-tooltip>
                     <template scope="scope">
                         <el-button type="text" class="no-padding" @click="$taskDetailDialog.open(scope.row.name,scope.row.group)"><span class="text-bold">{{scope.row.group + "." + scope.row.name}}</span></el-button>
                         <span class="text-silver">{{scope.row.description?(" - "+scope.row.description):""}}</span></template>
+                </el-table-column>
+                <el-table-column label="下次执行" width="170">
+                    <template scope="scope">{{$moment(scope.row.nextFireTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
                 </el-table-column>
             </el-table>
             <div class="spr"></div>
