@@ -33,7 +33,7 @@
         <div class="hr"></div>
         <ul>
             <li><b>SimpleTrigger：</b>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行任务。</li>
-            <li><b>CalendarIntervalTrigger：</b>类似于SimpleTrigger，指定从某一个时间开始，以一定的时间间隔执行的任务。 但是不同的是SimpleTrigger指定的时间间隔为毫秒，没办法指定每隔一个月执行一次（每月的时间间隔不是固定值），而CalendarIntervalTrigger支持的间隔单位有<b>秒，分钟，小时，天，星期，月，年</b>。</li>
+            <li><b>CalendarIntervalTrigger：</b>类似于SimpleTrigger，指定从某一个时间开始，以一定的时间间隔执行的任务。 但是不同的是SimpleTrigger没办法指定每隔一个月执行一次（每月的时间间隔不是固定值），而CalendarIntervalTrigger支持的间隔单位有<b>秒，分钟，小时，天，星期，月，年</b>。</li>
             <li><b>DailyTimeIntervalTrigger：</b>指定每天的某个时间段内，以一定的时间间隔执行任务。并且它可以支持指定星期。它适合的任务类似于：指定每天9:00 至 18:00 ，每隔70秒执行一次，并且只要周一至周五执行。</li>
             <li><b>CronTrigger：</b>适合于更复杂的任务，它支持通过<b>Cron</b>语法来制定执行计划。</li>
         </ul>
@@ -47,6 +47,8 @@
         <div class="spr"></div>
         <h3 class="no-margin">5、联动任务配置</h3>
         <div class="hr"></div>
+        待完善...
+        <!--
         <div>联动任务表示主任务执行完成后，自动触发其他任务的机制，配置采用JSON格式，示例：</div>
         <pre class="bg-dark-white font-code">
     示例1:
@@ -119,7 +121,7 @@
     //linkageRule:联动配置，同创建常规任务，可使用全局变量
         </pre>
         <el-alert title="注意：目前并没有对联动任务配置的合理性做严格检查，配置不当可能会造成环形联动（如：a -> b -> c -> a ...），请谨慎配置！" :closable="false" type="warning" show-icon></el-alert>
-        <!--<el-collapse v-model="title" accordion>
+        &lt;!&ndash;<el-collapse v-model="title" accordion>
             <el-collapse-item title="执行临时任务" name="ExecTmpTask">
                 待完善...
             </el-collapse-item>
@@ -132,6 +134,6 @@
             <el-collapse-item title="待完善" name="4">
                 待完善...
             </el-collapse-item>
-        </el-collapse>-->
+        </el-collapse>&ndash;&gt;-->
     </div>
 </div>
