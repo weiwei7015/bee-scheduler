@@ -34,11 +34,11 @@ define(['text!comp/task-edit.html'], function (tpl) {
                 editTaskFormModel: {
                     name: '',
                     group: 'Default',
-                    scheduleType: 4,
+                    scheduleType: 1,
                     scheduleTypeSimpleOptions: {
                         interval: 30,
                         repeatType: 1,
-                        repeatCount: 10,
+                        repeatCount: 2,
                         misfireHandlingType: 0
                     },
                     scheduleTypeCalendarIntervalOptions: {
