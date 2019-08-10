@@ -1,4 +1,4 @@
-define(['text!comp/task-edit.html'], function (tpl) {
+define(['text!comp/task-edit.html', 'css!./task-edit.css'], function (tpl) {
 
     return {
         template: tpl,

@@ -1,0 +1,17 @@
+span.task-module-help-btn {
+    position: absolute;
+    top: 0;
+    right: -25px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #8492A6;
+}
+
+span.task-module-help-btn :hover {
+    color: #ffb00f;
+
+}
+
+span.task-module-help-btn :active {
+    color: #F7BA2A;
+}

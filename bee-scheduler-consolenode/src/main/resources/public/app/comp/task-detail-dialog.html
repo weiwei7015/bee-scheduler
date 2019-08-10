@@ -1,5 +1,7 @@
 <el-dialog :visible.sync="dialogVisible">
-    <span slot="title" class="el-dialog__title"><i class="iconfont icon-detail"></i> {{taskDetail.group}}.{{taskDetail.name}}</span>
+    <template v-if="taskDetail">
+        <span slot="title" class="el-dialog__title"><i class="iconfont icon-detail"></i> {{taskDetail.group}}.{{taskDetail.name}}</span>
+    </template>
     <div v-loading="loading" style="height: 400px;overflow: auto">
         <div v-show="!loading">
             <template v-if="taskDetail">
@@ -46,7 +48,7 @@
                 </el-form>
             </template>
             <template v-else>
-                <div class="text-center text-extra-light-silver" style="font-size: 16px;margin: 20px"><i class="iconfont icon-404" style="font-size: 30px"></i> 未找到任务信息，该任务已过期或已删除</div>
+                <div class="text-center text-extra-light-silver" style="font-size:16px;margin: 20px"><i class="iconfont icon-404" style="font-size: 40px"></i> 未找到任务信息，该任务已过期或已删除</div>
             </template>
         </div>
     </div>
