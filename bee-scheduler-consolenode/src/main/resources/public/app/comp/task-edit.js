@@ -88,7 +88,7 @@ define(['text!comp/task-edit.html', 'css!./task-edit.css'], function (tpl) {
                     var group = vm.$route.params.group;
                     vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
                         if (re.body.data == null) {
-                            vm.$router.push("/404");
+                            vm.$router.replace("/404");
                             return;
                         }
                         data.editTaskFormModel = re.body.data;
