@@ -53,6 +53,8 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
             quartzProperties.setProperty("org.quartz.jobStore.isClustered", "true");
             quartzProperties.setProperty("org.quartz.jobStore.clusterCheckinInterval", String.valueOf(CLUSTER_CHECKIN_INTERVAL));
         }
+        quartzProperties.setProperty("org.quartz.plugin.JobInterruptMonitorPlugin.class", "org.quartz.plugins.interrupt.JobInterruptMonitorPlugin");
+        quartzProperties.setProperty("org.quartz.plugin.JobInterruptMonitorPlugin.defaultMaxRunTime", "300000");
         this.setQuartzProperties(quartzProperties);
         super.afterPropertiesSet();
     }

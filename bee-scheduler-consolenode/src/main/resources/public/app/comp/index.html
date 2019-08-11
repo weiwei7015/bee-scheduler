@@ -9,7 +9,7 @@
                 <el-menu :collapse="isMenuFold" class="menu" unique-opened="true" router="true" ref="nav" :default-active="$route.path">
 <!--                    <el-menu-item index="/dashboard"><i class="iconfont icon-dashboard"></i> <span slot="title">Dashboard</span></el-menu-item>-->
                     <el-menu-item index="/task/list"><i class="iconfont icon-yy-task"></i> <span slot="title">任务管理</span></el-menu-item>
-                    <el-menu-item index="/task/history/list"><i class="iconfont icon-history"></i> <span slot="title">执行历史</span></el-menu-item>
+                    <el-menu-item index="/task/history/list"><i class="iconfont icon-history"></i> <span slot="title">执行历史 \ 日志</span></el-menu-item>
                     <el-menu-item index="/cluster" v-if="$AppConfig.clusterMode"><i class="iconfont icon-icons01"></i> <span slot="title">集群实例</span></el-menu-item>
                     <el-menu-item index="/settings"><i class="iconfont icon-settings"></i> <span slot="title">系统设置</span></el-menu-item>
                     <el-menu-item index="/help"><i class="iconfont icon-tips"></i> <span slot="title">使用帮助</span></el-menu-item>
