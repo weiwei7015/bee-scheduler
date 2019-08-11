@@ -81,6 +81,7 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
                     {path: '/cluster', component: views.clusterHome},
                     {path: '/settings', component: views.settings},
                     {path: '/help', component: views.help},
+                    {path: '/404', component: views.error_404},
                     // {path: '', redirect: '/home'},
                     {path: '*', component: views.error_404}
                 ]

@@ -87,6 +87,10 @@ define(['text!comp/task-edit.html', 'css!./task-edit.css'], function (tpl) {
                     var name = vm.$route.params.name;
                     var group = vm.$route.params.group;
                     vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
+                        if (re.body.data == null) {
+                            vm.$router.push("/404");
+                            return;
+                        }
                         data.editTaskFormModel = re.body.data;
                         data.editTaskFormModelInitBackup = JSON.parse(JSON.stringify(re.body.data));
                         if (editFor === "Copy") {

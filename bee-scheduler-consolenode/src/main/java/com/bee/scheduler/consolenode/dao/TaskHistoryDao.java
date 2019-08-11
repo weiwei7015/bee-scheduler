@@ -2,6 +2,7 @@ package com.bee.scheduler.consolenode.dao;
 
 import com.bee.scheduler.consolenode.model.ExecutedTask;
 import com.bee.scheduler.consolenode.model.Pageable;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,8 +21,11 @@ import java.util.List;
 public class TaskHistoryDao extends AbstractDao {
 
     public ExecutedTask query(String fireId) {
-        String sql = "SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.FIRED_WAY 'firedWay',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.EXEC_MODULE 'execModule',t.FIRED_TIME 'firedTime',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t WHERE t.FIRE_ID = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExecutedTask.class), fireId);
+        try {
+            return jdbcTemplate.queryForObject("SELECT t.SCHED_NAME 'schedulerName',t.INSTANCE_ID 'instanceId',t.FIRE_ID 'fireId',t.FIRED_WAY 'firedWay',t.TASK_NAME 'name',t.TASK_GROUP 'group',t.EXEC_MODULE 'execModule',t.FIRED_TIME 'firedTime',t.COMPLETE_TIME 'completeTime',t.EXPEND_TIME 'expendTime',t.REFIRED 'refired',t.EXEC_STATE 'execState',t.LOG 'log' FROM BS_TASK_HISTORY t WHERE t.FIRE_ID = ?", new BeanPropertyRowMapper<>(ExecutedTask.class), fireId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public Pageable<ExecutedTask> query(String schedulerName, String fireId, String taskName, String taskGroup, String execState, String firedWay, String instanceId, Long starTimeFrom, Long startTimeTo, int page) {
