@@ -18,6 +18,7 @@ import java.util.Properties;
 public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
     private static final long CLUSTER_CHECKIN_INTERVAL = 5000;
     private static final long MISFIRE_THRESHOLD = 5000;
+    private static final long BATCH_TRIGGER_ACQUISITION_FIRE_AHEAD_TIME_WINDOW = 5000;
     private String instanceId;
     private boolean clusterMode = false;
     private int threadPoolSize = 10;
@@ -44,6 +45,9 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
         quartzProperties.setProperty("org.quartz.jobStore.misfireThreshold", String.valueOf(MISFIRE_THRESHOLD));
         quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
         quartzProperties.setProperty("org.quartz.threadPool.threadCount", String.valueOf(threadPoolSize));
+        quartzProperties.setProperty("org.quartz.jobStore.acquireTriggersWithinLock", "true");
+        quartzProperties.setProperty("org.quartz.scheduler.batchTriggerAcquisitionMaxCount", String.valueOf(threadPoolSize));
+        quartzProperties.setProperty("org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow", String.valueOf(BATCH_TRIGGER_ACQUISITION_FIRE_AHEAD_TIME_WINDOW));
         if (this.instanceId == null) {
             quartzProperties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
         } else {
