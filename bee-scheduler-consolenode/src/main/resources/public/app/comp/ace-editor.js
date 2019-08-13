@@ -6,12 +6,12 @@ define(['text!./ace-editor.html', 'ace/ace'], function (tpl, ace) {
         components: {},
         data: function () {
             var data = {
-                elId: "ace-editor",
+                editorId: "ace-editor",
                 contentBackup: ""
             };
 
             idCounter = idCounter + 1;
-            data.elId = "ace-editor-" + (idCounter);
+            data.editorId = "ace-editor-" + (idCounter);
             return data;
         },
         watch: {
@@ -25,23 +25,29 @@ define(['text!./ace-editor.html', 'ace/ace'], function (tpl, ace) {
         },
         mounted: function () {
             var vm = this;
-            var elId = vm.elId;
+            var editorId = vm.editorId;
 
 
             var theme = vm.theme || "", height = vm.height || "300", mode = vm.mode || "javascript";
 
             //初始化容器高度
-            window.document.querySelector("#" + elId).style.height = height + "px";
+            window.document.querySelector("#" + editorId).style.height = height + "px";
 
             //初始化编辑器
-            var editor = vm.editor = ace.edit(elId);
-            editor.setTheme("ace/theme/" + theme);
-            editor.setValue(vm.value);
-            if (vm.simpleStyle) {
-                editor.setHighlightActiveLine(false);
-                editor.renderer.setShowGutter(false);
-            }
-            editor.getSession().setMode("ace/mode/" + mode);
+            var editor = vm.editor = ace.edit(editorId, {
+                theme: "ace/theme/" + theme,
+                value: vm.value,
+                highlightActiveLine: vm.simpleStyle,
+                showGutter: vm.simpleStyle,
+                mode: "ace/mode/" + mode
+            });
+            // editor.setTheme("ace/theme/" + theme);
+            // editor.setValue(vm.value);
+            // if (vm.simpleStyle) {
+            //     editor.setHighlightActiveLine(false);
+            //     editor.renderer.setShowGutter(false);
+            // }
+            // editor.getSession().setMode("ace/mode/" + mode);
             editor.$blockScrolling = Infinity;
 
 
