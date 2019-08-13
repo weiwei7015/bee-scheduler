@@ -7,4 +7,4 @@
 
 
 Console-Node
-Bee-Scheduler v2.5.0 , Build With Quartz-2.3.1
+Bee-Scheduler v2.5.1 , Build With Quartz-2.3.1
