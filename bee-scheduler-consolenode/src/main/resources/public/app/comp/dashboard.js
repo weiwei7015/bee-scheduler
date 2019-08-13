@@ -1,19 +1,20 @@
-define(['text!comp/dashboard.html'], function (tpl, ace) {
-
-
-    var comp_task_trends_plate = function (resolver) {
-        require(['comp/task-trends-plate'], resolver);
-    };
-
+define(['text!comp/dashboard.html', 'comp/ace-editor'], function (tpl, aceEditor) {
     return {
         template: tpl,
         components: {
-            "task-trends-plate": comp_task_trends_plate
+            "ace-editor": aceEditor
         },
         data: function () {
             var vm = this;
-            return {};
+            return {
+                code: '{}'
+            };
         },
-        methods: {}
+        methods: {
+            changeCode: function () {
+                this.code = "{'hello':'word'}";
+
+            }
+        }
     };
 });

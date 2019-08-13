@@ -8,18 +8,14 @@
         </div>
     </div>
     <div class="page-body">
+
+        <el-button @click="changeCode">hello</el-button>
+        {{code}}
+        <ace-editor height="500" mode="json" theme="chrome" v-model="code" :simpleStyle="false"></ace-editor>
+
+
         <div class="text-center">
             <span class="text-extra-light-silver" style="font-size: 50px;">敬请期待 : )</span>
         </div>
-        <!--<el-row>
-            <el-col :span="18">
-                <div class="text-center">
-                    <span class="text-extra-light-silver" style="font-size: 50px;">敬请期待 : )</span>
-                </div>
-            </el-col>
-            <el-col :span="6">
-                <task-trends-plate></task-trends-plate>
-            </el-col>
-        </el-row>-->
     </div>
 </div>
