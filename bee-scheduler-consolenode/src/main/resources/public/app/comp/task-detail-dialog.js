@@ -1,8 +1,15 @@
 define(['text!comp/task-detail-dialog.html', 'vue'], function (tpl, Vue) {
+
+    var aceEditor = function (resolver) {
+        require(['comp/ace-editor'], resolver);
+    };
+
     var TaskDetailDialogConstructor = Vue.extend({
         template: tpl,
         props: ['name', 'group'],
-        components: {},
+        components: {
+            "ace-editor": aceEditor
+        },
         data: function () {
             var vm = this;
             var data = {

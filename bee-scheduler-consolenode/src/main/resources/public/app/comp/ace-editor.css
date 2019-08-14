@@ -3,9 +3,24 @@
     min-height: 160px;
 }
 
+.ace-editor-wrapper {
+    border-radius: 4px;
+    /*border: 1px solid #DCDFE6;*/
+    border: 1px solid #C0C4CC;
+}
+
+/*.ace-editor-wrapper:hover {
+    border-color: #C0C4CC;
+}
+
+.ace-editor-wrapper:focus {
+    border-color: #303133;
+}*/
+
 .ace-editor-wrapper .ace-editor {
     width: 100%;
 }
+
 
 .ace-editor-wrapper .ace-editor-tag {
     background-color: rgba(192, 204, 218, 0.31);

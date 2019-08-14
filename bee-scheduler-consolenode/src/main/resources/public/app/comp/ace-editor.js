@@ -24,7 +24,7 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
             var vm = this;
             //prepare configs
             var editorId = vm.editorId;
-            var theme = vm.theme || "";
+            var theme = vm.theme || "chrome";
             var mode = vm.mode || "javascript";
             var simpleStyle = vm.simpleStyle !== undefined;
             var readOnly = vm.readOnly !== undefined;
@@ -43,8 +43,8 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
                     mode: "ace/mode/" + mode,
                     highlightActiveLine: !simpleStyle,
                     showGutter: !simpleStyle,
+                    showLineNumbers: !simpleStyle,
                     readOnly: readOnly,
-                    showLineNumbers: false,
                     minLines: minLines,
                     maxLines: maxLines
                 });

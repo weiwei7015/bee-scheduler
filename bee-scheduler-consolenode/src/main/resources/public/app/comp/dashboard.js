@@ -2,7 +2,6 @@ define(['text!comp/dashboard.html'], function (tpl) {
     var aceEditor = function (resolver) {
         require(['comp/ace-editor'], resolver);
     };
-
     return {
         template: tpl,
         components: {
@@ -16,7 +15,9 @@ define(['text!comp/dashboard.html'], function (tpl) {
         },
         methods: {
             changeCode: function () {
-                this.code = "{'hello':'word'}";
+                this.code = "{\n" +
+                    "    \"hello\":\"world\"\n" +
+                    "}";
 
             }
         }

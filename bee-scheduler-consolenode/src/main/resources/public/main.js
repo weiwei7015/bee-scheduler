@@ -6,7 +6,7 @@ require.config({
         comp: 'app/comp',
         vs: 'lib/monaco-editor-0.17.1/min/vs',
         ace: 'lib/ace-1.4.5',
-        vue: 'lib/vue-2.5.13',
+        vue: 'lib/vue-2.5.13.min',
         vue_router: 'lib/vue-router-3.0.1.min',
         vue_resource: 'lib/vue-resource-1.5.0.min',
         ELEMENT: 'lib/element-ui-2.11.1/index',

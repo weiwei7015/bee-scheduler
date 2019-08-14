@@ -1,7 +1,14 @@
-define(['text!comp/quick-task-dialog.html', 'vue'], function (tpl, Vue) {
+define(['text!comp/quick-task-dialog.html'], function (tpl) {
+
+    var aceEditor = function (resolver) {
+        require(['comp/ace-editor'], resolver);
+    };
+
     return {
         template: tpl,
-        components: {},
+        components: {
+            "ace-editor": aceEditor
+        },
         props: ['visible'],
         data: function () {
             var vm = this;

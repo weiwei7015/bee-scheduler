@@ -36,7 +36,8 @@
                     <!--                    <span class="task-module-help-btn"><i class="iconfont icon-tips"></i></span>-->
                 </el-form-item>
                 <el-form-item label="任务参数" prop="params">
-                    <el-input type="textarea" v-model="editTaskFormModel.params" class="font-code" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入任务组件需要的参数（JSON格式）"></el-input>
+                    <!--<el-input type="textarea" v-model="editTaskFormModel.params" class="font-code" :autosize="{minRows: 4, maxRows: 15}" placeholder="请输入任务组件需要的参数（JSON格式）"></el-input>-->
+                    <ace-editor mode="json" v-model="editTaskFormModel.params"></ace-editor>
                 </el-form-item>
                 <el-form-item label="任务描述" prop="description">
                     <el-input type="textarea" v-model="editTaskFormModel.description" :autosize="{minRows: 2, maxRows: 5}" placeholder="请详细描述该任务"></el-input>

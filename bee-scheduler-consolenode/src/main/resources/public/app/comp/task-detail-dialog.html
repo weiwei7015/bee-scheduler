@@ -9,7 +9,10 @@
                     <h4 class="no-margin">任务内容</h4>
                     <div class="hr"></div>
                     <el-form-item label="任务组件">{{taskDetail.taskModule}}</el-form-item>
-                    <el-form-item label="任务参数">{{taskDetail.params}}</el-form-item>
+                    <el-form-item label="任务参数">
+<!--                        {{taskDetail.params}}-->
+                        <ace-editor mode="json" v-model="taskDetail.params" read-only simple-style></ace-editor>
+                    </el-form-item>
                     <el-form-item label="任务描述">{{taskDetail.description||"--"}}</el-form-item>
 
                     <div class="spr spr-x"></div>

@@ -1,8 +1,13 @@
 define(['text!comp/task-edit.html', 'css!./task-edit.css'], function (tpl) {
+    var aceEditor = function (resolver) {
+        require(['comp/ace-editor'], resolver);
+    };
 
     return {
         template: tpl,
-        components: {},
+        components: {
+            "ace-editor": aceEditor
+        },
         data: function () {
             var vm = this;
             var editFor = vm.$route.meta.editFor;
