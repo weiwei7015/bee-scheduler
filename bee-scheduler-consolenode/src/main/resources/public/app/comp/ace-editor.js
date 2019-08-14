@@ -18,7 +18,7 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
             },
             minLines: {
                 type: Number,
-                default: 2
+                default: 5
             },
             maxLines: {
                 type: Number,
@@ -26,7 +26,7 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
             },
             theme: {
                 type: String,
-                default: 'chrome'
+                default: 'dawn'
             }
         },
         components: {},

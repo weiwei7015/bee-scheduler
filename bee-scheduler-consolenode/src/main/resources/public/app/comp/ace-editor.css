@@ -1,25 +1,23 @@
 .ace-editor-wrapper {
     position: relative;
-    /*min-height: 160px;*/
-    padding: 5px;
     border-radius: 4px;
-    background-color: #F2F6FC;
+    box-sizing: border-box;
+    /*background-color: #F2F6FC;*/
 }
 
 .ace-editor-wrapper .ace-editor {
+    border-radius: 4px;
     width: 100%;
-    background-color: #F2F6FC;
+    /*background-color: #F2F6FC;*/
 }
 
 .ace-editor-wrapper.ace-edit-mode {
-    padding: 0;
     border: 1px solid #DCDFE6;
-    background-color: #FFFFFF;
+    /*background-color: #FFFFFF;*/
 }
 
 .ace-editor-wrapper.ace-edit-mode .ace-editor {
-    border-radius: 4px;
-    background-color: #FFFFFF;
+    /*background-color: #FFFFFF;*/
 }
 
 
