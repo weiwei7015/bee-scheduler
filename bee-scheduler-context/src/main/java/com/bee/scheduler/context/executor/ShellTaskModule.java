@@ -41,7 +41,7 @@ public class ShellTaskModule implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    shell:''\r" +
+                "    \"shell\":\"\"\r" +
                 "}";
     }
 

@@ -46,11 +46,11 @@ public class HttpExcutorModule implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    url:\"\",\r" +
-                "    method:\"get\",\r" +
-                "    timeout:5000,\r" +
-                "    headers:{name:\"value\"},\r" +
-                "    body:\"\"\r" +
+                "    \"url\":\"\",\r" +
+                "    \"method\":\"get\",\r" +
+                "    \"timeout\":5000,\r" +
+                "    \"headers\":{\"name\":\"value\"},\r" +
+                "    \"body\":\"\"\r" +
                 "}";
     }
 

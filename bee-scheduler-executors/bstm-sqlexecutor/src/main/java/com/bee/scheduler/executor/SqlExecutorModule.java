@@ -44,9 +44,9 @@ public class SqlExecutorModule implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    url:'jdbc:mysql://localhost:3306/mysql',\r" +
-                "    type:'query',\r" +
-                "    sql:''\r" +
+                "    \"url\":\"jdbc:mysql://localhost:3306/mysql\",\r" +
+                "    \"type\":\"query\",\r" +
+                "    \"sql\":\"\"\r" +
                 "}";
     }
 

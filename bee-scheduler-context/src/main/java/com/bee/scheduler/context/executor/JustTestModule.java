@@ -39,7 +39,7 @@ public class JustTestModule implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    content:''\r" +
+                "    \"content\":\"\"\r" +
                 "}";
     }
 

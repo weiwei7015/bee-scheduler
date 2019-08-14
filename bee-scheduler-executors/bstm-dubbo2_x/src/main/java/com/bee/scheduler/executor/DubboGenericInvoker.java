@@ -143,16 +143,16 @@ public class DubboGenericInvoker implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    url:'',\r" +
-                "    registry:'zookeeper://127.0.0.1:2181',\r" +
-                "    service:'',\r" +
-                "    version:'',\r" +
-                "    group:'',\r" +
-                "    method:'',\r" +
-                "    timeout:10000,\r" +
-                "    loadbalance:'random',\r" +
-                "    params:[],\r" +
-                "    paramsType:[]\r" +
+                "    \"url\":\"\",\r" +
+                "    \"registry\":\"zookeeper://127.0.0.1:2181\",\r" +
+                "    \"service\":\"\",\r" +
+                "    \"version\":\"\",\r" +
+                "    \"group\":\"\",\r" +
+                "    \"method\":\"\",\r" +
+                "    \"timeout\":10000,\r" +
+                "    \"loadbalance\":\"random\",\r" +
+                "    \"params\":[],\r" +
+                "    \"paramsType\":[]\r" +
                 "}";
     }
 

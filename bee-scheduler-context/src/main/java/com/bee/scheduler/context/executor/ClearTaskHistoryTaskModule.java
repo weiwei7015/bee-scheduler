@@ -52,11 +52,11 @@ public class ClearTaskHistoryTaskModule implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    keep_days:'5',\r" +
-                "    task_group:'',\r" +
-                "    task_name:'',\r" +
-                "    fired_way:'',\r" +
-                "    exec_state:''\r" +
+                "    \"keep_days\":\"5\",\r" +
+                "    \"task_group\":\"\",\r" +
+                "    \"task_name\":\"\",\r" +
+                "    \"fired_way\":\"\",\r" +
+                "    \"exec_state\":\"\"\r" +
                 "}";
     }
 

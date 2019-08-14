@@ -49,17 +49,17 @@ public class MailModule implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    smtp_host:'',\r" +
-                "    smtp_port:'465',\r" +
-                "    smtp_auth:'true',\r" +
-                "    smtp_ssl_enable:'true',\r" +
-                "    from:'xxx@xx.com',\r" +
-                "    recipients_to:'xxx@xx.com,xxx@xx.com',\r" +
-                "    recipients_cc:'xxx@xx.com,xxx@xx.com',\r" +
-                "    subject:'',\r" +
-                "    content:'',\r" +
-                "    account:'',\r" +
-                "    password:''\r" +
+                "    \"smtp_host\":\"\",\r" +
+                "    \"smtp_port\":465,\r" +
+                "    \"smtp_auth\":true,\r" +
+                "    \"smtp_ssl_enable\":true,\r" +
+                "    \"from\":\"xxx@xx.com\",\r" +
+                "    \"recipients_to\":\"xxx@xx.com,xxx@xx.com\",\r" +
+                "    \"recipients_cc\":\"xxx@xx.com,xxx@xx.com\",\r" +
+                "    \"subject\":\"\",\r" +
+                "    \"content\":\"\",\r" +
+                "    \"account\":\"\",\r" +
+                "    \"password\":\"\"\r" +
                 "}";
     }
 

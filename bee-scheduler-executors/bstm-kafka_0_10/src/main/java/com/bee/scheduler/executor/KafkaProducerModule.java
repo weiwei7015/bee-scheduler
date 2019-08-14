@@ -46,11 +46,11 @@ public class KafkaProducerModule implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    brokerList:'',\r" +
-                "    messages:[\r" +
-                "        {topic:'',content:{}},\r" +
-                "        {topic:'',content:''},\r" +
-                "        {topic:'',content:[{},{}]}\r" +
+                "    \"brokerList\":\"\",\r" +
+                "    \"messages\":[\r" +
+                "        {\"topic\":\"\",\"content\":{}},\r" +
+                "        {\"topic\":\"\",\"content\":\"\"},\r" +
+                "        {\"topic\":\"\",\"content\":[{},{}]}\r" +
                 "    ]\r" +
                 "}";
     }
