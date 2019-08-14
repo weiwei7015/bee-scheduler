@@ -1,36 +1,38 @@
 .ace-editor-wrapper {
     position: relative;
-    min-height: 160px;
-}
-
-.ace-editor-wrapper {
+    /*min-height: 160px;*/
+    padding: 5px;
     border-radius: 4px;
-    /*border: 1px solid #DCDFE6;*/
-    border: 1px solid #C0C4CC;
+    background-color: #F2F6FC;
 }
-
-/*.ace-editor-wrapper:hover {
-    border-color: #C0C4CC;
-}
-
-.ace-editor-wrapper:focus {
-    border-color: #303133;
-}*/
 
 .ace-editor-wrapper .ace-editor {
     width: 100%;
+    background-color: #F2F6FC;
+}
+
+.ace-editor-wrapper.ace-edit-mode {
+    padding: 0;
+    border: 1px solid #DCDFE6;
+    background-color: #FFFFFF;
+}
+
+.ace-editor-wrapper.ace-edit-mode .ace-editor {
+    border-radius: 4px;
+    background-color: #FFFFFF;
 }
 
 
 .ace-editor-wrapper .ace-editor-tag {
     background-color: rgba(192, 204, 218, 0.31);
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 5px;
+    top: 5px;
     border-radius: 3px;
     z-index: 2;
     margin: 0;
-    padding: 0 5px;
-    line-height: 25px;
+    padding: 0 3px;
+    font-size: 12px;
+    line-height: 20px;
     color: #b0b6bf;
 }

@@ -2,7 +2,7 @@
     <template v-if="taskDetail">
         <span slot="title" class="el-dialog__title"><i class="iconfont icon-detail"></i> {{taskDetail.group}}.{{taskDetail.name}}</span>
     </template>
-    <div v-loading="loading" style="height: 400px;overflow: auto">
+    <div v-loading="loading">
         <div v-show="!loading">
             <template v-if="taskDetail">
                 <el-form label-width="100px" class="no-item-margin form-label-muted">
@@ -10,8 +10,8 @@
                     <div class="hr"></div>
                     <el-form-item label="任务组件">{{taskDetail.taskModule}}</el-form-item>
                     <el-form-item label="任务参数">
-<!--                        {{taskDetail.params}}-->
-                        <ace-editor mode="json" v-model="taskDetail.params" read-only simple-style></ace-editor>
+                        <!--{{taskDetail.params}}-->
+                        <ace-editor language="json" mode="view" v-model="taskDetail.params"></ace-editor>
                     </el-form-item>
                     <el-form-item label="任务描述">{{taskDetail.description||"--"}}</el-form-item>
 
@@ -47,7 +47,13 @@
                     <el-form-item v-if="taskDetail.startAtType == 2" label="激活时间">{{$moment(taskDetail.startAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
                     <el-form-item label="销毁选项">{{taskDetail.endAtType === 1?"永不销毁":taskDetail.endAtType === 2?"指定时间销毁":"unknown"}}</el-form-item>
                     <el-form-item v-if="taskDetail.endAtType == 2" label="销毁时间">{{$moment(taskDetail.endAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
-                    <el-form-item label="联动任务">{{taskDetail.linkageRule||"--"}}</el-form-item>
+                    <el-form-item label="联动任务">
+                        <template v-if="taskDetail.linkageRule">
+                            <ace-editor language="json" mode="view" v-model="taskDetail.linkageRule"></ace-editor>
+                        </template>
+                        <template v-else>--</template>
+                        <!--{{taskDetail.linkageRule||"&#45;&#45;"}}-->
+                    </el-form-item>
                 </el-form>
             </template>
             <template v-else>

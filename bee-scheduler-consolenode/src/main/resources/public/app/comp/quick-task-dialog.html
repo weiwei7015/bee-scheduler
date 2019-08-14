@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item label="任务参数" prop="params">
                 <!--<el-input type="textarea" v-model="editTaskFormModel.params" :autosize="{minRows: 4, maxRows: 15}" class="font-code" placeholder="请输入任务组件需要的参数（JSON格式）"></el-input>-->
-                <ace-editor mode="json" v-model="editTaskFormModel.params"></ace-editor>
+                <ace-editor language="json" mode="edit" v-model="editTaskFormModel.params"></ace-editor>
             </el-form-item>
             <el-form-item label="延迟选项">
                 <el-radio-group v-model="editTaskFormModel.enableStartDelay">

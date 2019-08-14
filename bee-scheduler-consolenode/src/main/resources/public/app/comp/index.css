@@ -88,6 +88,12 @@
     vertical-align: middle;
 }
 
+/** el-dialog__body **/
+.el-dialog__body {
+    height: 400px;
+    overflow: auto
+}
+
 /*** framework ***/
 .page {
     height: 100%;

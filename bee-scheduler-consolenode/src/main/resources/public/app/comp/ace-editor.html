@@ -1,4 +1,4 @@
-<div class="ace-editor-wrapper" v-loading="editor===null" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+<div class="ace-editor-wrapper" :class="{'ace-edit-mode':mode=='edit'}" :style="{minHeight:(16*minLines)+'px'}" v-loading="editor===null" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
     <div :id="editorId" class="ace-editor"></div>
-    <span class="ace-editor-tag">{{mode.toUpperCase()}}</span>
+    <span class="ace-editor-tag">{{language.toUpperCase()}}</span>
 </div>
