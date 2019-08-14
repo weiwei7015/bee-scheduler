@@ -1,4 +1,4 @@
-<div style="position: relative;">
-    <div :id="editorId" style="width: 100%;"></div>
-    <span style="background-color: rgba(192, 204, 218, 0.31);position: absolute;right: 0;top: 0;border-radius: 3px;z-index: 2;margin: 0;padding: 0 5px;line-height: 25px;color: #b0b6bf;">{{mode.toUpperCase()}}</span>
+<div class="ace-editor-wrapper" v-loading="editor===null" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+    <div :id="editorId" class="ace-editor"></div>
+    <span class="ace-editor-tag">{{mode.toUpperCase()}}</span>
 </div>

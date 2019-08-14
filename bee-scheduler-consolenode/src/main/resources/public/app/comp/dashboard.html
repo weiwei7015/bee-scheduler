@@ -11,7 +11,7 @@
 
         <el-button @click="changeCode">hello</el-button>
         {{code}}
-        <ace-editor height="500" mode="json" theme="eclipse" v-model="code" :simpleStyle="true"></ace-editor>
+        <ace-editor mode="json" theme="eclipse" v-model="code" read-only></ace-editor>
 
 
         <div class="text-center">

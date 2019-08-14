@@ -1,23 +1,20 @@
-define(['text!./ace-editor.html', 'ace/ace'], function (tpl, ace) {
+define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
     var idCounter = 0;
     return {
         template: tpl,
-        props: ['value', 'height', 'theme', 'mode', 'simple-style'],
+        props: ['value', 'min-lines', 'max-lines', 'theme', 'mode', 'simple-style', 'read-only'],
         components: {},
         data: function () {
-            var data = {
-                editorId: "ace-editor",
-                contentBackup: ""
+            return {
+                editorId: "ace-editor-" + (++idCounter),
+                editor: null,
+                currentContent: ""
             };
-
-            idCounter = idCounter + 1;
-            data.editorId = "ace-editor-" + (idCounter);
-            return data;
         },
         watch: {
             value: function (newVal, oldVal) {
                 var vm = this;
-                if (this.contentBackup !== newVal) {
+                if (this.currentContent !== newVal) {
                     vm.editor.setValue(newVal);
                     vm.editor.clearSelection();
                 }
@@ -25,35 +22,37 @@ define(['text!./ace-editor.html', 'ace/ace'], function (tpl, ace) {
         },
         mounted: function () {
             var vm = this;
+            //prepare configs
             var editorId = vm.editorId;
-
-
-            var theme = vm.theme || "", height = vm.height || "300", mode = vm.mode || "javascript";
-
-            //初始化容器高度
-            window.document.querySelector("#" + editorId).style.height = height + "px";
-
-            //初始化编辑器
-            var editor = vm.editor = ace.edit(editorId, {
-                theme: "ace/theme/" + theme,
-                value: vm.value,
-                highlightActiveLine: vm.simpleStyle,
-                showGutter: vm.simpleStyle,
-                mode: "ace/mode/" + mode
-            });
-            // editor.setTheme("ace/theme/" + theme);
-            // editor.setValue(vm.value);
-            // if (vm.simpleStyle) {
-            //     editor.setHighlightActiveLine(false);
-            //     editor.renderer.setShowGutter(false);
-            // }
-            // editor.getSession().setMode("ace/mode/" + mode);
-            editor.$blockScrolling = Infinity;
-
-
-            vm.editor.on("change", function (e) {
-                vm.contentBackup = vm.editor.getValue();
-                vm.$emit('input', vm.editor.getValue());
+            var theme = vm.theme || "";
+            var mode = vm.mode || "javascript";
+            var simpleStyle = vm.simpleStyle !== undefined;
+            var readOnly = vm.readOnly !== undefined;
+            // var minLines = vm.minLines || 10;
+            var minLines = 10;
+            var maxLines = vm.maxLines || 30;
+            if (maxLines < minLines) {
+                maxLines = minLines;
+            }
+            //load ace module
+            require(['ace/ace'], function (ace) {
+                //create editor
+                var editor = vm.editor = ace.edit(editorId, {
+                    value: vm.value,
+                    theme: "ace/theme/" + theme,
+                    mode: "ace/mode/" + mode,
+                    highlightActiveLine: !simpleStyle,
+                    showGutter: !simpleStyle,
+                    readOnly: readOnly,
+                    showLineNumbers: false,
+                    minLines: minLines,
+                    maxLines: maxLines
+                });
+                //bind change event
+                editor.on("change", function (e) {
+                    vm.currentContent = vm.editor.getValue();
+                    vm.$emit('input', editor.getValue());
+                });
             });
         }
     };

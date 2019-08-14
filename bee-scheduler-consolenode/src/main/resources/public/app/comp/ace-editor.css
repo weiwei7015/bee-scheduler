@@ -1,0 +1,21 @@
+.ace-editor-wrapper {
+    position: relative;
+    min-height: 160px;
+}
+
+.ace-editor-wrapper .ace-editor {
+    width: 100%;
+}
+
+.ace-editor-wrapper .ace-editor-tag {
+    background-color: rgba(192, 204, 218, 0.31);
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border-radius: 3px;
+    z-index: 2;
+    margin: 0;
+    padding: 0 5px;
+    line-height: 25px;
+    color: #b0b6bf;
+}

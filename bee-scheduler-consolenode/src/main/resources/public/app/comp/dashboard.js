@@ -1,4 +1,8 @@
-define(['text!comp/dashboard.html', 'comp/ace-editor'], function (tpl, aceEditor) {
+define(['text!comp/dashboard.html'], function (tpl) {
+    var aceEditor = function (resolver) {
+        require(['comp/ace-editor'], resolver);
+    };
+
     return {
         template: tpl,
         components: {
