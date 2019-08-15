@@ -10,8 +10,7 @@
                     <div class="hr"></div>
                     <el-form-item label="任务组件">{{taskDetail.taskModule}}</el-form-item>
                     <el-form-item label="任务参数">
-                        <!--{{taskDetail.params}}-->
-                        <ace-editor language="json" mode="view" v-model="taskDetail.params"></ace-editor>
+                        <pre class="language-json" v-html="Prism.highlight(taskDetail.params||'', Prism.languages.json,'json')"></pre>
                     </el-form-item>
                     <el-form-item label="任务描述">{{taskDetail.description||"--"}}</el-form-item>
 
@@ -49,10 +48,9 @@
                     <el-form-item v-if="taskDetail.endAtType == 2" label="销毁时间">{{$moment(taskDetail.endAt).format("YYYY-MM-DD HH:mm:ss")}}</el-form-item>
                     <el-form-item label="联动任务">
                         <template v-if="taskDetail.linkageRule">
-                            <ace-editor language="json" mode="view" v-model="taskDetail.linkageRule"></ace-editor>
+                            <pre class="language-json" v-html="Prism.highlight(taskDetail.linkageRule, Prism.languages.json,'json')"></pre>
                         </template>
                         <template v-else>--</template>
-                        <!--{{taskDetail.linkageRule||"&#45;&#45;"}}-->
                     </el-form-item>
                 </el-form>
             </template>

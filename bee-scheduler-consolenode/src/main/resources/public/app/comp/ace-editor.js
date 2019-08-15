@@ -1,5 +1,4 @@
 define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
-    //['value', 'min-lines', 'max-lines', 'theme', 'mode', 'language', 'simple-style', 'read-only'],
     var idCounter = 0;
     return {
         template: tpl,
@@ -9,10 +8,6 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
                 required: true
             },
             language: {
-                type: String,
-                required: true
-            },
-            mode: {
                 type: String,
                 required: true
             },
@@ -49,7 +44,6 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
         mounted: function () {
             var vm = this;
             //prepare configs
-            var editMode = vm.mode === "edit";
             if (vm.maxLines < vm.minLines) {
                 vm.maxLines = vm.minLines;
             }
@@ -61,9 +55,9 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
                     theme: "ace/theme/" + vm.theme,
                     mode: "ace/mode/" + vm.language,
                     highlightActiveLine: false,
-                    showGutter: editMode,
-                    showLineNumbers: editMode,
-                    readOnly: !editMode,
+                    showGutter: true,
+                    showLineNumbers: true,
+                    readOnly: false,
                     showFoldWidgets: false,
                     showPrintMargin: false,
                     displayIndentGuides: false,

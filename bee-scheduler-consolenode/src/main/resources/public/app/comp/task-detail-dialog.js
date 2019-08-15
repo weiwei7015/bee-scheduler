@@ -1,15 +1,8 @@
-define(['text!comp/task-detail-dialog.html', 'vue'], function (tpl, Vue) {
-
-    var aceEditor = function (resolver) {
-        require(['comp/ace-editor'], resolver);
-    };
-
+define(['text!comp/task-detail-dialog.html', 'vue', 'prism'], function (tpl, Vue, Prism) {
     var TaskDetailDialogConstructor = Vue.extend({
         template: tpl,
         props: ['name', 'group'],
-        components: {
-            "ace-editor": aceEditor
-        },
+        components: {},
         data: function () {
             var vm = this;
             var data = {
@@ -34,6 +27,7 @@ define(['text!comp/task-detail-dialog.html', 'vue'], function (tpl, Vue) {
             }
         },
         mounted: function () {
+            Prism.highlightAll();
         },
         methods: {
             destroyElement: function () {

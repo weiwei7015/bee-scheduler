@@ -1,4 +1,4 @@
-define(['text!comp/dashboard.html'], function (tpl) {
+define(['text!comp/dashboard.html', 'prism'], function (tpl, Prism) {
     var aceEditor = function (resolver) {
         require(['comp/ace-editor'], resolver);
     };
@@ -12,6 +12,9 @@ define(['text!comp/dashboard.html'], function (tpl) {
             return {
                 code: '{}'
             };
+        },
+        mounted: function () {
+            Prism.highlightAll();
         },
         methods: {
             changeCode: function () {

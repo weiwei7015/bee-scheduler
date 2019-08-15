@@ -4,8 +4,8 @@ require.config({
         // view: 'app/component/view',
         // part: 'app/component/part',
         comp: 'app/comp',
-        vs: 'lib/monaco-editor-0.17.1/min/vs',
         ace: 'lib/ace-1.4.5',
+        prism: 'lib/prism/prism',
         vue: 'lib/vue-2.5.13.min',
         vue_router: 'lib/vue-router-3.0.1.min',
         vue_resource: 'lib/vue-resource-1.5.0.min',
@@ -13,6 +13,12 @@ require.config({
         moment: 'lib/moment-2.22.2.min',
         text: 'lib/text-2.0.15',
         css: 'lib/require-css-0.1.10.min'
+    },
+    shim: {
+        prism: {
+            exports: 'Prism',
+            deps: ['css!lib/prism/prism.css']
+        }
     },
     urlArgs: 'v=2019081001'
 });
