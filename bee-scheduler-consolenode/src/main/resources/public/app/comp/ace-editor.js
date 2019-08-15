@@ -21,7 +21,7 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
             },
             theme: {
                 type: String,
-                default: 'dawn'
+                default: 'eclipse'
             }
         },
         components: {},
@@ -50,7 +50,7 @@ define(['text!./ace-editor.html', 'css!./ace-editor.css'], function (tpl) {
             //load ace module
             require(['ace/ace'], function (ace) {
                 //create editor
-                var editor = vm.editor = ace.edit(vm.editorId, {
+                var editor = window.editor = vm.editor = ace.edit(vm.editorId, {
                     value: vm.value,
                     theme: "ace/theme/" + vm.theme,
                     mode: "ace/mode/" + vm.language,
