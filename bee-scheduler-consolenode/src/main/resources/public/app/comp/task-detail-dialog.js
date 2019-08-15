@@ -1,4 +1,4 @@
-define(['text!comp/task-detail-dialog.html', 'vue', 'prism'], function (tpl, Vue, Prism) {
+define(['text!./task-detail-dialog.html', 'vue', 'prism', 'css!./task-detail-dialog.css'], function (tpl, Vue, Prism) {
     var TaskDetailDialogConstructor = Vue.extend({
         template: tpl,
         props: ['name', 'group'],
