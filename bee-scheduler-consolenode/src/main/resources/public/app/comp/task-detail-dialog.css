@@ -1,5 +1,6 @@
 .language-json {
     position: relative;
+    border-radius: 4px;
     overflow: auto;
     font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
     direction: ltr;
