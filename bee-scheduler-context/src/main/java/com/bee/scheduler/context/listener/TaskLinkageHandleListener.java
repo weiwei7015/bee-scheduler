@@ -169,6 +169,10 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
         JobKey targetTaskJobKey = new JobKey(taskName, taskGroup);
         TriggerKey targetTaskTriggerKey = new TriggerKey(taskGroup + "." + taskName, TaskFiredWay.SCHEDULE.name());
         Trigger targetTaskTrigger = scheduler.getTrigger(targetTaskTriggerKey);
+        if (targetTaskTrigger != null) {
+            logger.error("任务不存在: " + taskGroup + "." + taskName);
+            return;
+        }
         JobDataMap targetTaskTriggerDataMap = targetTaskTrigger.getJobDataMap();
         TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger().withIdentity(fireTriggerKey).usingJobData(targetTaskTriggerDataMap).forJob(targetTaskJobKey);
         if (delay != null) {
