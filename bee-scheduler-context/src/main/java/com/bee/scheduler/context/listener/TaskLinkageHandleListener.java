@@ -169,7 +169,7 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
         JobKey targetTaskJobKey = new JobKey(taskName, taskGroup);
         TriggerKey targetTaskTriggerKey = new TriggerKey(taskGroup + "." + taskName, TaskFiredWay.SCHEDULE.name());
         Trigger targetTaskTrigger = scheduler.getTrigger(targetTaskTriggerKey);
-        if (targetTaskTrigger != null) {
+        if (targetTaskTrigger == null) {
             logger.error("任务不存在: " + taskGroup + "." + taskName);
             return;
         }
