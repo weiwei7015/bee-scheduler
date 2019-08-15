@@ -121,7 +121,7 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
         },
         function (request) {
             return function (response) {
-                if (response.status === 0) {
+                if (response.status === 0 || response.status === 503) {
                     app.$alert("请求服务器失败，请稍后再试", '网络异常', {type: "error"});
                 }
                 if (response.status >= 400) {
