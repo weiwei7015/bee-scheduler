@@ -14,7 +14,6 @@ define(['text!comp/dashboard.html', 'prism'], function (tpl, Prism) {
             };
         },
         mounted: function () {
-            Prism.highlightAll();
         },
         methods: {
             changeCode: function () {

@@ -27,7 +27,7 @@ define(['text!./task-detail-dialog.html', 'vue', 'prism', 'css!./task-detail-dia
             }
         },
         mounted: function () {
-            Prism.highlightAll();
+
         },
         methods: {
             destroyElement: function () {
