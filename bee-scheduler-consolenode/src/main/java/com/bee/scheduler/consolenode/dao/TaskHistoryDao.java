@@ -123,4 +123,26 @@ public class TaskHistoryDao extends AbstractDao {
         return jdbcTemplate.update(sql);
     }
 
+    public Pageable<String> queryTaskNames(String kw, int page, int pageSize) {
+        String sqlQueryResult = "select distinct TASK_NAME from BS_TASK_HISTORY where TASK_NAME like ? limit ?,?";
+        String sqlQueryResultCount = "select count(distinct TASK_NAME) from BS_TASK_HISTORY where TASK_NAME like ?";
+
+        int limitOffset = (page - 1) * pageSize;
+
+        List<String> result = jdbcTemplate.queryForList(sqlQueryResult, String.class, kw + "%", limitOffset, pageSize);
+        Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount, Integer.TYPE, kw + "%");
+        return new Pageable<>(page, pageSize, resultTotal, result);
+    }
+
+    public Pageable<String> queryTaskGroups(String kw, int page, int pageSize) {
+        String sqlQueryResult = "select distinct TASK_GROUP from BS_TASK_HISTORY where TASK_GROUP like ? limit ?,?";
+        String sqlQueryResultCount = "select count(distinct TASK_GROUP) from BS_TASK_HISTORY where TASK_GROUP like ?";
+
+        int limitOffset = (page - 1) * pageSize;
+
+        List<String> result = jdbcTemplate.queryForList(sqlQueryResult, String.class, kw + "%", limitOffset, pageSize);
+        Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount, Integer.TYPE, kw + "%");
+        return new Pageable<>(page, pageSize, resultTotal, result);
+    }
+
 }

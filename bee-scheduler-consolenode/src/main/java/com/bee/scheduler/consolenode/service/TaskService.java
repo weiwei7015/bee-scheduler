@@ -32,4 +32,6 @@ public interface TaskService {
     List<String> getTaskHistoryGroups(String schedulerName);
 
     int clearHistoryBefore(String schedulerName, Date date);
+
+    List<String> getTaskHistoryQuerySuggestions(String input);
 }

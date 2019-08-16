@@ -7,6 +7,7 @@ import com.bee.scheduler.consolenode.model.ExecutingTask;
 import com.bee.scheduler.consolenode.model.Pageable;
 import com.bee.scheduler.consolenode.model.Task;
 import com.bee.scheduler.consolenode.service.TaskService;
+import com.bee.scheduler.context.common.TaskExecState;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,5 +108,47 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public int clearHistoryBefore(String schedulerName, Date date) {
         return taskHistoryDao.clearBefore(schedulerName, date);
+    }
+
+    @Override
+    public List<String> getTaskHistoryQuerySuggestions(String input) {
+        ArrayList<String> result = new ArrayList<>();
+        Pageable<String> taskNames = taskHistoryDao.queryTaskNames(input, 1);
+        Pageable<String> taskGroups = taskHistoryDao.queryTaskGroups(input, 1);
+
+
+        if (StringUtils.isBlank(input)) {
+            return result;
+        }
+
+
+        String[] kws = input.split("\\s");
+
+
+        for (String kw : kws) {
+            if (kw.contains(":")) {
+                int splitterIndex = kw.indexOf(':');
+                String prefix = kw.substring(0, splitterIndex);
+                String qs = kw.substring(splitterIndex);
+
+                if (StringUtils.equalsIgnoreCase(prefix, "g")) {
+                    result.addAll(taskHistoryDao.queryTaskGroups(qs, 1, 5).getResult());
+                } else if (StringUtils.equalsIgnoreCase(prefix, "s")) {
+                    for (TaskExecState state : TaskExecState.values()) {
+                        if (StringUtils.startsWith(state.name(), qs)) {
+                            result.add()
+                        }
+                    }
+                } else if (StringUtils.equalsIgnoreCase(prefix, "f")) {
+
+                }
+            } else {
+                result.addAll(taskHistoryDao.queryTaskNames(kw, 1, 5).getResult());
+            }
+
+        }
+
+
+        return result;
     }
 }

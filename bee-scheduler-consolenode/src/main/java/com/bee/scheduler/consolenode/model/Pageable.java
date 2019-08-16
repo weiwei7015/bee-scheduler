@@ -6,35 +6,24 @@ import java.util.List;
  * @author weiwei 分页支持类
  */
 public class Pageable<T> {
-    private int page;
-    private int pageSize;
-    private int resultTotal;
+    private Integer page;
+    private Integer pageSize;
+    private Integer resultTotal;
     private List<T> result;
 
-    public Pageable(int page, int pageSize, int resultTotal, List<T> result) {
+    public Pageable(Integer page, Integer pageSize, Integer resultTotal, List<T> result) {
         this.page = page;
         this.pageSize = pageSize;
         this.resultTotal = resultTotal;
         this.result = result;
     }
 
-    public Pageable(int page, int resultTotal, List<T> result) {
+    public Pageable(Integer page, Integer resultTotal, List<T> result) {
         this(page, 20, resultTotal, result);
     }
 
-    public int getPage() {
-        return page;
-    }
 
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public void refresh() {
-
-    }
-
-    public int getPageTotal() {
+    public Integer getPageTotal() {
         if (resultTotal % pageSize == 0) {
             return resultTotal / pageSize;
         } else {
@@ -42,19 +31,27 @@ public class Pageable<T> {
         }
     }
 
-    public int getPageSize() {
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
-    public int getResultTotal() {
+    public Integer getResultTotal() {
         return resultTotal;
     }
 
-    public void setResultTotal(int resultTotal) {
+    public void setResultTotal(Integer resultTotal) {
         this.resultTotal = resultTotal;
     }
 
@@ -65,5 +62,4 @@ public class Pageable<T> {
     public void setResult(List<T> result) {
         this.result = result;
     }
-
 }

@@ -66,7 +66,7 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 this.curQueryParams.page = val;
                 this.load(this.curQueryParams);
             },
-            querySuggestion: function (queryString, cb) {
+            querySuggestion: function (queryString, callback) {
                 var suggestions = [];
                 var matchResult = /^(.+\s+)?(\S+)$/.exec(queryString);
                 if (matchResult) {
@@ -84,7 +84,7 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                         });
                     }
                 }
-                cb(suggestions)
+                callback(suggestions)
             },
             showTaskHistoryDetail: function (fireId) {
                 this.$router.push("/task/history/detail/" + fireId);
