@@ -25,16 +25,10 @@ define(['text!comp/task-list.html', 'css!./task-list.css'], function (tpl) {
                 },
                 curQueryParams: null,
                 queryResult: {},
-                taskGroups: [],
-                taskStatus: ["WAITING", "ACQUIRED", "PAUSED", "BLOCKED", "PAUSED_BLOCKED", "ERROR", "DELETED"],
                 selectedItems: [],
                 enabledCommandBtn: [],
                 taskModuleList: {}
             };
-
-            vm.$http.get("/task/groups").then(function (re) {
-                data.taskGroups = re.body.data;
-            });
 
             return data;
         },
@@ -93,21 +87,18 @@ define(['text!comp/task-list.html', 'css!./task-list.css'], function (tpl) {
                 this.curQueryParams.page = val;
                 this.load(this.curQueryParams);
             },
-            querySuggestion: function (queryString, cb) {
+            querySuggestion: function (queryString, callback) {
+                var vm = this;
                 var suggestions = [];
-                var matchResult = /^(.+\s+)?(\S+)$/.exec(queryString);
-                if (matchResult) {
-                    if (matchResult[2] === "g:") {
-                        this.taskGroups.forEach(function (value) {
-                            suggestions.push({"value": matchResult[0] + value + " "});
-                        });
-                    } else if (matchResult[2] === "s:") {
-                        this.taskStatus.forEach(function (value) {
-                            suggestions.push({"value": matchResult[0] + value + " "});
-                        });
-                    }
-                }
-                cb(suggestions)
+                vm.$http.get("/task/query-suggestions", {params: {input: queryString}}).then(function (re) {
+                    var suggestionResult = re.body.data;
+                    suggestionResult.forEach(function (value) {
+                        suggestions.push({"value": value});
+                    });
+                    callback(suggestions);
+                }, function (reason) {
+                    callback(suggestions);
+                });
             },
             onRowClick: function (row, event, column) {
                 console.log(column.id);

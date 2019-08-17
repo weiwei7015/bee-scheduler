@@ -5,8 +5,11 @@ import com.bee.scheduler.consolenode.model.Pageable;
 import com.bee.scheduler.consolenode.model.Task;
 import com.bee.scheduler.context.common.Constants;
 import com.bee.scheduler.context.common.TaskFiredWay;
+import com.bee.scheduler.context.common.TaskSpecialGroup;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;
 import java.sql.ResultSet;
@@ -23,36 +26,41 @@ public class TaskDao extends AbstractDao {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Task.class), schedulerName, name, group);
     }
 
-    public Pageable<Task> query(String schedulerName, String name, String group, String state, int page) {
-        List<Object> args = new ArrayList<>();
+    public Pageable<Task> query(String schedulerName, List<String> taskNameList, List<String> taskGroupList, List<String> taskStateList, int page) {
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
         StringBuilder sqlQueryResult = new StringBuilder("SELECT t1.SCHED_NAME 'schedulerName',t1.JOB_NAME 'name',t1.JOB_GROUP 'group',t1.TRIGGER_TYPE 'triggerType',t2.JOB_CLASS_NAME 'jobClassName',t1.JOB_DATA 'data',t1.TRIGGER_STATE 'state',t1.PREV_FIRE_TIME 'prevFireTime',t1.NEXT_FIRE_TIME 'nextFireTime',t1.START_TIME 'startTime',t1.END_TIME 'endTime',t1.MISFIRE_INSTR 'misfireInstr',t1.DESCRIPTION 'description' FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.SCHED_NAME = t2.SCHED_NAME AND t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
 
-        StringBuilder sqlWhere = new StringBuilder(" WHERE t1.SCHED_NAME = ? AND t1.TRIGGER_GROUP NOT IN('TMP','LINKAGE')");
-        args.add(schedulerName);
-        if (name != null) {
-            sqlWhere.append(" AND t1.JOB_NAME LIKE ?");
-            args.add("%" + name + "%");
+        List<String> conditions = new ArrayList<>();
+        conditions.add("t1.SCHED_NAME = :schedulerName");
+        conditions.add("t1.TRIGGER_GROUP NOT IN(:taskSpecialGroup)");
+        if (!CollectionUtils.isEmpty(taskNameList)) {
+            conditions.add("t1.JOB_NAME in (:taskNameList)");
         }
-        if (group != null) {
-            sqlWhere.append(" AND t1.JOB_GROUP = ?");
-            args.add(group);
+        if (!CollectionUtils.isEmpty(taskGroupList)) {
+            conditions.add("t1.JOB_GROUP in (:taskGroupList)");
         }
-        if (state != null) {
-            sqlWhere.append(" AND t1.TRIGGER_STATE = ?");
-            args.add(state);
+        if (!CollectionUtils.isEmpty(taskStateList)) {
+            conditions.add("t1.TRIGGER_STATE in (:taskStateList)");
         }
-        // 查询记录总数
-        Integer resultTotal = jdbcTemplate.queryForObject(sqlQueryResultCount.append(sqlWhere).toString(), Integer.class, args.toArray());
-        // 查询记录
-        sqlQueryResult.append(sqlWhere).append(" ORDER BY t1.JOB_GROUP,t1.JOB_NAME ASC LIMIT ?,?");
-        args.add((page - 1) * DEFAULT_PAGE_SIZE);
-        args.add(DEFAULT_PAGE_SIZE);
-
-        final List<Task> result = new ArrayList<>();
+        if (conditions.size() > 0) {
+            sqlQueryResult.append(" where ").append(StringUtils.join(conditions, " and "));
+            sqlQueryResultCount.append(" where ").append(StringUtils.join(conditions, " and "));
+        }
+        sqlQueryResult.append(" ORDER BY t1.JOB_GROUP,t1.JOB_NAME ASC LIMIT :limitOffset,:limitSize");
 
 
-        jdbcTemplate.query(sqlQueryResult.toString(), rs -> {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("schedulerName", schedulerName);
+        paramMap.put("taskSpecialGroup", TaskSpecialGroup.values());
+        paramMap.put("taskNameList", taskNameList);
+        paramMap.put("taskGroupList", taskGroupList);
+        paramMap.put("taskStateList", taskStateList);
+        paramMap.put("limitOffset", (page - 1) * DEFAULT_PAGE_SIZE);
+        paramMap.put("limitSize", DEFAULT_PAGE_SIZE);
+
+        Integer resultTotal = namedParameterJdbcTemplate.queryForObject(sqlQueryResultCount.toString(), paramMap, Integer.TYPE);
+        List<Task> result = new ArrayList<>();
+        namedParameterJdbcTemplate.query(sqlQueryResult.toString(), paramMap, rs -> {
             Task task = new Task();
             task.setSchedulerName(rs.getString("schedulerName"));
             task.setName(rs.getString("name"));
@@ -70,8 +78,7 @@ public class TaskDao extends AbstractDao {
             task.setDescription(rs.getString("description"));
             task.setData(data);
             result.add(task);
-        }, args.toArray());
-
+        });
         return new Pageable<>(page, DEFAULT_PAGE_SIZE, resultTotal, result);
     }
 
@@ -146,5 +153,61 @@ public class TaskDao extends AbstractDao {
             return null;
         }
         return null;
+    }
+
+    public Pageable<String> queryTaskGroups(String schedulerName, String kw, int page, int pageSize) {
+        StringBuilder sqlQueryResult = new StringBuilder("SELECT distinct t1.JOB_GROUP FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.SCHED_NAME = t2.SCHED_NAME AND t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
+        StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(distinct t1.JOB_GROUP) FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
+
+        List<String> conditions = new ArrayList<>();
+        conditions.add("t1.SCHED_NAME = :schedulerName");
+        if (StringUtils.isNotBlank(kw)) {
+            conditions.add("t1.JOB_GROUP like :kw");
+        }
+
+        if (conditions.size() > 0) {
+            sqlQueryResult.append(" where ").append(StringUtils.join(conditions, " and "));
+            sqlQueryResultCount.append(" where ").append(StringUtils.join(conditions, " and "));
+        }
+        sqlQueryResult.append(" limit :limitOffset,:limitSize");
+
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("schedulerName", schedulerName);
+        paramMap.put("kw", kw + "%");
+        paramMap.put("limitOffset", (page - 1) * pageSize);
+        paramMap.put("limitSize", pageSize);
+
+        List<String> result = namedParameterJdbcTemplate.queryForList(sqlQueryResult.toString(), paramMap, String.class);
+        Integer resultTotal = namedParameterJdbcTemplate.queryForObject(sqlQueryResultCount.toString(), paramMap, Integer.TYPE);
+        return new Pageable<>(page, pageSize, resultTotal, result);
+    }
+
+    public Pageable<String> queryTaskNames(String schedulerName, String kw, int page, int pageSize) {
+        StringBuilder sqlQueryResult = new StringBuilder("SELECT distinct t1.JOB_NAME FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.SCHED_NAME = t2.SCHED_NAME AND t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
+        StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(distinct t1.JOB_NAME) FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
+
+        List<String> conditions = new ArrayList<>();
+        conditions.add("t1.SCHED_NAME = :schedulerName");
+        if (StringUtils.isNotBlank(kw)) {
+            conditions.add("t1.JOB_NAME like :kw");
+        }
+
+        if (conditions.size() > 0) {
+            sqlQueryResult.append(" where ").append(StringUtils.join(conditions, " and "));
+            sqlQueryResultCount.append(" where ").append(StringUtils.join(conditions, " and "));
+        }
+        sqlQueryResult.append(" limit :limitOffset,:limitSize");
+
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("schedulerName", schedulerName);
+        paramMap.put("kw", kw + "%");
+        paramMap.put("limitOffset", (page - 1) * pageSize);
+        paramMap.put("limitSize", pageSize);
+
+        List<String> result = namedParameterJdbcTemplate.queryForList(sqlQueryResult.toString(), paramMap, String.class);
+        Integer resultTotal = namedParameterJdbcTemplate.queryForObject(sqlQueryResultCount.toString(), paramMap, Integer.TYPE);
+        return new Pageable<>(page, pageSize, resultTotal, result);
     }
 }

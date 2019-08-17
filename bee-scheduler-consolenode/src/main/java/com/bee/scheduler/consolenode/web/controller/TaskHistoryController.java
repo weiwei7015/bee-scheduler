@@ -24,7 +24,6 @@ public class TaskHistoryController {
     @Autowired
     private TaskService taskService;
 
-
     @GetMapping("/task/history/groups")
     public HttpResponseBodyWrapper taskHistoryGroups() throws Exception {
         Map<String, Object> model = new HashMap<>();
@@ -49,8 +48,8 @@ public class TaskHistoryController {
     }
 
     @GetMapping("/task/history/query-suggestions")
-    public HttpResponseBodyWrapper taskHistoryQuerySuggestions(String input) throws Exception {
+    public HttpResponseBodyWrapper queryTaskHistoryGroups(String input) throws Exception {
         ArrayList<String> strings = new ArrayList<>();
-        return new HttpResponseBodyWrapper(taskService.getTaskHistoryQuerySuggestions());
+        return new HttpResponseBodyWrapper(taskService.taskHistoryQuerySuggestion(scheduler.getSchedulerName(), input));
     }
 }

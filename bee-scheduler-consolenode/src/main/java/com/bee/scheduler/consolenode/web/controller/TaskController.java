@@ -11,11 +11,10 @@ import com.bee.scheduler.context.task.TaskScheduler;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * @author weiwei
  */
-@Controller
+@RestController
 public class TaskController {
     @Autowired
     private TaskScheduler scheduler;
@@ -33,13 +32,17 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @ResponseBody
     @GetMapping("/task/groups")
     public HttpResponseBodyWrapper taskGroups() throws Exception {
         return new HttpResponseBodyWrapper(scheduler.getTaskGroups());
     }
 
-    @ResponseBody
+    @GetMapping("/task/query-suggestions")
+    public HttpResponseBodyWrapper queryTaskHistoryGroups(String input) throws Exception {
+        ArrayList<String> strings = new ArrayList<>();
+        return new HttpResponseBodyWrapper(taskService.taskQuerySuggestion(scheduler.getSchedulerName(), input));
+    }
+
     @GetMapping("/task/list")
     public HttpResponseBodyWrapper task(String keyword, Integer page) throws Exception {
         keyword = StringUtils.trimToEmpty(keyword);
@@ -49,7 +52,6 @@ public class TaskController {
         return new HttpResponseBodyWrapper(queryResult);
     }
 
-    @ResponseBody
     @GetMapping("/task/trends")
     public HttpResponseBodyWrapper trends() throws Exception {
         HashMap<String, Object> data = new HashMap<>();
@@ -73,7 +75,6 @@ public class TaskController {
         return new HttpResponseBodyWrapper(data);
     }
 
-    @ResponseBody
     @PostMapping("/task/new")
     public void newTask(@RequestBody TaskConfig taskConfig) throws Exception {
         taskConfig.setName(StringUtils.trimToEmpty(taskConfig.getName()));
@@ -123,13 +124,11 @@ public class TaskController {
         scheduler.schedule(taskConfig);
     }
 
-    @ResponseBody
     @GetMapping("/task/detail")
     public HttpResponseBodyWrapper detail(String group, String name) throws Exception {
         return new HttpResponseBodyWrapper(scheduler.getTaskConfig(group, name));
     }
 
-    @ResponseBody
     @PostMapping("/task/edit")
     public void edit(@RequestBody TaskConfig taskConfig) throws Exception {
         if (StringUtils.isNotEmpty(taskConfig.getParams())) {
@@ -155,7 +154,6 @@ public class TaskController {
         scheduler.reschedule(taskConfig);
     }
 
-    @ResponseBody
     @PostMapping("/task/delete")
     public void delete(String[] taskIds) throws Exception {
         for (String taskId : taskIds) {
@@ -164,7 +162,6 @@ public class TaskController {
         }
     }
 
-    @ResponseBody
     @PostMapping("/task/pause")
     public void pause(String[] taskIds) throws Exception {
         for (String taskId : taskIds) {
@@ -174,7 +171,6 @@ public class TaskController {
         }
     }
 
-    @ResponseBody
     @PostMapping("/task/resume")
     public void resume(String[] taskIds) throws Exception {
         for (String taskId : taskIds) {
@@ -184,7 +180,6 @@ public class TaskController {
         }
     }
 
-    @ResponseBody
     @PostMapping("/task/execute")
     public void execute(String[] taskIds) throws Exception {
         for (String taskId : taskIds) {
@@ -195,7 +190,6 @@ public class TaskController {
         }
     }
 
-    @ResponseBody
     @PostMapping("/task/tmp")
     public void quickTask(@RequestBody QuickTaskConfig quickTaskConfig) throws Exception {
         quickTaskConfig.setName(StringUtils.trimToEmpty(quickTaskConfig.getName()));

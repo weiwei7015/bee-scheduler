@@ -8,11 +8,14 @@ import com.bee.scheduler.consolenode.model.Pageable;
 import com.bee.scheduler.consolenode.model.Task;
 import com.bee.scheduler.consolenode.service.TaskService;
 import com.bee.scheduler.context.common.TaskExecState;
+import com.bee.scheduler.context.common.TaskFiredWay;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.terracotta.quartz.wrappers.TriggerWrapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -32,17 +35,62 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Pageable<Task> queryTask(String schedulerName, String keyword, int page) {
-        String name = null, group = null, state = null;
+        List<String> taskNameList = new ArrayList<>();
+        List<String> taskGroupList = new ArrayList<>();
+        List<String> taskStateList = new ArrayList<>();
         for (String kwItem : StringUtils.split(keyword, " ")) {
             if (Pattern.matches("g:.+", kwItem)) {
-                group = StringUtils.split(kwItem, ":")[1];
+                taskGroupList.add(StringUtils.split(kwItem, ":")[1]);
             } else if (Pattern.matches("s:.+", kwItem)) {
-                state = StringUtils.split(kwItem, ":")[1];
+                taskStateList.add(StringUtils.split(kwItem, ":")[1]);
             } else {
-                name = kwItem;
+                taskNameList.add(kwItem);
             }
         }
-        return taskDao.query(schedulerName, name, group, state, page);
+        return taskDao.query(schedulerName, taskNameList, taskGroupList, taskStateList, page);
+    }
+
+
+    @Override
+    public List<String> taskQuerySuggestion(String schedulerName, String input) {
+        if (StringUtils.isBlank(input)) {
+            return Collections.emptyList();
+        }
+
+        int i = input.lastIndexOf(" ");
+        if (i == input.length() - 1) {
+            return Collections.emptyList();
+        }
+
+        String kw = input.substring(i + 1);
+        String queryPrefix = "";
+        List<String> queryResult = new ArrayList<>();
+        if (kw.startsWith("g:")) {
+            queryPrefix = "g:";
+            String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
+            queryResult.addAll(taskDao.queryTaskGroups(schedulerName, q, 1, 10).getResult());
+        } else if (kw.startsWith("s:")) {
+            queryPrefix = "s:";
+            String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
+            for (TriggerWrapper.TriggerState item : TriggerWrapper.TriggerState.values()) {
+                if (StringUtils.startsWithIgnoreCase(item.name(), q)) {
+                    queryResult.add(item.name());
+                }
+            }
+        } else {
+            queryResult.addAll(taskDao.queryTaskNames(schedulerName, kw, 1, 10).getResult());
+        }
+        List<String> suggestions = new ArrayList<>();
+        if (i == -1) {
+            for (String item : queryResult) {
+                suggestions.add(queryPrefix + item + " ");
+            }
+        } else {
+            for (String item : queryResult) {
+                suggestions.add(input.substring(0, i + 1) + queryPrefix + item + " ");
+            }
+        }
+        return suggestions;
     }
 
     @Override
@@ -62,30 +110,35 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Pageable<ExecutedTask> queryTaskHistory(String schedulerName, String keyword, int page) {
-        String fireId = null, taskName = null, taskGroup = null, execState = null, firedWay = null, instanceId = null;
-        Long starTimeFrom = null, starTimeTo = null;
+        List<String> fireIdList = new ArrayList<>();
+        List<String> taskNameList = new ArrayList<>();
+        List<String> taskGroupList = new ArrayList<>();
+        List<String> execStateList = new ArrayList<>();
+        List<String> firedWayList = new ArrayList<>();
+        List<String> instanceIdList = new ArrayList<>();
+
+        Long firedTimeBefore = null, firedTimeAfter = null;
         for (String kwItem : StringUtils.split(keyword, " ")) {
             if (Pattern.matches("id:.+", kwItem)) {
-                fireId = StringUtils.split(kwItem, ":")[1];
+                fireIdList.add(StringUtils.split(kwItem, ":")[1]);
             } else if (Pattern.matches("g:.+", kwItem)) {
-                taskGroup = StringUtils.split(kwItem, ":")[1];
+                taskGroupList.add(StringUtils.split(kwItem, ":")[1]);
             } else if (Pattern.matches("s:.+", kwItem)) {
-                execState = StringUtils.split(kwItem, ":")[1];
+                execStateList.add(StringUtils.split(kwItem, ":")[1]);
             } else if (Pattern.matches("f:.+", kwItem)) {
-                firedWay = StringUtils.split(kwItem, ":")[1];
+                firedWayList.add(StringUtils.split(kwItem, ":")[1]);
             } else if (Pattern.matches("nd:.+", kwItem)) {
-                instanceId = StringUtils.split(kwItem, ":")[1];
+                instanceIdList.add(StringUtils.split(kwItem, ":")[1]);
 //            } else if (Pattern.matches("ts:.+", kwItem)) {
-//                starTimeFrom = StringUtils.split(kwItem, ":")[1];
+//                firedTimeBefore = StringUtils.split(kwItem, ":")[1];
 //            } else if (Pattern.matches("te:.+", kwItem)) {
-//                starTimeTo = StringUtils.split(kwItem, ":")[1];
+//                firedTimeAfter = StringUtils.split(kwItem, ":")[1];
             } else {
-                taskName = kwItem;
+                taskNameList.add(kwItem);
             }
         }
 
-
-        return taskHistoryDao.query(schedulerName, fireId, taskName, taskGroup, execState, firedWay, instanceId, starTimeFrom, starTimeTo, page);
+        return taskHistoryDao.query(schedulerName, fireIdList, taskNameList, taskGroupList, execStateList, firedWayList, instanceIdList, firedTimeBefore, firedTimeAfter, page);
     }
 
     @Override
@@ -111,44 +164,52 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<String> getTaskHistoryQuerySuggestions(String input) {
-        ArrayList<String> result = new ArrayList<>();
-        Pageable<String> taskNames = taskHistoryDao.queryTaskNames(input, 1);
-        Pageable<String> taskGroups = taskHistoryDao.queryTaskGroups(input, 1);
-
-
+    public List<String> taskHistoryQuerySuggestion(String schedulerName, String input) {
         if (StringUtils.isBlank(input)) {
-            return result;
+            return Collections.emptyList();
         }
 
+        int i = input.lastIndexOf(" ");
+        if (i == input.length() - 1) {
+            return Collections.emptyList();
+        }
 
-        String[] kws = input.split("\\s");
-
-
-        for (String kw : kws) {
-            if (kw.contains(":")) {
-                int splitterIndex = kw.indexOf(':');
-                String prefix = kw.substring(0, splitterIndex);
-                String qs = kw.substring(splitterIndex);
-
-                if (StringUtils.equalsIgnoreCase(prefix, "g")) {
-                    result.addAll(taskHistoryDao.queryTaskGroups(qs, 1, 5).getResult());
-                } else if (StringUtils.equalsIgnoreCase(prefix, "s")) {
-                    for (TaskExecState state : TaskExecState.values()) {
-                        if (StringUtils.startsWith(state.name(), qs)) {
-                            result.add()
-                        }
-                    }
-                } else if (StringUtils.equalsIgnoreCase(prefix, "f")) {
-
+        String kw = input.substring(i + 1);
+        String queryPrefix = "";
+        List<String> queryResult = new ArrayList<>();
+        if (kw.startsWith("g:")) {
+            queryPrefix = "g:";
+            String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
+            queryResult.addAll(taskHistoryDao.queryTaskGroups(schedulerName, q, 1, 10).getResult());
+        } else if (kw.startsWith("f:")) {
+            queryPrefix = "f:";
+            String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
+            for (TaskFiredWay item : TaskFiredWay.values()) {
+                if (StringUtils.startsWithIgnoreCase(item.name(), q)) {
+                    queryResult.add(item.name());
                 }
-            } else {
-                result.addAll(taskHistoryDao.queryTaskNames(kw, 1, 5).getResult());
             }
-
+        } else if (kw.startsWith("s:")) {
+            queryPrefix = "s:";
+            String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
+            for (TaskExecState item : TaskExecState.values()) {
+                if (StringUtils.startsWithIgnoreCase(item.name(), q)) {
+                    queryResult.add(item.name());
+                }
+            }
+        } else {
+            queryResult.addAll(taskHistoryDao.queryTaskNames(schedulerName, kw, 1, 10).getResult());
         }
-
-
-        return result;
+        List<String> suggestions = new ArrayList<>();
+        if (i == -1) {
+            for (String item : queryResult) {
+                suggestions.add(queryPrefix + item + " ");
+            }
+        } else {
+            for (String item : queryResult) {
+                suggestions.add(input.substring(0, i + 1) + queryPrefix + item + " ");
+            }
+        }
+        return suggestions;
     }
 }

@@ -11,7 +11,7 @@
     <div class="page-body">
         <el-row>
             <el-col :span="10">
-                <el-autocomplete :fetch-suggestions="querySuggestion" @select="query" select-when-unmatched="true" v-model="queryParams.keyword" style="width:100%" :debounce="0" placeholder="任务名 g:任务组 s:任务状态">
+                <el-autocomplete :fetch-suggestions="querySuggestion" @select="query" select-when-unmatched="true" v-model="queryParams.keyword" style="width:100%" :debounce="300" placeholder="任务名 g:任务组 s:任务状态">
                     <el-button slot="append" icon="el-icon-search" @click="query"></el-button>
                 </el-autocomplete>
             </el-col>

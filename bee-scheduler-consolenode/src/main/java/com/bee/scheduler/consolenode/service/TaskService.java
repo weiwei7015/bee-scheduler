@@ -17,6 +17,8 @@ public interface TaskService {
 
     Pageable<Task> queryTask(String schedulerName, String keyword, int page);
 
+    List<String> taskQuerySuggestion(String schedulerName, String input);
+
     int queryTaskCount(String schedulerName, String name, String group, String state);
 
     List<ExecutingTask> queryExcutingTask(String schedulerName);
@@ -33,5 +35,5 @@ public interface TaskService {
 
     int clearHistoryBefore(String schedulerName, Date date);
 
-    List<String> getTaskHistoryQuerySuggestions(String input);
+    List<String> taskHistoryQuerySuggestion(String schedulerName, String input);
 }

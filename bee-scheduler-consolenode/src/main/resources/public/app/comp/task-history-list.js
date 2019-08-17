@@ -4,25 +4,15 @@ define(['text!comp/task-history-list.html'], function (tpl) {
         components: {},
         data: function () {
             var vm = this;
-            var data = {
+            return {
                 queryLoading: false,
                 queryParams: {
                     keyword: '',
                     page: 1
                 },
                 curQueryParams: null,
-                queryResult: {},
-                taskGroups: [],
-                execStatus: ["SUCCESS", "FAIL", "VETOED"],
-                firedWays: ["SCHEDULE", "MANUAL", "TMP", "LINKAGE"]
-
+                queryResult: {}
             };
-
-            vm.$http.get("/task/history/groups").then(function (re) {
-                vm.taskGroups = re.body.data;
-            });
-
-            return data;
         },
         watch: {
             '$route': function (to, from) {
@@ -67,24 +57,17 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 this.load(this.curQueryParams);
             },
             querySuggestion: function (queryString, callback) {
+                var vm = this;
                 var suggestions = [];
-                var matchResult = /^(.+\s+)?(\S+)$/.exec(queryString);
-                if (matchResult) {
-                    if (matchResult[2] === "g:") {
-                        this.taskGroups.forEach(function (value) {
-                            suggestions.push({"value": matchResult[0] + value + " "});
-                        });
-                    } else if (matchResult[2] === "s:") {
-                        this.execStatus.forEach(function (value) {
-                            suggestions.push({"value": matchResult[0] + value + " "});
-                        });
-                    } else if (matchResult[2] === "f:") {
-                        this.firedWays.forEach(function (value) {
-                            suggestions.push({"value": matchResult[0] + value + " "});
-                        });
-                    }
-                }
-                callback(suggestions)
+                vm.$http.get("/task/history/query-suggestions", {params: {input: queryString}}).then(function (re) {
+                    var suggestionResult = re.body.data;
+                    suggestionResult.forEach(function (value) {
+                        suggestions.push({"value": value});
+                    });
+                    callback(suggestions);
+                }, function (reason) {
+                    callback(suggestions);
+                });
             },
             showTaskHistoryDetail: function (fireId) {
                 this.$router.push("/task/history/detail/" + fireId);
