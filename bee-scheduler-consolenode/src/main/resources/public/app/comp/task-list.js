@@ -74,7 +74,7 @@ define(['text!comp/task-list.html', 'css!./task-list.css'], function (tpl) {
 
                 vm.$http.get("/task/list", {params: queryParams}).then(function (re) {
                     vm.queryLoading = false;
-                    vm.queryResult = re.body.data;
+                    vm.queryResult = re.body;
                 }, function () {
                     vm.queryLoading = false;
                     vm.queryResult = {};
@@ -91,7 +91,7 @@ define(['text!comp/task-list.html', 'css!./task-list.css'], function (tpl) {
                 var vm = this;
                 var suggestions = [];
                 vm.$http.get("/task/query-suggestions", {params: {input: queryString}}).then(function (re) {
-                    var suggestionResult = re.body.data;
+                    var suggestionResult = re.body;
                     suggestionResult.forEach(function (value) {
                         suggestions.push({"value": value});
                     });

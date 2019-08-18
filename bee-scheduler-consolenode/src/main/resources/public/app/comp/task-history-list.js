@@ -43,7 +43,7 @@ define(['text!comp/task-history-list.html'], function (tpl) {
 
                 vm.$http.get("/task/history/list", {params: queryParams}).then(function (re) {
                     vm.queryLoading = false;
-                    vm.queryResult = re.body.data;
+                    vm.queryResult = re.body;
                 }, function () {
                     vm.queryLoading = false;
                     vm.queryResult = {};
@@ -60,7 +60,7 @@ define(['text!comp/task-history-list.html'], function (tpl) {
                 var vm = this;
                 var suggestions = [];
                 vm.$http.get("/task/history/query-suggestions", {params: {input: queryString}}).then(function (re) {
-                    var suggestionResult = re.body.data;
+                    var suggestionResult = re.body;
                     suggestionResult.forEach(function (value) {
                         suggestions.push({"value": value});
                     });

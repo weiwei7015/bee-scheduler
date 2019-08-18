@@ -12,7 +12,7 @@ define(['text!comp/cluster-home.html'], function (tpl, ace) {
 
             data.clusterInfoLoading = true;
             vm.$http.get("/cluster/nodes").then(function (re) {
-                data.nodes = re.body.data;
+                data.nodes = re.body;
                 data.clusterInfoLoading = false;
             }, function () {
                 data.clusterInfoLoading = false;
@@ -25,7 +25,7 @@ define(['text!comp/cluster-home.html'], function (tpl, ace) {
                 vm.clusterInfoLoading = true;
                 vm.nodes = [];
                 vm.$http.get("/cluster/nodes").then(function (re) {
-                    vm.nodes = re.body.data;
+                    vm.nodes = re.body;
                     vm.clusterInfoLoading = false;
                     vm.$message({message: '集群信息已刷新', type: 'success'});
                 }, function () {

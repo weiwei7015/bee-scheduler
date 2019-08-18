@@ -11,7 +11,7 @@ define(['text!./task-detail-dialog.html', 'vue', 'prism', 'css!./task-detail-dia
                 taskDetail: {}
             };
             vm.$http.get("/task/detail", {params: {name: vm.name, group: vm.group}}).then(function (re) {
-                data.taskDetail = re.body.data;
+                data.taskDetail = re.body;
                 data.loading = false;
             }, function () {
                 this.taskDetail = null;

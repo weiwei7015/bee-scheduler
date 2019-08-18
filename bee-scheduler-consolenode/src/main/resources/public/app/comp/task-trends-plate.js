@@ -13,7 +13,7 @@ define(['text!comp/task-trends-plate.html'], function (tpl, ace) {
 
             var refreshData = function () {
                 vm.$http.get("/task/trends").then(function (re) {
-                    var reData = re.body.data;
+                    var reData = re.body;
                     data.totalTaskCount = reData.taskTotalCount;
                     data.executingTaskCount = reData.executingTaskCount;
                     data.taskTrends = reData.taskTrends;

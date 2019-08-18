@@ -10,7 +10,7 @@ define(['text!comp/index.html', 'css!./index.css'], function (tpl) {
             };
             var refreshServerTime = function () {
                 vm.$http.get("/server-time").then(function (re) {
-                    data.now = re.body.data;
+                    data.now = re.body;
                 });
             };
             // refreshServerTime();

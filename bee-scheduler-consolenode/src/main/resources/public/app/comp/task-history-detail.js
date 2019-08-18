@@ -11,11 +11,7 @@ define(['text!comp/task-history-detail.html', 'css!./task-history-detail.css'], 
             };
 
             vm.$http.get("/task/history/detail?fireId=" + fireId).then(function (re) {
-                if (re.body.data == null) {
-                    vm.$router.replace("/404");
-                    return;
-                }
-                data.taskHistoryDetail = re.body.data;
+                data.taskHistoryDetail = re.body;
                 data.taskHistoryDetailLoading = false;
             });
 

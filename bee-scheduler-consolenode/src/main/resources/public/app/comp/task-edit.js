@@ -77,7 +77,7 @@ define(['text!comp/task-edit.html', 'css!./task-edit.css'], function (tpl) {
 
             vm.$http.get("/task/groups").then(function (re) {
                 var taskGroupList = [];
-                var reData = re.body.data;
+                var reData = re.body;
                 for (var i = 0; i < reData.length; i++) {
                     taskGroupList.push({value: reData[i]});
                 }
@@ -87,17 +87,13 @@ define(['text!comp/task-edit.html', 'css!./task-edit.css'], function (tpl) {
 
             data.initEditFormModelInProcess = true;
             vm.$http.get("/task-module/list").then(function (re) {
-                data.taskModuleList = re.body.data;
+                data.taskModuleList = re.body;
                 if (editFor === "Edit" || editFor === "Copy") {
                     var name = vm.$route.params.name;
                     var group = vm.$route.params.group;
                     vm.$http.get("/task/detail", {params: {name: name, group: group}}).then(function (re) {
-                        if (re.body.data == null) {
-                            vm.$router.replace("/404");
-                            return;
-                        }
-                        data.editTaskFormModel = re.body.data;
-                        data.editTaskFormModelInitBackup = JSON.parse(JSON.stringify(re.body.data));
+                        data.editTaskFormModel = re.body;
+                        data.editTaskFormModelInitBackup = JSON.parse(re.bodyText);
                         if (editFor === "Copy") {
                             data.editTaskFormModel.name = data.editTaskFormModel.name + "_Copy";
                         }

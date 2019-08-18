@@ -37,7 +37,7 @@ define(['text!comp/quick-task-dialog.html'], function (tpl) {
 
             data.initializing = true;
             vm.$http.get("/task-module/list").then(function (re) {
-                data.taskModuleList = re.body.data;
+                data.taskModuleList = re.body;
                 data.initializing = false;
             });
 

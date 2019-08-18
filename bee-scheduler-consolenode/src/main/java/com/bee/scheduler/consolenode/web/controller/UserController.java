@@ -1,7 +1,7 @@
 package com.bee.scheduler.consolenode.web.controller;
 
 import com.bee.scheduler.consolenode.entity.User;
-import com.bee.scheduler.consolenode.exception.BizzException;
+import com.bee.scheduler.consolenode.exception.BadRequestException;
 import com.bee.scheduler.consolenode.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -24,14 +24,14 @@ public class UserController extends AbstractController {
     private UserService userService;
 
     @PostMapping("/user/updatepassword")
-    public ResponseEntity updatePassword(String account, String oldpassword, String newpassword, String renewpassword) {
+    public ResponseEntity updatePassword(String account, String oldpassword, String newpassword, String renewpassword) throws Exception {
         User user = userService.getByAccount$Pwd(account, oldpassword);
         if (user == null) {
-            throw new BizzException(BizzException.error_code_invalid_params, "原始密码有误");
+            throw new BadRequestException("原始密码有误");
         }
 
         if (!StringUtils.equals(newpassword, renewpassword)) {
-            throw new BizzException(BizzException.error_code_invalid_params, "确认密码不一致");
+            throw new BadRequestException("确认密码不一致");
         }
         userService.updatePwdByAccount(user.getAccount(), newpassword);
         return ResponseEntity.ok("success");

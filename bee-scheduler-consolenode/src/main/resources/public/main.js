@@ -121,19 +121,24 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
         },
         function (request) {
             return function (response) {
-                if (response.status === 0 || response.status === 503) {
-                    app.$alert("请求服务器失败，请稍后再试", '网络异常', {type: "error"});
-                }
-                if (response.status >= 400) {
-                    if (response.status === 401) {
+                if (response.status < 100 || response.status >= 400) {
+                    if (response.status === 0) {
+                        app.$alert("请求服务器失败，请稍后再试", '网络异常', {type: "error"});
+                    } else if (response.status === 401) {
                         app.$alert("您尚未登录或登录信息已过期", '需要登录', {
                             type: "warning",
                             callback: function () {
                                 app.$router.push("/login");
                             }
                         });
+                    } else if (response.status === 404) {
+                        app.$alert("您请求的资源不存在", '404 Not Found', {type: "error"});
                     } else {
-                        app.$alert(response.body.message, response.body.error, {type: "warning"});
+                        if (response.body.message && response.body.error) {
+                            app.$alert(response.body.message, response.body.error, {type: "warning"});
+                        } else {
+                            app.$alert("请求遇到了一点问题,请稍后再试", response.status, {type: "error"});
+                        }
                     }
                 }
             };
@@ -141,7 +146,7 @@ require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-
     );
 
     app.$http.get("/configs").then(function (re) {
-        Vue.prototype.$AppConfig = re.body.data;
+        Vue.prototype.$AppConfig = re.body;
 
         //mount the root comp
         app.$mount("#app");
