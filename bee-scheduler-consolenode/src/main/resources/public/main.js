@@ -20,7 +20,7 @@ require.config({
             deps: ['css!lib/prism/prism.css']
         }
     },
-    urlArgs: 'v=2019081501'
+    urlArgs: 'v=2019081901'
 });
 
 require(['vue', 'vue_router', 'vue_resource', 'ELEMENT', 'moment', 'comp/helper-dialog', 'comp/task-detail-dialog'], function (Vue, VueRouter, VueResource, Elem, moment, helperDialog, taskDetailDialog) {
