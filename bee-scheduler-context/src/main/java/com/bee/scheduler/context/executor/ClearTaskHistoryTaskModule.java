@@ -16,7 +16,6 @@ import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -52,7 +51,7 @@ public class ClearTaskHistoryTaskModule implements ExecutorModule {
     @Override
     public String getParamTemplate() {
         return "{\r" +
-                "    \"keep_days\":5,\r" +
+                "    \"keep_hours\":120,\r" +
                 "    \"task_group\":\"\",\r" +
                 "    \"task_name\":\"\",\r" +
                 "    \"fired_way\":\"\",\r" +
@@ -69,11 +68,11 @@ public class ClearTaskHistoryTaskModule implements ExecutorModule {
         Log logger = taskExecutionContext.getLogger();
 
         // 保留最近几天的任务记录
-        Integer keepDays = taskParam.getInteger("keep_days");
-        if (keepDays == null) {
+        Integer keepHours = taskParam.getInteger("keep_days");
+        if (keepHours == null) {
             throw new ExecutionException("必须参数:keep_days");
         }
-        if (keepDays < 0) {
+        if (keepHours < 0) {
             throw new ExecutionException("参数有误:keep_days");
         }
         String taskGroup = taskParam.getString("task_group");
@@ -105,8 +104,8 @@ public class ClearTaskHistoryTaskModule implements ExecutorModule {
         }
 
         Date datePoint = new Date();
-        datePoint = DateUtils.truncate(datePoint, Calendar.DATE);
-        datePoint = DateUtils.addDays(datePoint, -keepDays + 1);
+//        datePoint = DateUtils.truncate(datePoint, Calendar.HOUR);
+        datePoint = DateUtils.addHours(datePoint, -keepHours);
 
         JSONObject data = new JSONObject();
         try (
