@@ -1,0 +1,21 @@
+spring:
+  profiles: default
+  mvc:
+    static-path-pattern: /public/**
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+  datasource:
+    continue-on-error: true
+    initialization-mode: always
+    datasource.url: ${dburl}
+---
+spring:
+  profiles: ds-mysql
+  datasource:
+    platform: mysql
+---
+spring:
+  profiles: ds-postgres
+  datasource:
+    platform: postgres
