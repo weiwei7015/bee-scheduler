@@ -42,10 +42,10 @@ public class ApplicationBootStrap {
                     if (dburl == null) {
                         throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
                     }
-                    if (dburl.startsWith("jdbc:mysql")) {
+                    if (dburl.startsWith("jdbc:mysql://")) {
                         env.setActiveProfiles("mysql");
-                    } else if (dburl.startsWith("jdbc:postgresql")) {
-                        env.setActiveProfiles("postgres");
+                    } else if (dburl.startsWith("jdbc:postgresql://")) {
+                        env.setActiveProfiles("postgresql");
                     } else {
                         throw new RuntimeException("invalid argument:dburl");
                     }
