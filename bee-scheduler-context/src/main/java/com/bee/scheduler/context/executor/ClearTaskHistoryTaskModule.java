@@ -68,12 +68,12 @@ public class ClearTaskHistoryTaskModule implements ExecutorModule {
         Log logger = taskExecutionContext.getLogger();
 
         // 保留最近几天的任务记录
-        Integer keepHours = taskParam.getInteger("keep_days");
+        Integer keepHours = taskParam.getInteger("keep_hours");
         if (keepHours == null) {
-            throw new ExecutionException("必须参数:keep_days");
+            throw new ExecutionException("必须参数:keep_hours");
         }
         if (keepHours < 0) {
-            throw new ExecutionException("参数有误:keep_days");
+            throw new ExecutionException("参数有误:keep_hours");
         }
         String taskGroup = taskParam.getString("task_group");
         String taskName = taskParam.getString("task_name");
