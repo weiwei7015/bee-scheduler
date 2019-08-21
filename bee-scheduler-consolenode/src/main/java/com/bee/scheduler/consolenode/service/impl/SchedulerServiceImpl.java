@@ -1,6 +1,6 @@
 package com.bee.scheduler.consolenode.service.impl;
 
-import com.bee.scheduler.consolenode.dao.SchedulerDao;
+import com.bee.scheduler.consolenode.dao.DaoSupport;
 import com.bee.scheduler.consolenode.model.ClusterSchedulerNode;
 import com.bee.scheduler.consolenode.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,10 @@ import java.util.List;
 public class SchedulerServiceImpl implements SchedulerService {
 
     @Autowired
-    private SchedulerDao schedulerDao;
+    private DaoSupport dao;
 
     @Override
     public List<ClusterSchedulerNode> getAllClusterScheduler(String schedulerName) {
-        return schedulerDao.getAllClusterScheduler(schedulerName);
+        return dao.getClusterSchedulerNodes(schedulerName);
     }
 }

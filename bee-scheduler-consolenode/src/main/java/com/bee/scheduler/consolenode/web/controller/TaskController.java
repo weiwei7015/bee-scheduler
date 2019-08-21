@@ -44,35 +44,12 @@ public class TaskController {
     }
 
     @GetMapping("/task/list")
-    public ResponseEntity<Pageable<Task>> task(String keyword, Integer page) throws Exception {
+    public ResponseEntity<Pageable<TaskDetail>> task(String keyword, Integer page) throws Exception {
         keyword = StringUtils.trimToEmpty(keyword);
         page = page == null ? 1 : page;
 
-        Pageable<Task> queryResult = taskService.queryTask(scheduler.getSchedulerName(), keyword, page);
+        Pageable<TaskDetail> queryResult = taskService.queryTask(scheduler.getSchedulerName(), keyword, page);
         return ResponseEntity.ok(queryResult);
-    }
-
-    @GetMapping("/task/trends")
-    public ResponseEntity<HashMap<String, Object>> trends() throws Exception {
-        HashMap<String, Object> data = new HashMap<>();
-
-        String schedulerName = scheduler.getSchedulerName();
-        int taskTotalCount = taskService.queryTaskCount(schedulerName, null, null, null);
-        List<ExecutingTask> executingTaskList = taskService.queryExcutingTask(schedulerName);
-
-        Pageable<ExecutedTask> taskHistoryList = taskService.queryTaskHistory(schedulerName, "", 1);
-
-        List<FiredTask> taskTrends = new ArrayList<>();
-
-        taskTrends.addAll(executingTaskList);
-        taskTrends.addAll(taskHistoryList.getResult());
-
-        taskTrends.sort((o1, o2) -> o2.getFiredTime().compareTo(o1.getFiredTime()));
-
-        data.put("taskTotalCount", taskTotalCount);
-        data.put("executingTaskCount", executingTaskList.size());
-        data.put("taskTrends", taskTrends);
-        return ResponseEntity.ok(data);
     }
 
     @PostMapping("/task/new")

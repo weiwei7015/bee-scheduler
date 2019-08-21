@@ -48,7 +48,7 @@ public class ApplicationBootStrap {
             try {
                 logger.info("loading build-in task modules...");
                 new BuildInTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
-                logger.info("loading classpath jar archive task modules...");
+                logger.info("loading classpath-jar-archive task modules...");
                 new ClassPathJarArchiveTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
             } catch (Exception e) {
                 throw new ApplicationContextException("scheduler init failed!", e);
