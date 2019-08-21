@@ -47,7 +47,7 @@ public abstract class DaoSupport extends AbstractDao {
      * ================= Cluster =====================
      */
     public List<ClusterSchedulerNode> getClusterSchedulerNodes(String schedulerName) {
-        return jdbcTemplate.query("select SCHED_NAME as 'name',INSTANCE_NAME as 'instanceName',LAST_CHECKIN_TIME as 'lastCheckinTime',CHECKIN_INTERVAL as 'checkinInterval' from BS_SCHEDULER_STATE t where SCHED_NAME = ?", new RowMapper<ClusterSchedulerNode>() {
+        return jdbcTemplate.query("select SCHED_NAME as \"name\",INSTANCE_NAME as \"instanceName\",LAST_CHECKIN_TIME as \"lastCheckinTime\",CHECKIN_INTERVAL as \"checkinInterval\" from BS_SCHEDULER_STATE t where SCHED_NAME = ?", new RowMapper<ClusterSchedulerNode>() {
             @Override
             public ClusterSchedulerNode mapRow(ResultSet rs, int rowNum) throws SQLException {
                 ClusterSchedulerNode clusterSchedulerNode = new ClusterSchedulerNode();
@@ -65,7 +65,7 @@ public abstract class DaoSupport extends AbstractDao {
      */
     public Pageable<TaskDetail> queryTask(String schedulerName, List<String> taskNameList, List<String> taskGroupList, List<String> taskStateList, Integer pageNum, Integer pageSize) {
         StringBuilder sqlQueryCount = new StringBuilder("SELECT COUNT(1) FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
-        StringBuilder sqlQueryResult = new StringBuilder("SELECT t1.SCHED_NAME as 'schedulerName',t1.JOB_NAME as 'name',t1.JOB_GROUP as 'group',t1.TRIGGER_TYPE as 'triggerType',t2.JOB_CLASS_NAME as 'jobClassName',t1.JOB_DATA as 'data',t1.TRIGGER_STATE as 'state',t1.PREV_FIRE_TIME as 'prevFireTime',t1.NEXT_FIRE_TIME as 'nextFireTime',t1.START_TIME as 'startTime',t1.END_TIME as 'endTime',t1.MISFIRE_INSTR as 'misfireInstr',t1.DESCRIPTION as 'description' FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.SCHED_NAME = t2.SCHED_NAME AND t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
+        StringBuilder sqlQueryResult = new StringBuilder("SELECT t1.SCHED_NAME as \"schedulerName\",t1.JOB_NAME as \"name\",t1.JOB_GROUP as \"group\",t1.TRIGGER_TYPE as \"triggerType\",t2.JOB_CLASS_NAME as \"jobClassName\",t1.JOB_DATA as \"data\",t1.TRIGGER_STATE as \"state\",t1.PREV_FIRE_TIME as \"prevFireTime\",t1.NEXT_FIRE_TIME as \"nextFireTime\",t1.START_TIME as \"startTime\",t1.END_TIME as \"endTime\",t1.MISFIRE_INSTR as \"misfireInstr\",t1.DESCRIPTION as \"description\" FROM BS_TRIGGERS t1 JOIN BS_JOB_DETAILS t2 ON t1.SCHED_NAME = t2.SCHED_NAME AND t1.JOB_NAME = t2.JOB_NAME AND t1.JOB_GROUP = t2.JOB_GROUP");
 
         List<String> conditions = new ArrayList<>();
         conditions.add("t1.SCHED_NAME = :schedulerName");
@@ -180,14 +180,14 @@ public abstract class DaoSupport extends AbstractDao {
      */
     public ExecutedTask getTaskHistory(String fireId) {
         try {
-            return jdbcTemplate.queryForObject("SELECT SCHED_NAME as 'schedulerName',INSTANCE_ID as 'instanceId',FIRE_ID as 'fireId',FIRED_WAY as 'firedWay',TASK_NAME as 'name',TASK_GROUP as 'group',EXEC_MODULE as 'execModule',FIRED_TIME as 'firedTime',COMPLETE_TIME as 'completeTime',EXPEND_TIME as 'expendTime',REFIRED as 'refired',EXEC_STATE as 'execState',LOG as 'log' FROM BS_TASK_HISTORY WHERE FIRE_ID = ?", new BeanPropertyRowMapper<>(ExecutedTask.class), fireId);
+            return jdbcTemplate.queryForObject("SELECT SCHED_NAME as \"schedulerName\",INSTANCE_ID as \"instanceId\",FIRE_ID as \"fireId\",FIRED_WAY as \"firedWay\",TASK_NAME as \"name\",TASK_GROUP as \"group\",EXEC_MODULE as \"execModule\",FIRED_TIME as \"firedTime\",COMPLETE_TIME as \"completeTime\",EXPEND_TIME as \"expendTime\",REFIRED as \"refired\",EXEC_STATE as \"execState\",LOG as \"log\" FROM BS_TASK_HISTORY WHERE FIRE_ID = ?", new BeanPropertyRowMapper<>(ExecutedTask.class), fireId);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
     public Pageable<ExecutedTask> queryTaskHistory(String schedulerName, List<String> fireIdList, List<String> taskNameList, List<String> taskGroupList, List<String> execStateList, List<String> firedWayList, List<String> instanceIdList, Long firedTimeBefore, Long firedTimeAfter, Integer pageNum, Integer pageSize) {
-        StringBuilder sqlQueryResult = new StringBuilder("SELECT SCHED_NAME as 'schedulerName',INSTANCE_ID as 'instanceId',FIRE_ID as 'fireId',TASK_NAME as 'name',TASK_GROUP as 'group',EXEC_MODULE as 'execModule',FIRED_TIME as 'firedTime',FIRED_WAY as 'firedWay',COMPLETE_TIME as 'completeTime',EXPEND_TIME as 'expendTime',REFIRED as 'refired',EXEC_STATE as 'execState' FROM BS_TASK_HISTORY");
+        StringBuilder sqlQueryResult = new StringBuilder("SELECT SCHED_NAME as \"schedulerName\",INSTANCE_ID as \"instanceId\",FIRE_ID as \"fireId\",TASK_NAME as \"name\",TASK_GROUP as \"group\",EXEC_MODULE as \"execModule\",FIRED_TIME as \"firedTime\",FIRED_WAY as \"firedWay\",COMPLETE_TIME as \"completeTime\",EXPEND_TIME as \"expendTime\",REFIRED as \"refired\",EXEC_STATE as \"execState\" FROM BS_TASK_HISTORY");
         StringBuilder sqlQueryResultCount = new StringBuilder("SELECT COUNT(1) FROM BS_TASK_HISTORY");
 
         List<String> conditions = new ArrayList<>();
