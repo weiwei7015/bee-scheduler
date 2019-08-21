@@ -29,7 +29,7 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
         this.setDataSource(dataSource);
         this.setSchedulerName(name);
         this.setDataSource(dataSource);
-        this.setAutoStartup(false);
+//        this.setAutoStartup(false);
     }
 
     public CustomizedQuartzSchedulerFactoryBean(String name, DataSource dataSource) {
