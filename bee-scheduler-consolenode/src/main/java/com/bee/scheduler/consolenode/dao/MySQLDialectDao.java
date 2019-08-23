@@ -92,7 +92,7 @@ public class MySQLDialectDao extends AbstractDao implements StandardDao {
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("schedulerName", schedulerName);
-        paramMap.put("taskSpecialGroup", TaskSpecialGroup.stringValues());
+        paramMap.put("taskSpecialGroup", TaskSpecialGroup.values());
         paramMap.put("taskNameList", taskNameList);
         paramMap.put("taskGroupList", taskGroupList);
         paramMap.put("taskStateList", taskStateList);
