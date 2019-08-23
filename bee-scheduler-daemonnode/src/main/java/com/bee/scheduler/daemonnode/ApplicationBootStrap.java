@@ -27,7 +27,7 @@ public class ApplicationBootStrap {
         SimpleCommandLinePropertySource commandLinePropertySource = new SimpleCommandLinePropertySource(args);
         String dburl = commandLinePropertySource.getProperty("dburl");
         if (dburl == null) {
-            throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
+            throw new RuntimeException("please specify --dburl in args(e.g. --dburl=jdbc:mysql://127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
         }
         if (dburl.startsWith("jdbc:mysql://")) {
             app.setAdditionalProfiles("mysql");
