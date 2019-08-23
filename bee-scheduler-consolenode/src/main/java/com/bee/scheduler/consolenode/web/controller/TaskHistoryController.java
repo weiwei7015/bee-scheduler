@@ -23,11 +23,6 @@ public class TaskHistoryController {
     @Autowired
     private TaskService taskService;
 
-    @GetMapping("/task/history/groups")
-    public ResponseEntity<List<String>> taskHistoryGroups() throws Exception {
-        return ResponseEntity.ok(taskService.getTaskHistoryGroups(scheduler.getSchedulerName()));
-    }
-
     @GetMapping("/task/history/list")
     public ResponseEntity<Pageable<ExecutedTask>> taskHistoryList(String keyword, Integer page) throws Exception {
 

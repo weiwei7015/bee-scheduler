@@ -2,7 +2,8 @@ package com.bee.scheduler.consolenode.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.bee.scheduler.consolenode.exception.BadRequestException;
-import com.bee.scheduler.consolenode.model.*;
+import com.bee.scheduler.consolenode.model.Pageable;
+import com.bee.scheduler.consolenode.model.TaskDetail;
 import com.bee.scheduler.consolenode.service.TaskService;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.model.QuickTaskConfig;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -44,35 +43,12 @@ public class TaskController {
     }
 
     @GetMapping("/task/list")
-    public ResponseEntity<Pageable<Task>> task(String keyword, Integer page) throws Exception {
+    public ResponseEntity<Pageable<TaskDetail>> task(String keyword, Integer page) throws Exception {
         keyword = StringUtils.trimToEmpty(keyword);
         page = page == null ? 1 : page;
 
-        Pageable<Task> queryResult = taskService.queryTask(scheduler.getSchedulerName(), keyword, page);
+        Pageable<TaskDetail> queryResult = taskService.queryTask(scheduler.getSchedulerName(), keyword, page);
         return ResponseEntity.ok(queryResult);
-    }
-
-    @GetMapping("/task/trends")
-    public ResponseEntity<HashMap<String, Object>> trends() throws Exception {
-        HashMap<String, Object> data = new HashMap<>();
-
-        String schedulerName = scheduler.getSchedulerName();
-        int taskTotalCount = taskService.queryTaskCount(schedulerName, null, null, null);
-        List<ExecutingTask> executingTaskList = taskService.queryExcutingTask(schedulerName);
-
-        Pageable<ExecutedTask> taskHistoryList = taskService.queryTaskHistory(schedulerName, "", 1);
-
-        List<FiredTask> taskTrends = new ArrayList<>();
-
-        taskTrends.addAll(executingTaskList);
-        taskTrends.addAll(taskHistoryList.getResult());
-
-        taskTrends.sort((o1, o2) -> o2.getFiredTime().compareTo(o1.getFiredTime()));
-
-        data.put("taskTotalCount", taskTotalCount);
-        data.put("executingTaskCount", executingTaskList.size());
-        data.put("taskTrends", taskTrends);
-        return ResponseEntity.ok(data);
     }
 
     @PostMapping("/task/new")

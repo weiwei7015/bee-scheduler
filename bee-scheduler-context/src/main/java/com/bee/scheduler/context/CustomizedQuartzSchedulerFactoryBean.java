@@ -5,6 +5,8 @@ import org.quartz.ListenerManager;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import javax.sql.DataSource;
@@ -15,7 +17,7 @@ import java.util.Properties;
 /**
  * @author weiwei.
  */
-public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
+public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean implements EnvironmentAware {
     private static final long CLUSTER_CHECKIN_INTERVAL = 5000;
     private static final long MISFIRE_THRESHOLD = 5000;
     private static final long BATCH_TRIGGER_ACQUISITION_FIRE_AHEAD_TIME_WINDOW = 5000;
@@ -23,13 +25,19 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
     private boolean clusterMode = false;
     private int threadPoolSize = 10;
     private List<TaskListenerSupport> taskListenerList = new ArrayList<>();
+    private Environment environment;
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
     public CustomizedQuartzSchedulerFactoryBean(String name, String instanceId, DataSource dataSource) {
         this.instanceId = instanceId;
         this.setDataSource(dataSource);
         this.setSchedulerName(name);
         this.setDataSource(dataSource);
-        this.setAutoStartup(false);
+//        this.setAutoStartup(false);
     }
 
     public CustomizedQuartzSchedulerFactoryBean(String name, DataSource dataSource) {
@@ -39,15 +47,21 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String datasourcePlatform = environment.getProperty("spring.datasource.platform");
+
         Properties quartzProperties = new Properties();
         quartzProperties.setProperty("org.quartz.jobStore.tablePrefix", "BS_");
         quartzProperties.setProperty("org.quartz.jobStore.useProperties", "true");
         quartzProperties.setProperty("org.quartz.jobStore.misfireThreshold", String.valueOf(MISFIRE_THRESHOLD));
-        quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
         quartzProperties.setProperty("org.quartz.threadPool.threadCount", String.valueOf(threadPoolSize));
         quartzProperties.setProperty("org.quartz.jobStore.acquireTriggersWithinLock", "true");
         quartzProperties.setProperty("org.quartz.scheduler.batchTriggerAcquisitionMaxCount", String.valueOf(threadPoolSize));
         quartzProperties.setProperty("org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow", String.valueOf(BATCH_TRIGGER_ACQUISITION_FIRE_AHEAD_TIME_WINDOW));
+        if ("mysql".equals(datasourcePlatform)) {
+            quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
+        } else if ("postgresql".equals(datasourcePlatform)) {
+            quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
+        }
         if (this.instanceId == null) {
             quartzProperties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
         } else {

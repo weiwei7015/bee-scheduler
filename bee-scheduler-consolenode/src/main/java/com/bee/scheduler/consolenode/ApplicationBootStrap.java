@@ -8,20 +8,15 @@ import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
 import com.bee.scheduler.context.task.TaskModuleRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -35,30 +30,30 @@ public class ApplicationBootStrap {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(ApplicationBootStrap.class);
-        app.addListeners(
-                (ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
-                    ConfigurableEnvironment env = event.getEnvironment();
-                    if (!env.containsProperty("dburl")) {
-                        throw new RuntimeException("please specify --dburl in args(e.g. --dburl=127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
-                    }
-                },
-                (ApplicationListener<ApplicationReadyEvent>) event -> {
-                    ConfigurableApplicationContext applicationContext = event.getApplicationContext();
-                    logger.info("loading task modules...");
-                    try {
-                        new BuildInTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
-                        new ClassPathJarArchiveTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    logger.info("starting scheduler...");
-                    try {
-                        applicationContext.getBean(Scheduler.class).start();
-                    } catch (SchedulerException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        );
+        //检查启动参数
+        SimpleCommandLinePropertySource commandLinePropertySource = new SimpleCommandLinePropertySource(args);
+        String dburl = commandLinePropertySource.getProperty("dburl");
+        if (dburl == null) {
+            throw new RuntimeException("please specify --dburl in args(e.g. --dburl=jdbc:mysql://127.0.0.1:3306/bee-scheduler?user=root&password=root&useSSL=false&characterEncoding=UTF-8)");
+        }
+        if (dburl.startsWith("jdbc:mysql://")) {
+            app.setAdditionalProfiles("mysql");
+        } else if (dburl.startsWith("jdbc:postgresql://")) {
+            app.setAdditionalProfiles("postgresql");
+        } else {
+            throw new RuntimeException("invalid argument:dburl");
+        }
+        //添加自定义初始化
+        app.addInitializers(applicationContext -> {
+            try {
+                logger.info("loading build-in task modules...");
+                new BuildInTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
+                logger.info("loading classpath-jar-archive task modules...");
+                new ClassPathJarArchiveTaskModuleLoader().load().forEach(TaskModuleRegistry::register);
+            } catch (Exception e) {
+                throw new ApplicationContextException("scheduler init failed!", e);
+            }
+        });
         app.run(args);
     }
 

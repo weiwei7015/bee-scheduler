@@ -1,18 +1,18 @@
 package com.bee.scheduler.consolenode.model;
 
-import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author weiwei
  */
-public class Task {
+public class TaskDetail {
     private String schedulerName;
     private String name;
     private String group;
     private String triggerType;
     private String execModule;
     private Integer priority;
-    private Map<Object, Object> data;
+    private Properties data;
     private String state;
     private Long nextFireTime;
     private Long prevFireTime;
@@ -21,11 +21,11 @@ public class Task {
     private Integer misfireInstr;
     private String description;
 
-    public Task() {
+    public TaskDetail() {
 
     }
 
-    public Task(String schedulerName, String name, String group, String execModule) {
+    public TaskDetail(String schedulerName, String name, String group, String execModule) {
         this.schedulerName = schedulerName;
         this.name = name;
         this.group = group;
@@ -80,11 +80,11 @@ public class Task {
         this.priority = priority;
     }
 
-    public Map<Object, Object> getData() {
+    public Properties getData() {
         return data;
     }
 
-    public void setData(Map<Object, Object> data) {
+    public void setData(Properties data) {
         this.data = data;
     }
 

@@ -2,6 +2,9 @@ package com.bee.scheduler.context.common;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author weiwei
  */
@@ -15,5 +18,13 @@ public enum TaskSpecialGroup {
             }
         }
         return false;
+    }
+
+    public static List<String> stringValues() {
+        List<String> valueList = new ArrayList<>();
+        for (TaskSpecialGroup value : values()) {
+            valueList.add(value.name());
+        }
+        return valueList;
     }
 }

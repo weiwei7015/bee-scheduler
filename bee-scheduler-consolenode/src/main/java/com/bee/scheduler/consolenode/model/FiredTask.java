@@ -5,7 +5,7 @@ import com.bee.scheduler.context.common.TaskFiredWay;
 /**
  * Created by wei-wei
  */
-public class FiredTask extends Task {
+public class FiredTask extends TaskDetail {
     private String instanceId;
     private String fireId;
     private Long firedTime;
