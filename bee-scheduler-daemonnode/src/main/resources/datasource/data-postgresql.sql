@@ -1,0 +1,1 @@
+INSERT INTO BS_USER(ACCOUNT, PWD, NAME) VALUES('admin','admin','管理员');
