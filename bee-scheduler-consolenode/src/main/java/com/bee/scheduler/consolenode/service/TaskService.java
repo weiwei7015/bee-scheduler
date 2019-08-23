@@ -2,11 +2,9 @@ package com.bee.scheduler.consolenode.service;
 
 
 import com.bee.scheduler.consolenode.model.ExecutedTask;
-import com.bee.scheduler.consolenode.model.ExecutingTask;
 import com.bee.scheduler.consolenode.model.Pageable;
 import com.bee.scheduler.consolenode.model.TaskDetail;
 
-import java.util.Date;
 import java.util.List;
 
 /**

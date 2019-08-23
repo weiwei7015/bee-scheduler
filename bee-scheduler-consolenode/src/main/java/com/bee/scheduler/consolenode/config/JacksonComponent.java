@@ -30,7 +30,7 @@ public class JacksonComponent {
 
     public static class TimeOfDayDeserializer extends JsonDeserializer<TimeOfDay> {
         @Override
-        public TimeOfDay deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        public TimeOfDay deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
             return TimeOfDay.hourAndMinuteAndSecondFromDate(ctxt.readValue(p, Date.class));
         }
     }

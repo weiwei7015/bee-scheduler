@@ -1,6 +1,6 @@
 package com.bee.scheduler.consolenode.service.impl;
 
-import com.bee.scheduler.consolenode.dao.DaoSupport;
+import com.bee.scheduler.consolenode.dao.StandardDao;
 import com.bee.scheduler.consolenode.model.ExecutedTask;
 import com.bee.scheduler.consolenode.model.Pageable;
 import com.bee.scheduler.consolenode.model.TaskDetail;
@@ -22,7 +22,7 @@ import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZ
 @Service
 public class TaskServiceImpl implements TaskService {
     @Autowired
-    private DaoSupport dao;
+    private StandardDao standardDao;
 
     @Override
     public Pageable<TaskDetail> queryTask(String schedulerName, String keyword, int page) {
@@ -38,7 +38,7 @@ public class TaskServiceImpl implements TaskService {
                 taskNameList.add(kwItem);
             }
         }
-        return dao.queryTask(schedulerName, taskNameList, taskGroupList, taskStateList, page, DEFAULT_PAGE_SIZE);
+        return standardDao.queryTask(schedulerName, taskNameList, taskGroupList, taskStateList, page, DEFAULT_PAGE_SIZE);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
         if (kw.startsWith("g:")) {
             queryPrefix = "g:";
             String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
-            queryResult.addAll(dao.queryTaskGroups(schedulerName, q, 1, 10).getResult());
+            queryResult.addAll(standardDao.queryTaskGroups(schedulerName, q, 1, 10).getResult());
         } else if (kw.startsWith("s:")) {
             queryPrefix = "s:";
             String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
@@ -68,7 +68,7 @@ public class TaskServiceImpl implements TaskService {
                 }
             }
         } else {
-            queryResult.addAll(dao.queryTaskNames(schedulerName, kw, 1, 10).getResult());
+            queryResult.addAll(standardDao.queryTaskNames(schedulerName, kw, 1, 10).getResult());
         }
         List<String> suggestions = new ArrayList<>();
         if (i == -1) {
@@ -85,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public ExecutedTask getTaskHistory(String fireId) {
-        return dao.getTaskHistory(fireId);
+        return standardDao.getTaskHistory(fireId);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class TaskServiceImpl implements TaskService {
             }
         }
 
-        return dao.queryTaskHistory(schedulerName, fireIdList, taskNameList, taskGroupList, execStateList, firedWayList, instanceIdList, firedTimeBefore, firedTimeAfter, page, DEFAULT_PAGE_SIZE);
+        return standardDao.queryTaskHistory(schedulerName, fireIdList, taskNameList, taskGroupList, execStateList, firedWayList, instanceIdList, firedTimeBefore, firedTimeAfter, page, DEFAULT_PAGE_SIZE);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class TaskServiceImpl implements TaskService {
         if (kw.startsWith("g:")) {
             queryPrefix = "g:";
             String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
-            queryResult.addAll(dao.queryTaskGroups(schedulerName, q, 1, 10).getResult());
+            queryResult.addAll(standardDao.queryTaskGroups(schedulerName, q, 1, 10).getResult());
         } else if (kw.startsWith("f:")) {
             queryPrefix = "f:";
             String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
@@ -156,7 +156,7 @@ public class TaskServiceImpl implements TaskService {
                 }
             }
         } else {
-            queryResult.addAll(dao.queryTaskNames(schedulerName, kw, 1, 10).getResult());
+            queryResult.addAll(standardDao.queryTaskNames(schedulerName, kw, 1, 10).getResult());
         }
         List<String> suggestions = new ArrayList<>();
         if (i == -1) {
