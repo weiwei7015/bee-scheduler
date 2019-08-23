@@ -21,23 +21,24 @@
 >“不用！数据表会在系统首次启动的时候自动生成”
   
 ### 单机运行模式
-#### 运行管理节点:console-node:
+#### 运行管理节点: console-node
 ```shell
-java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai"
+java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="jdbc:mysql://127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai"
 ```
 启动完成后浏览器访问：http://ip:port  ，默认账号admin/admin ，请使用IE9+、Chrome、Safari、Firefox等现代浏览器  
+ **（注意：v2.5.2及以上的版本支持postgre数据库，dburl参数中需要指定前缀如：jdbc:mysql://、jdbc:postgresql://）**
   
 ### 集群运行模式：
 #### 1、运行管理节点:console-node，并使用--cluster参数开启集群：
 ```shell
-java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai" --cluster
+java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="jdbc:mysql://127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai" --cluster
 ```
 启动完成后浏览器访问管理节点：http://ip:port ，默认账号admin/admin  
  **（注意：管理节点本身也是一个调度节点，参与任务执行）**，请使用IE9+、Chrome、Safari、Firefox等现代浏览器 
 
 #### 2、运行扩展节点:daemon-node
 ```shell
-java -jar bee-scheduler-daemonnode-xxx.jar --dburl="127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai"
+java -jar bee-scheduler-daemonnode-xxx.jar --dburl="jdbc:mysql://127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai"
 ```
 启动完成后，访问管理节点能看到集群信息
 >扩展节点的数量可以随时增减，新增的节点启动完成后，会自动加入集群，停止的扩展节点会自动退出集群
