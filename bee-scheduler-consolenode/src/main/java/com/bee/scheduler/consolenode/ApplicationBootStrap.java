@@ -23,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.Optional;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class ApplicationBootStrap {
@@ -93,12 +94,8 @@ public class ApplicationBootStrap {
     public CustomizedQuartzSchedulerFactoryBean schedulerFactoryBean(Environment env, DataSource dataSource) {
         CustomizedQuartzSchedulerFactoryBean beeSchedulerFactoryBean = new CustomizedQuartzSchedulerFactoryBean("BeeScheduler", dataSource);
         beeSchedulerFactoryBean.setClusterMode(env.containsProperty("cluster"));
-        if (env.containsProperty("thread-pool-size")) {
-            beeSchedulerFactoryBean.setThreadPoolSize(env.getRequiredProperty("thread-pool-size", Integer.TYPE));
-        }
-        if (env.containsProperty("instance-id")) {
-            beeSchedulerFactoryBean.setInstanceId(env.getRequiredProperty("instance-id"));
-        }
+        Optional.ofNullable(env.getProperty("thread-pool-size", Integer.TYPE)).ifPresent(beeSchedulerFactoryBean::setThreadPoolSize);
+        Optional.ofNullable(env.getProperty("instance-id")).ifPresent(beeSchedulerFactoryBean::setInstanceId);
         return beeSchedulerFactoryBean;
     }
 

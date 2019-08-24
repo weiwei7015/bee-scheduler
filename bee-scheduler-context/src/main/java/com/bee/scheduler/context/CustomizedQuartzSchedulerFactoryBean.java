@@ -46,9 +46,8 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean i
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        String datasourcePlatform = environment.getProperty("spring.datasource.platform");
-
         Properties quartzProperties = new Properties();
+        //common props
         quartzProperties.setProperty("org.quartz.jobStore.tablePrefix", "BS_");
         quartzProperties.setProperty("org.quartz.jobStore.useProperties", "true");
         quartzProperties.setProperty("org.quartz.jobStore.misfireThreshold", String.valueOf(MISFIRE_THRESHOLD));
@@ -56,22 +55,26 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean i
         quartzProperties.setProperty("org.quartz.jobStore.acquireTriggersWithinLock", "true");
         quartzProperties.setProperty("org.quartz.scheduler.batchTriggerAcquisitionMaxCount", String.valueOf(threadPoolSize));
         quartzProperties.setProperty("org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow", String.valueOf(BATCH_TRIGGER_ACQUISITION_FIRE_AHEAD_TIME_WINDOW));
-        if ("mysql".equals(datasourcePlatform)) {
+        quartzProperties.setProperty("org.quartz.plugin.JobInterruptMonitorPlugin.class", "org.quartz.plugins.interrupt.JobInterruptMonitorPlugin");
+        quartzProperties.setProperty("org.quartz.plugin.JobInterruptMonitorPlugin.defaultMaxRunTime", "300000");
+        //switch data source delegate
+        String dsp = environment.getProperty("spring.datasource.platform");
+        if ("mysql".equals(dsp)) {
             quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
-        } else if ("postgresql".equals(datasourcePlatform)) {
+        } else if ("postgresql".equals(dsp)) {
             quartzProperties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
         }
+        //how to generate instance id
         if (this.instanceId == null) {
             quartzProperties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
         } else {
             quartzProperties.setProperty("org.quartz.scheduler.instanceId", instanceId);
         }
+        //is cluster mode enabled
         if (clusterMode) {
             quartzProperties.setProperty("org.quartz.jobStore.isClustered", "true");
             quartzProperties.setProperty("org.quartz.jobStore.clusterCheckinInterval", String.valueOf(CLUSTER_CHECKIN_INTERVAL));
         }
-        quartzProperties.setProperty("org.quartz.plugin.JobInterruptMonitorPlugin.class", "org.quartz.plugins.interrupt.JobInterruptMonitorPlugin");
-        quartzProperties.setProperty("org.quartz.plugin.JobInterruptMonitorPlugin.defaultMaxRunTime", "300000");
         this.setQuartzProperties(quartzProperties);
         super.afterPropertiesSet();
     }
@@ -87,7 +90,6 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean i
         taskListenerList.add(new VetoDangerousTaskListener());
         taskListenerList.add(new TaskLinkageHandleListener());
         taskListenerList.add(new TaskHistoryListener());
-
         ListenerManager listenerManager = scheduler.getListenerManager();
         for (TaskListenerSupport listener : taskListenerList) {
             listenerManager.addJobListener(listener);

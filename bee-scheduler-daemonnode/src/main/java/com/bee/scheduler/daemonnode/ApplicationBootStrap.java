@@ -16,6 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class ApplicationBootStrap {
@@ -60,12 +61,8 @@ public class ApplicationBootStrap {
     public CustomizedQuartzSchedulerFactoryBean customizedQuartzSchedulerFactoryBean(Environment env, DataSource dataSource) {
         CustomizedQuartzSchedulerFactoryBean beeSchedulerFactoryBean = new CustomizedQuartzSchedulerFactoryBean("BeeScheduler", dataSource);
         beeSchedulerFactoryBean.setClusterMode(true);
-        if (env.containsProperty("thread-pool-size")) {
-            beeSchedulerFactoryBean.setThreadPoolSize(env.getRequiredProperty("thread-pool-size", Integer.TYPE));
-        }
-        if (env.containsProperty("instance-id")) {
-            beeSchedulerFactoryBean.setInstanceId(env.getRequiredProperty("instance-id"));
-        }
+        Optional.ofNullable(env.getProperty("thread-pool-size", Integer.TYPE)).ifPresent(beeSchedulerFactoryBean::setThreadPoolSize);
+        Optional.ofNullable(env.getProperty("instance-id")).ifPresent(beeSchedulerFactoryBean::setInstanceId);
         return beeSchedulerFactoryBean;
     }
 
