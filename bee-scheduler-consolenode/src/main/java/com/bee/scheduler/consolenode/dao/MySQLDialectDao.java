@@ -73,7 +73,7 @@ public class MySQLDialectDao extends AbstractDao implements StandardDao {
 
         List<String> conditions = new ArrayList<>();
         conditions.add("t1.SCHED_NAME = :schedulerName");
-        conditions.add("t1.TRIGGER_GROUP NOT IN(:taskSpecialGroup)");
+        conditions.add("t1.JOB_GROUP NOT IN(:taskSpecialGroup)");
         if (!CollectionUtils.isEmpty(taskNameList)) {
             conditions.add("t1.JOB_NAME in (:taskNameList)");
         }

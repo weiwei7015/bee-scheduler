@@ -7,7 +7,6 @@ import com.bee.scheduler.context.TaskExecutionContextUtil;
 import com.bee.scheduler.context.common.Constants;
 import com.bee.scheduler.context.common.TaskFiredWay;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
-import com.bee.scheduler.context.listener.support.LinkageRuleResolver;
 import com.bee.scheduler.context.task.TaskExecutorProxy;
 import com.bee.scheduler.core.ExecutionResult;
 import org.apache.commons.lang3.StringUtils;
@@ -25,13 +24,11 @@ import java.util.Map;
 public class TaskLinkageHandleListener extends TaskListenerSupport {
     private Log logger = LogFactory.getLog(TaskLinkageHandleListener.class);
     private ExpressionPlaceholderHandler expressionPlaceholderHandler = new ExpressionPlaceholderHandler();
-    private LinkageRuleResolver linkageRuleResolver = new LinkageRuleResolver();
 
     @Override
     public String getName() {
         return "TaskLinkageHandleListener";
     }
-
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {

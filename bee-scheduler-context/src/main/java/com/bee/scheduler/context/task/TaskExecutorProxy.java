@@ -26,9 +26,9 @@ public class TaskExecutorProxy implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("开始执行任务 -> " + context.getJobDetail().getKey());
-        logger.info("任务参数 -> " + TaskExecutionContextUtil.getTaskParam(context));
         ExecutionResult result = null;
         try {
+            logger.info("任务参数 -> " + TaskExecutionContextUtil.getTaskParam(context));
             TaskExecutionContext taskExecutionContext = prepareExecutionContext(context);
             ExecutorModule taskModule = TaskModuleRegistry.get(taskExecutionContext.getExecutorModuleId());
             if (taskModule == null) {
@@ -39,15 +39,18 @@ public class TaskExecutorProxy implements Job {
             TaskExecutionContextUtil.setModuleExecutionResult(context, result);
         } catch (ExecutorModuleNotFountException e) {
             logger.error("未找到组件: " + e.getExecutorModuleId());
-            TaskExecutionContextUtil.setModuleExecutionResult(context, result = ExecutionResult.fail());
+            result = ExecutionResult.fail();
+            TaskExecutionContextUtil.setModuleExecutionResult(context, result);
             throw new JobExecutionException("未找到组件:" + e.getExecutorModuleId());
         } catch (ExecutionException e) {
-            logger.error("任务执行失败:" + e.getMessage());
-            TaskExecutionContextUtil.setModuleExecutionResult(context, result = ExecutionResult.fail());
+            logger.error("任务执行失败,原因:" + e.getMessage());
+            result = ExecutionResult.fail();
+            TaskExecutionContextUtil.setModuleExecutionResult(context, result);
             throw new JobExecutionException(e);
         } catch (Throwable e) {
             logger.error("任务执行异常", e);
-            TaskExecutionContextUtil.setModuleExecutionResult(context, result = ExecutionResult.fail());
+            result = ExecutionResult.fail();
+            TaskExecutionContextUtil.setModuleExecutionResult(context, result);
             throw new JobExecutionException(e);
         } finally {
             if (result != null) {

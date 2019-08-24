@@ -20,7 +20,7 @@ public enum TaskSpecialGroup {
         return false;
     }
 
-    public static List<String> stringValues() {
+    public static List<String> stringValueList() {
         List<String> valueList = new ArrayList<>();
         for (TaskSpecialGroup value : values()) {
             valueList.add(value.name());
