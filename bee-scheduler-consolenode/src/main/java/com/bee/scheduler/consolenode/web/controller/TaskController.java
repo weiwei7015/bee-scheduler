@@ -38,7 +38,7 @@ public class TaskController {
     }
 
     @GetMapping("/task/query-suggestions")
-    public ResponseEntity<List<String>> queryTaskHistoryGroups(String input) throws Exception {
+    public ResponseEntity<List<String>> querySuggestions(String input) throws Exception {
         return ResponseEntity.ok(taskService.taskQuerySuggestion(scheduler.getSchedulerName(), input));
     }
 

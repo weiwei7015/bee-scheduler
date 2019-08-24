@@ -138,7 +138,7 @@ public class TaskServiceImpl implements TaskService {
         if (kw.startsWith("g:")) {
             queryPrefix = "g:";
             String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
-            queryResult.addAll(standardDao.queryTaskGroups(schedulerName, q, 1, 10).getResult());
+            queryResult.addAll(standardDao.queryTaskHistoryGroups(schedulerName, q, 1, 10).getResult());
         } else if (kw.startsWith("f:")) {
             queryPrefix = "f:";
             String q = kw.equals(queryPrefix) ? "" : kw.substring(2);
@@ -156,7 +156,7 @@ public class TaskServiceImpl implements TaskService {
                 }
             }
         } else {
-            queryResult.addAll(standardDao.queryTaskNames(schedulerName, kw, 1, 10).getResult());
+            queryResult.addAll(standardDao.queryTaskHistoryNames(schedulerName, kw, 1, 10).getResult());
         }
         List<String> suggestions = new ArrayList<>();
         if (i == -1) {

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,8 +44,7 @@ public class TaskHistoryController {
     }
 
     @GetMapping("/task/history/query-suggestions")
-    public ResponseEntity<List<String>> queryTaskHistoryGroups(String input) throws Exception {
-        ArrayList<String> strings = new ArrayList<>();
+    public ResponseEntity<List<String>> querySuggestions(String input) throws Exception {
         return ResponseEntity.ok(taskService.taskHistoryQuerySuggestion(scheduler.getSchedulerName(), input));
     }
 }
