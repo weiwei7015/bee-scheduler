@@ -128,13 +128,10 @@ public class TaskLinkageHandleListener extends TaskListenerSupport {
         vars.put("mainTaskFireId", mainJobKey.getName());
         vars.put("mainTaskGroup", mainJobKey.getGroup());
         vars.put("mainTaskName", mainJobKey.getName());
-        vars.put("mainTaskFailed", !taskModuleExecutionResult.isSuccess());
+        vars.put("mainTaskResult", taskModuleExecutionResult);
         vars.put("time", new Date());
-        vars.put("jsonObject", new JSONObject());
-        vars.put("jsonArray", new JSONArray());
-        if (taskModuleExecutionResult.getData() != null) {
-            vars.putAll(taskModuleExecutionResult.getData());
-        }
+        vars.put("JsonObject", new JSONObject());
+        vars.put("JsonArray", new JSONArray());
         return vars;
     }
 
