@@ -93,9 +93,18 @@ public class ApplicationBootStrap {
     @Bean
     public CustomizedQuartzSchedulerFactoryBean schedulerFactoryBean(Environment env, DataSource dataSource) {
         CustomizedQuartzSchedulerFactoryBean beeSchedulerFactoryBean = new CustomizedQuartzSchedulerFactoryBean("BeeScheduler", dataSource);
-        beeSchedulerFactoryBean.setClusterMode(env.containsProperty("cluster"));
-        Optional.ofNullable(env.getProperty("thread-pool-size", Integer.TYPE)).ifPresent(beeSchedulerFactoryBean::setThreadPoolSize);
-        Optional.ofNullable(env.getProperty("instance-id")).ifPresent(beeSchedulerFactoryBean::setInstanceId);
+        if (env.containsProperty("cluster")) {
+            logger.info("scheduler cluster mode enabled");
+            beeSchedulerFactoryBean.setClusterMode(true);
+        }
+        Optional.ofNullable(env.getProperty("thread-pool-size", Integer.TYPE)).ifPresent(value -> {
+            logger.info("scheduler thread-pool-size:" + value);
+            beeSchedulerFactoryBean.setThreadPoolSize(value);
+        });
+        Optional.ofNullable(env.getProperty("instance-id")).ifPresent(value -> {
+            logger.info("scheduler instanceId:" + value);
+            beeSchedulerFactoryBean.setInstanceId(value);
+        });
         return beeSchedulerFactoryBean;
     }
 
