@@ -1,4 +1,4 @@
-package com.bee.scheduler.context.core;
+package com.bee.scheduler.consolenode.core;
 
 import com.bee.scheduler.context.executor.ClearTaskHistoryTaskModule;
 import com.bee.scheduler.context.executor.HttpExcutorModule;

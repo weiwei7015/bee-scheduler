@@ -1,4 +1,4 @@
-package com.bee.scheduler.context.core;
+package com.bee.scheduler.consolenode.core;
 
 import com.bee.scheduler.core.ExecutorModule;
 import org.apache.commons.logging.Log;
