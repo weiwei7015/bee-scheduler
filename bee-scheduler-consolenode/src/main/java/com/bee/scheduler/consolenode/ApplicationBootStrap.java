@@ -30,7 +30,7 @@ public class ApplicationBootStrap {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(ApplicationBootStrap.class);
-        //检查启动参数
+        //check bootstrap argument
         SimpleCommandLinePropertySource commandLinePropertySource = new SimpleCommandLinePropertySource(args);
         String dburl = commandLinePropertySource.getProperty("dburl");
         if (dburl == null) {
@@ -43,7 +43,7 @@ public class ApplicationBootStrap {
         } else {
             throw new RuntimeException("invalid argument:dburl");
         }
-        //添加自定义初始化
+        //load executor modules
         app.addInitializers(applicationContext -> {
             try {
                 logger.info("loading build-in task modules...");
