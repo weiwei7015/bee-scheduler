@@ -27,11 +27,6 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean i
     private List<TaskListenerSupport> taskListenerList = new ArrayList<>();
     private Environment environment;
 
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
     public CustomizedQuartzSchedulerFactoryBean(String name, String instanceId, DataSource dataSource) {
         this.instanceId = instanceId;
         this.setDataSource(dataSource);
@@ -44,6 +39,10 @@ public class CustomizedQuartzSchedulerFactoryBean extends SchedulerFactoryBean i
         this(name, null, dataSource);
     }
 
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

@@ -25,10 +25,6 @@ public class TaskConfig {
     //任务销毁方式
     public static final int END_AT_TYPE_NEVER = 1;
     public static final int END_AT_TYPE_GIVEN_TIME = 2;
-
-    //触发器状态
-    public enum TriggerState {NONE, NORMAL, PAUSED, COMPLETE, ERROR, BLOCKED}
-
     private String name = "";
     private String group = "";
     private Integer scheduleType = SCHEDULE_TYPE_CRON_TRIGGER;
@@ -164,6 +160,9 @@ public class TaskConfig {
     public void setLinkageRule(String linkageRule) {
         this.linkageRule = linkageRule;
     }
+
+    //触发器状态
+    public enum TriggerState {NONE, NORMAL, PAUSED, COMPLETE, ERROR, BLOCKED}
 
     public static class ScheduleTypeSimpleOptions {
         private Long interval = 30L;

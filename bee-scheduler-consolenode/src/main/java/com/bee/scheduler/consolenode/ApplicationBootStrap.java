@@ -1,10 +1,10 @@
 package com.bee.scheduler.consolenode;
 
-import com.bee.scheduler.consolenode.core.BuildInTaskModuleLoader;
-import com.bee.scheduler.consolenode.core.ClassPathJarArchiveTaskModuleLoader;
 import com.bee.scheduler.consolenode.web.PassportInterceptor;
 import com.bee.scheduler.context.BeeSchedulerFactoryBean;
 import com.bee.scheduler.context.CustomizedQuartzSchedulerFactoryBean;
+import com.bee.scheduler.context.core.BuildInTaskModuleLoader;
+import com.bee.scheduler.context.core.ClassPathJarArchiveTaskModuleLoader;
 import com.bee.scheduler.context.task.TaskModuleRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,6 +58,11 @@ public class ApplicationBootStrap {
     }
 
     @Bean
+    public static PropertySourcesPlaceholderConfigurer PropertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
     public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -81,11 +86,6 @@ public class ApplicationBootStrap {
                 return errorAttributes;
             }
         };
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer PropertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
     }
 
     //调度器工厂

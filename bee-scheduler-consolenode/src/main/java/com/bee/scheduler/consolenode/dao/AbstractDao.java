@@ -10,12 +10,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  * @author weiwei
  */
 class AbstractDao {
+    static final int DEFAULT_PAGE_SIZE = 20;
     Log logger = LogFactory.getLog(getClass());
-
     @Autowired
     JdbcTemplate jdbcTemplate;
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    static final int DEFAULT_PAGE_SIZE = 20;
 }

@@ -23,6 +23,36 @@ import java.util.*;
  */
 public class DubboGenericInvoker implements ExecutorModule {
 
+    public static final KeyGenerator REFERENCE_CONFIG_CACHE_KEY_GENERATOR = new KeyGenerator() {
+        @Override
+        public String generateKey(ReferenceConfig<?> referenceConfig) {
+
+            String iName = referenceConfig.getInterface();
+            if (StringUtils.isBlank(iName)) {
+                Class<?> clazz = referenceConfig.getInterfaceClass();
+                iName = clazz.getName();
+            }
+            if (StringUtils.isBlank(iName)) {
+                throw new IllegalArgumentException("No interface info in ReferenceConfig" + referenceConfig);
+            }
+            StringBuilder ret = new StringBuilder();
+            if (referenceConfig.getRegistry() == null) {
+                if (StringUtils.isNotBlank(referenceConfig.getUrl())) {
+                    ret.append(referenceConfig.getUrl()).append("/");
+                }
+            } else {
+                ret.append(referenceConfig.getRegistry()).append("/");
+            }
+            if (StringUtils.isNotBlank(referenceConfig.getGroup())) {
+                ret.append(referenceConfig.getGroup()).append("/");
+            }
+            ret.append(iName);
+            if (StringUtils.isNotBlank(referenceConfig.getVersion())) {
+                ret.append(":").append(referenceConfig.getVersion());
+            }
+            return ret.toString();
+        }
+    };
     private static Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
 
     static {
@@ -83,37 +113,6 @@ public class DubboGenericInvoker implements ExecutorModule {
         TYPE_ALIASES.put("collection", Collection.class);
         TYPE_ALIASES.put("iterator", Iterator.class);
     }
-
-    public static final KeyGenerator REFERENCE_CONFIG_CACHE_KEY_GENERATOR = new KeyGenerator() {
-        @Override
-        public String generateKey(ReferenceConfig<?> referenceConfig) {
-
-            String iName = referenceConfig.getInterface();
-            if (StringUtils.isBlank(iName)) {
-                Class<?> clazz = referenceConfig.getInterfaceClass();
-                iName = clazz.getName();
-            }
-            if (StringUtils.isBlank(iName)) {
-                throw new IllegalArgumentException("No interface info in ReferenceConfig" + referenceConfig);
-            }
-            StringBuilder ret = new StringBuilder();
-            if (referenceConfig.getRegistry() == null) {
-                if (StringUtils.isNotBlank(referenceConfig.getUrl())) {
-                    ret.append(referenceConfig.getUrl()).append("/");
-                }
-            } else {
-                ret.append(referenceConfig.getRegistry()).append("/");
-            }
-            if (StringUtils.isNotBlank(referenceConfig.getGroup())) {
-                ret.append(referenceConfig.getGroup()).append("/");
-            }
-            ret.append(iName);
-            if (StringUtils.isNotBlank(referenceConfig.getVersion())) {
-                ret.append(":").append(referenceConfig.getVersion());
-            }
-            return ret.toString();
-        }
-    };
 
     @Override
     public String getId() {

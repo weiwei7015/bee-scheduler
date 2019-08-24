@@ -10,14 +10,9 @@ import java.util.Map;
  * 通知类，用于封装前台所需要的通知信息
  */
 public class Notification {
-    public enum NotificationType {
-        JOB_TO_BEEXECUTED, JOB_WAS_EXECUTED, JOB_EXECUTION_VETOED
-    }
-
     private NotificationType type;
     private Date publishTime;
     private Map<String, Object> content;
-
     public Notification() {
     }
 
@@ -50,6 +45,10 @@ public class Notification {
 
     public void setPublishTime(Date publishTime) {
         this.publishTime = publishTime;
+    }
+
+    public enum NotificationType {
+        JOB_TO_BEEXECUTED, JOB_WAS_EXECUTED, JOB_EXECUTION_VETOED
     }
 
 }

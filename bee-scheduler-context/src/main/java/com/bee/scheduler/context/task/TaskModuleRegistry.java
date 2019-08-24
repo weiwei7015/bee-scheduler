@@ -11,8 +11,8 @@ import java.util.Map;
  * @author weiwei
  */
 public class TaskModuleRegistry {
-    private static Log logger = LogFactory.getLog(TaskModuleRegistry.class);
     public static final Map<String, ExecutorModule> TaskModuleMap = new HashMap<>();
+    private static Log logger = LogFactory.getLog(TaskModuleRegistry.class);
 
     public static void register(ExecutorModule taskModule) {
         logger.info("loaded module : " + taskModule.getId());

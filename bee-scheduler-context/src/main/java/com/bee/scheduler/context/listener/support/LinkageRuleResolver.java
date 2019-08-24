@@ -11,6 +11,30 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 public class LinkageRuleResolver {
     private ExpressionParser elParser = new SpelExpressionParser();
 
+    public static void main(String[] args) {
+
+        ExpressionParser elParser = new SpelExpressionParser();
+        EvaluationContext context = new StandardEvaluationContext();
+        context.setVariable("content", "hello");
+        Expression expression = elParser.parseExpression("'aa'.length()");
+        Object value = expression.getValue(context);
+        System.out.println("value = " + value);
+
+
+//        LinkageRuleResolver linkageRuleResolver = new LinkageRuleResolver();
+//        JSONObject variables = new JSONObject();
+//        variables.put("content", "helloworld");
+//        String el = "{\n" +
+//                "    \"mode\":\"Create\",\n" +
+//                "    \"delay\":1000,\n" +
+//                "    \"next\":\"[]\",\n" +
+//                "    \"task\":{},\n" +
+//                "    \"condition\":\"'#content'.length() > 2\",\n" +
+//                "    \"exports\":\"{'aa':1,'bb':2}\"\n" +
+//                "}";
+//        ResolvedLinkageRule result = linkageRuleResolver.resolve(JSONObject.parseObject(el), variables);
+//        System.out.println("result = " + result);
+    }
 
     public ResolvedLinkageRule resolve(JSONObject linkageRule, JSONObject variables) {
         ResolvedLinkageRule result = new ResolvedLinkageRule();
@@ -63,32 +87,6 @@ public class LinkageRuleResolver {
         }
 
         return result;
-    }
-
-
-    public static void main(String[] args) {
-
-        ExpressionParser elParser = new SpelExpressionParser();
-        EvaluationContext context = new StandardEvaluationContext();
-        context.setVariable("content", "hello");
-        Expression expression = elParser.parseExpression("'aa'.length()");
-        Object value = expression.getValue(context);
-        System.out.println("value = " + value);
-
-
-//        LinkageRuleResolver linkageRuleResolver = new LinkageRuleResolver();
-//        JSONObject variables = new JSONObject();
-//        variables.put("content", "helloworld");
-//        String el = "{\n" +
-//                "    \"mode\":\"Create\",\n" +
-//                "    \"delay\":1000,\n" +
-//                "    \"next\":\"[]\",\n" +
-//                "    \"task\":{},\n" +
-//                "    \"condition\":\"'#content'.length() > 2\",\n" +
-//                "    \"exports\":\"{'aa':1,'bb':2}\"\n" +
-//                "}";
-//        ResolvedLinkageRule result = linkageRuleResolver.resolve(JSONObject.parseObject(el), variables);
-//        System.out.println("result = " + result);
     }
 
 }

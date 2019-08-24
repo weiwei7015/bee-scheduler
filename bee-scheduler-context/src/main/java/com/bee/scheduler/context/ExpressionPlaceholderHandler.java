@@ -14,10 +14,10 @@ import java.util.regex.Pattern;
  * @author weiwei
  */
 public class ExpressionPlaceholderHandler {
-    private ExpressionParser elParser = new SpelExpressionParser();
     private static final String EL_SEG_REG = "<el>.+?</el>";
     private static final int EL_PREFIX_LENGTH = 4;
     private static final int EL_SUFFIX_LENGTH = 5;
+    private ExpressionParser elParser = new SpelExpressionParser();
     private Pattern elSegPattern = Pattern.compile(EL_SEG_REG);
 
     public <T> T compute(String el, JSONObject variables, Class<T> resultType) {

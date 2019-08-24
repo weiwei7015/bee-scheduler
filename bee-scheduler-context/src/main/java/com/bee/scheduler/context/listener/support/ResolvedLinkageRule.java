@@ -7,8 +7,6 @@ import com.alibaba.fastjson.JSONObject;
  * @author weiwei
  */
 public class ResolvedLinkageRule {
-    public enum Mode {Create, Trigger}
-
     private Mode mode;
     private String taskGroup;
     private String taskName;
@@ -82,6 +80,7 @@ public class ResolvedLinkageRule {
         this.exports = exports;
     }
 
+    public enum Mode {Create, Trigger}
 
     public static class LinkageTaskConfig {
         private String taskModule;

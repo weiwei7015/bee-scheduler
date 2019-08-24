@@ -13,6 +13,14 @@ public class ThreadLocalTaskLoggerAppender extends UnsynchronizedAppenderBase<IL
     public static final ThreadLocal<TaskExecutionLogger> TaskExecutionLoggerThreadLocal = new ThreadLocal<>();
     private CachingDateFormatter cachingDateFormatter = new CachingDateFormatter("yyyy-MM-dd HH:mm:ss");
 
+    public static String getLogContent() {
+        TaskExecutionLogger taskExecutionLogger = TaskExecutionLoggerThreadLocal.get();
+        if (taskExecutionLogger != null) {
+            return taskExecutionLogger.getLog();
+        } else {
+            return "";
+        }
+    }
 
     @Override
     protected void append(ILoggingEvent eventObject) {
@@ -22,15 +30,6 @@ public class ThreadLocalTaskLoggerAppender extends UnsynchronizedAppenderBase<IL
             if (eventObject.getThrowableProxy() != null) {
                 taskExecutionLogger.appendLine(ThrowableProxyUtil.asString(eventObject.getThrowableProxy()));
             }
-        }
-    }
-
-    public static String getLogContent() {
-        TaskExecutionLogger taskExecutionLogger = TaskExecutionLoggerThreadLocal.get();
-        if (taskExecutionLogger != null) {
-            return taskExecutionLogger.getLog();
-        } else {
-            return "";
         }
     }
 }
