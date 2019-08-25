@@ -49,7 +49,7 @@ public class JustTestModule implements ExecutorModule {
         Log logger = context.getLogger();
 
         String content = taskParam.getString("content");
-        logger.info("content: [" + content + "]");
+        logger.info("content: " + content);
         JSONObject data = new JSONObject();
         data.put("content", content);
         return ExecutionResult.success(data);
