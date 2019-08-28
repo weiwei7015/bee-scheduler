@@ -6,8 +6,8 @@ import com.alibaba.fastjson.JSONObject;
  * @author weiwei
  */
 public class ExecutionResult {
-    private boolean success;
-    private JSONObject data;
+    public boolean success;
+    public JSONObject data;
 
     public ExecutionResult(boolean success, JSONObject data) {
         this.success = success;

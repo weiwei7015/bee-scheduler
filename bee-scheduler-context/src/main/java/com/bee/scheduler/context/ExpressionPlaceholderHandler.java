@@ -59,7 +59,7 @@ public class ExpressionPlaceholderHandler {
             if (start > pos) {
                 resolvedText.append(originText, pos, start);
             }
-            resolvedText.append(value);
+            resolvedText.append(StringEscapeUtils.escapeJava(value));
             pos = end;
         }
         if (pos < originText.length()) {
