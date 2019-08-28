@@ -5,7 +5,6 @@ import com.bee.scheduler.context.common.Constants;
 import com.bee.scheduler.context.common.TaskFiredWay;
 import com.bee.scheduler.context.common.TaskSpecialGroup;
 import com.bee.scheduler.context.exception.TaskSchedulerException;
-import com.bee.scheduler.context.listener.support.ResolvedLinkageRule;
 import com.bee.scheduler.context.model.QuickTaskConfig;
 import com.bee.scheduler.context.model.TaskConfig;
 import org.apache.commons.lang3.ArrayUtils;
@@ -41,11 +40,6 @@ public class TaskScheduler {
         } catch (SchedulerException e) {
             throw new TaskSchedulerException(e);
         }
-    }
-
-
-    public void scheduleLinkageTask(ResolvedLinkageRule.LinkageTaskConfig linkageTaskConfig) throws TaskSchedulerException {
-
     }
 
     public void schedule(TaskConfig taskConfig) throws TaskSchedulerException {
