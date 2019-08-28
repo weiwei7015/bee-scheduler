@@ -76,8 +76,8 @@ public class TaskExecutorProxy implements Job {
                 vars.put("taskName", jobKey.getName());
                 vars.put("taskFireId", context.getFireInstanceId());
                 vars.put("time", new Date());
-                vars.put("jsonObject", new JSONObject());
-                vars.put("jsonArray", new JSONArray());
+                vars.put("JsonObject", new JSONObject());
+                vars.put("JsonArray", new JSONArray());
                 paramString = expressionPlaceholderHandler.handle(paramString, vars);
                 logger.info("解析后的任务参数:" + paramString);
             }
