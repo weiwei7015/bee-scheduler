@@ -74,7 +74,7 @@ public class PostgreSQLDialectDao extends AbstractDao implements StandardDao {
 
         List<String> conditions = new ArrayList<>();
         conditions.add("t1.SCHED_NAME = :schedulerName");
-//        conditions.add("t1.JOB_GROUP NOT IN(:taskSpecialGroup)");
+        conditions.add("t1.JOB_GROUP NOT IN(:taskSpecialGroup)");
         if (!CollectionUtils.isEmpty(taskNameList)) {
             conditions.add("t1.JOB_NAME in (:taskNameList)");
         }
@@ -93,7 +93,7 @@ public class PostgreSQLDialectDao extends AbstractDao implements StandardDao {
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("schedulerName", schedulerName);
-//        paramMap.put("taskSpecialGroup", TaskSpecialGroup.stringValueList());
+        paramMap.put("taskSpecialGroup", TaskSpecialGroup.stringValueList());
         paramMap.put("taskNameList", taskNameList);
         paramMap.put("taskGroupList", taskGroupList);
         paramMap.put("taskStateList", taskStateList);
