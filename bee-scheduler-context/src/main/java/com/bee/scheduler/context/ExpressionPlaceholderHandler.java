@@ -1,7 +1,7 @@
 package com.bee.scheduler.context;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.text.StringEscapeUtils;
+import com.bee.scheduler.context.util.JavaStringEscapeUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -24,7 +24,7 @@ public class ExpressionPlaceholderHandler {
         if (isElSeg(el)) {
             el = el.substring(EL_PREFIX_LENGTH, el.length() - EL_SUFFIX_LENGTH);
         }
-        el = StringEscapeUtils.unescapeJava(el);
+        el = JavaStringEscapeUtils.unescape(el);
         EvaluationContext evaluationContext = new StandardEvaluationContext();
         if (variables != null) {
             variables.keySet().forEach(key -> {
@@ -54,12 +54,13 @@ public class ExpressionPlaceholderHandler {
             int start = matcher.start(), end = matcher.end();
             String wrapped = matcher.group();
             String el = wrapped.substring(EL_PREFIX_LENGTH, wrapped.length() - EL_SUFFIX_LENGTH);
-            el = StringEscapeUtils.unescapeJava(el);
+            el = JavaStringEscapeUtils.unescape(el);
             String value = elParser.parseExpression(el).getValue(evaluationContext, String.class);
+            value = JavaStringEscapeUtils.escape(value);
             if (start > pos) {
                 resolvedText.append(originText, pos, start);
             }
-            resolvedText.append(StringEscapeUtils.escapeJava(value));
+            resolvedText.append(value);
             pos = end;
         }
         if (pos < originText.length()) {
