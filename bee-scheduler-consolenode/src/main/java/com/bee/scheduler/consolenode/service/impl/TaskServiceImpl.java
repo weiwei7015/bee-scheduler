@@ -17,10 +17,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
 
 @Service
 public class TaskServiceImpl implements TaskService {
+    private static final Integer DEFAULT_PAGE_SIZE = 20;
     @Autowired
     private StandardDao standardDao;
 
