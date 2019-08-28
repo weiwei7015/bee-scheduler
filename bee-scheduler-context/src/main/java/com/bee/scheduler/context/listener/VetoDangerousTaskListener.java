@@ -12,7 +12,7 @@ public class VetoDangerousTaskListener extends TaskListenerSupport {
 
     @Override
     public boolean vetoJobExecution(Trigger trigger, JobExecutionContext context) {
-        int minExecInterval = 1000 * 30;
+        int minExecInterval = 1000 * 30;//执行频率限制为30秒
         //因系统设置的BATCH_TRIGGER_ACQUISITION_FIRE_AHEAD_TIME_WINDOW=5000,此处检查执行频率时允许有5秒的误差
         int broadMinExecInterval = minExecInterval - 5000;
         if (context.getPreviousFireTime() != null && context.getFireTime().getTime() - context.getPreviousFireTime().getTime() < broadMinExecInterval) {
