@@ -26,7 +26,6 @@
 java -jar bee-scheduler-consolenode-xxx.jar --server.port=8080 --dburl="jdbc:mysql://127.0.0.1:3306/bee-scheduler?user=root&password=root&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai"
 ```
 启动完成后浏览器访问：http://ip:port  ，默认账号admin/admin ，请使用IE9+、Chrome、Safari、Firefox等现代浏览器  
- **（注意：v2.5.2及以上的版本支持postgre数据库，dburl参数中需要指定前缀如：jdbc:mysql://、jdbc:postgresql://）**
   
 ### 集群运行模式：
 #### 1、运行管理节点:console-node，并使用--cluster参数开启集群：
@@ -52,14 +51,16 @@ java -jar bee-scheduler-daemonnode-xxx.jar --dburl="jdbc:mysql://127.0.0.1:3306/
 |--instance-id|string|否|实例ID|AUTO(自动生成)|
 |--cluster| - |否|是否开启集群模式|无需参数值|
 
+**（注意：v2.5.2及以上的版本支持postgre数据库，dburl参数中需要指定前缀如：jdbc:mysql://、jdbc:postgresql://）**
+
 ### 管理界面截图
-![BeeScheduler](readme/main.png "BeeScheduler")
-![BeeScheduler](readme/edit3.png "BeeScheduler")
-![BeeScheduler](readme/edit2.png "BeeScheduler")
-![BeeScheduler](readme/tmp_task.png "BeeScheduler")
-![BeeScheduler](readme/history.png "BeeScheduler")
-![BeeScheduler](readme/history_detail.png "BeeScheduler")
-![BeeScheduler](readme/cluster.png "BeeScheduler")
+![BeeScheduler](readme/01.png "BeeScheduler")
+![BeeScheduler](readme/07.png "BeeScheduler")
+![BeeScheduler](readme/08.png "BeeScheduler")
+![BeeScheduler](readme/03.png "BeeScheduler")
+![BeeScheduler](readme/04.png "BeeScheduler")
+![BeeScheduler](readme/05.png "BeeScheduler")
+![BeeScheduler](readme/06.png "BeeScheduler")
   
 ### 开源协议
 [MIT](http://opensource.org/licenses/MIT)
