@@ -15,7 +15,7 @@ public class TaskModuleRegistry {
     private static Log logger = LogFactory.getLog(TaskModuleRegistry.class);
 
     public static void register(ExecutorModule taskModule) {
-        logger.info("loaded module : " + taskModule.getId());
+        logger.info("module registered: " + taskModule.getId());
         TaskModuleMap.put(taskModule.getId(), taskModule);
     }
 
